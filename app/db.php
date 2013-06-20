@@ -3,6 +3,6 @@ return array(
     'host' => 'localhost',
     'user' => 'root',
     'pass' => '',
-    'name' => 'keyvault',
+    'name' => 'test',
     'table' => 'setting_eav',
 );
