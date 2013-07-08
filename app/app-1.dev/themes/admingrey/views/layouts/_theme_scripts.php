@@ -1,7 +1,6 @@
 <?php
-$assetPath = Yii::app()->theme->basePath . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
-$assetUrl = Yii::app()->getAssetManager()->publish($assetPath, false, 1, YII_DEBUG);
+$assetPath = app()->theme->basePath . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+$assetUrl = app()->getAssetManager()->publish($assetPath, false, 1, YII_DEBUG);
 
 // register css file
 cs()->registerCSSFile($assetUrl . '/css/theme.css', 'screen, projection', array('order' => 5));
-?>

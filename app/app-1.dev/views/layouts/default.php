@@ -3,7 +3,7 @@
  * @var $this WebController
  * @var $content
  */
-if (Yii::app()->request->isAjaxRequest) {
+if (app()->request->isAjaxRequest) {
     $this->beginContent('//layouts/ajax');
     echo user()->multiFlash();
     echo $content;
