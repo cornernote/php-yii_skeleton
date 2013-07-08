@@ -12,11 +12,11 @@ class SiteController extends WebController
     {
         return array(
             array('allow',
-                'actions' => array('index', 'page'),
+                'actions' => array('overview'),
                 'users' => array('@'),
             ),
             array('allow',
-                'actions' => array('error'),
+                'actions' => array('index', 'error', 'page'),
                 'users' => array('*'),
             ),
             array('deny',
@@ -52,8 +52,9 @@ class SiteController extends WebController
      */
     public function actionIndex()
     {
-        // renders the view file 'protected/views/site/index.php'
-        // using the default layout 'protected/views/layouts/main.php'
+        if (user()->id) {
+            $this->redirect(array('/site/overview'));
+        }
         $this->render('index');
     }
 
@@ -69,5 +70,32 @@ class SiteController extends WebController
                 $this->render('error', $error);
         }
     }
+
+    /**
+     * This is the default 'index' action that is invoked
+     * when an action is not explicitly requested by users.
+     */
+    public function actionOverview()
+    {
+        if (user()->checkAccess('admin')) {
+            $this->render('overview_admin');
+        }
+        elseif (user()->checkAccess('locksmith')) {
+            $this->render('overview_locksmith');
+        }
+        elseif (user()->checkAccess('customer')) {
+            $customer = Customer::model()->findByPk(user()->id);
+            $this->render('overview_customer', array(
+                'customer' => $customer,
+            ));
+        }
+        elseif (user()->checkAccess('key_holder')) {
+            $keyHolder = KeyHolder::model()->findByPk(user()->id);
+            $this->render('overview_key_holder', array(
+                'keyHolder' => $keyHolder,
+            ));
+        }
+    }
+
 
 }

@@ -32,6 +32,8 @@ class LogController extends WebController
     public function actionIndex()
     {
         $log = new Log('search');
+        if (isset($_GET['Log']))
+            $log->attributes = $_GET['Log'];
         $this->render('index', array(
             'log' => $log,
         ));
