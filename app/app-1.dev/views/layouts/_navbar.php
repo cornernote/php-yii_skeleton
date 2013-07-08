@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $this WebController
+ */
 $this->widget('Navbar', array(
     'id' => 'navbar',
     'fixed' => 'top',
@@ -9,4 +12,3 @@ $this->widget('Navbar', array(
         NavbarItems::user(),
     ),
 ));
-?>

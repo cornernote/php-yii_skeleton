@@ -1,4 +1,11 @@
-<?php Helper::searchToggle('user-grid'); ?>
+<?php
+/**
+ * @var $this UserController
+ * @var $user User
+ */
+
+Helper::searchToggle('user-grid');
+?>
 <div class="search-form hide">
     <?php
     /** @var $form ActiveForm **/
@@ -11,14 +18,10 @@
     <fieldset>
         <legend><?php echo t('User Search'); ?></legend>
         <?php
-        echo $form->textFieldRow($user, 'id', array('class' => 'input-small', 'prepend' => 'user-'));
-        echo $form->textFieldRow($user, 'company_name');
-        echo $form->textFieldRow($user, 'first_name');
-        echo $form->textFieldRow($user, 'last_name');
+        echo $form->textFieldRow($user, 'customer_id');
+        echo $form->textFieldRow($user, 'name');
         echo $form->textFieldRow($user, 'email', array('size' => 60, 'maxlength' => 255));
-        echo $form->textFieldRow($user, 'username', array('size' => 60, 'maxlength' => 255));
         echo $form->dropDownListRow($user, 'role', CHtml::listData(Role::model()->findAll(), 'id', 'name'), array('empty' => ''));
-        echo $form->textFieldRow($user, 'phone');
         ?>
     </fieldset>
     <div class="form-actions">

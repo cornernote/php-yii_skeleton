@@ -1,47 +1,40 @@
 <?php
+/**
+ * @var $this SiteController
+ */
 $this->pageTitle = app()->name;
 //$this->pageHeading = app()->name;
 ?>
 
-<?php
-$this->beginWidget('bootstrap.widgets.BootHero', array(
-    'heading' => t('Welcome to') . ' ' . app()->name,
-));
-?>
-<br/>
-<p>You may change the content of this page by modifying the following file:</p>
-<p><tt><?php echo __FILE__; ?></tt></p>
+<div class="row txt-middle">
+    <div class="span12">
+        <h2>Simplify your access management.</h2>
+        <hr class="dashed">
+    </div>
+</div>
 
-<?php
-//$this->widget('bootstrap.widgets.BootButton', array(
-//    'type' => 'primary',
-//    'size' => 'large',
-//    'label' => 'Learn more',
-//));
-?>
+<div class="row txt-middle">
+    <div class="span4 bouncy">
+        <div class="icon_wrapper">
+            <i class="icon-key"></i>
+        </div>
+        <h2>Manage Keys and Locks</h2>
+        <p>Take cake of your customer's keys and locks all in one simple location.</p>
+    </div>
+    <div class="span4 bouncy">
+        <div class="icon_wrapper">
+            <i class="icon-shopping-cart"></i>
+        </div>
+        <h2>Handle Orders</h2>
+        <p>Allow your customers to login and place orders for new keys.</p>
+    </div>
+    <div class="span4 bouncy">
+        <div class="icon_wrapper">
+            <i class="icon-lock"></i>
+        </div>
+        <h2>Safe and Secure</h2>
+        <p>All connections are handled over an SSL connection.</p>
+    </div>
+</div>
+<hr class="dashed">
 
-<?php
-$this->endWidget();
-?>
-
-
-<!--
-<h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
-
-<p>Congratulations! You have successfully created your Yii application.</p>
-
-<p>You may change the content of this page by modifying the following two files:</p>
-<ul>
-	<li>View file: <tt><?php echo __FILE__; ?></tt></li>
-	<li>Layout file: <tt><?php echo $this->getLayoutFile('main'); ?></tt></li>
-</ul>
-
-<p>For more details on how to further develop this application, please read
-the <a href="http://www.yiiframework.com/doc/">documentation</a>.
-Feel free to ask in the <a href="http://www.yiiframework.com/forum/">forum</a>,
-should you have any questions.</p>
-
--->
-<?php
-
-?>

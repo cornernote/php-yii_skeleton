@@ -143,6 +143,15 @@ $this->widget('bootstrap.widgets.BootButton', array(
     </div>
 
     <div class="control-group">
+        <?php echo CHtml::label(t('Debug Email'), 'SettingEav_debug_email', array('class' => 'control-label')); ?>
+        <div class="controls">
+            <?php
+            echo CHtml::checkBox('SettingEav[debug_email]', $setting->getEavAttribute('debug_email'));
+            ?>
+        </div>
+    </div>
+
+    <div class="control-group">
         <?php echo CHtml::label(t('Debug Toolbar'), 'SettingEav_debug_toolbar', array('class' => 'control-label')); ?>
         <div class="controls">
             <?php

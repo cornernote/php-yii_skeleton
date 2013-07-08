@@ -1,5 +1,7 @@
 <?php
-/* @var $this AccountController */
+/**
+ * @var $this AccountController
+ */
 ?>
 <?php
 $this->pageTitle = t('Update Account');
@@ -13,6 +15,7 @@ $this->renderPartial('_menu', array('user' => $user));
 
 
 <?php
+/* @var $form ActiveForm */
 $form = $this->beginWidget('ActiveForm', array(
     'id' => 'account-form',
     'enableAjaxValidation' => true,
@@ -26,21 +29,10 @@ echo $form->errorSummary($user);
     <legend><?php echo t('User Details') ?></legend>
 
     <?php
-    echo $form->textFieldRow($user, 'first_name', array('size' => 60, 'maxlength' => 255));
-    echo $form->textFieldRow($user, 'last_name', array('size' => 60, 'maxlength' => 255));
-    ?>
-
-</fieldset>
-
-
-<fieldset>
-    <legend><?php echo t('Contact Details') ?></legend>
-
-    <?php
-    echo $form->textFieldRow($user, 'email', array('size' => 60, 'maxlength' => 255));
     echo $form->textFieldRow($user, 'username', array('size' => 60, 'maxlength' => 255));
+    echo $form->textFieldRow($user, 'name', array('size' => 60, 'maxlength' => 255));
+    echo $form->textFieldRow($user, 'email', array('size' => 60, 'maxlength' => 255));
     echo $form->textFieldRow($user, 'phone', array('size' => 60, 'maxlength' => 255));
-    echo $form->textFieldRow($user, 'fax', array('size' => 60, 'maxlength' => 255));
     ?>
 
 </fieldset>

@@ -1,6 +1,11 @@
 <?php
-debug(Yii::app()->request->isAjaxRequest);
-if (!Yii::app()->request->isAjaxRequest) {
+/**
+ * @var $this WebController
+ * @var $content
+ */
+?>
+<div class="container-fluid">
+    <?php
     if ($this->breadcrumbs) {
         $this->widget('bootstrap.widgets.BootBreadcrumbs', array('links' => $this->breadcrumbs));
     }
@@ -16,12 +21,7 @@ if (!Yii::app()->request->isAjaxRequest) {
             ),
         ));
     }
-}
-echo user()->multiFlash();
-echo $content;
-if (!Yii::app()->request->isAjaxRequest) {
-    echo '<footer class="footer">';
-    echo '<p class="pull-right"><a href="#">' . t('Back to Top') . ' &uarr;</a></p>';
-    echo '</footer>';
-}
-?>
+    echo user()->multiFlash();
+    echo $content;
+    ?>
+</div>

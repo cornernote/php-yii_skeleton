@@ -15,26 +15,10 @@ $this->renderPartial('_menu', array('user' => $user));
     <?php $this->widget('DetailView', array(
     'data' => $user,
     'attributes' => array(
-        array(
-            'name' => 'id',
-            'value' => 'user-' . $user->id,
-            'type' => 'raw',
-        ),
         'username',
-        'first_name',
-        'last_name',
-    ),
-)); ?>
-</fieldset>
-
-<fieldset>
-    <legend><?php echo t('Contact Details') ?></legend>
-    <?php $this->widget('DetailView', array(
-    'data' => $user,
-    'attributes' => array(
+        'name',
         'email',
         'phone',
-        'fax',
     ),
 )); ?>
 </fieldset>

@@ -1,5 +1,6 @@
 <?php
 /**
+ * @var $this PageTrailController
  * @var $pageTrail PageTrail
  */
 user()->setState('search.pageTrail', ru());
@@ -11,4 +12,5 @@ $this->breadcrumbs = array(
 );
 $this->renderPartial('/site/_system_menu');
 $this->renderPartial('/pageTrail/_grid', array('pageTrail' => $pageTrail));
+
 ?>

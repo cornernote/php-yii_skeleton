@@ -19,7 +19,6 @@ $this->widget('ListView', array(
     'dataProvider' => $dataProvider,
     'itemView' => '/auditTrail/_field_view',
     'itemsTagName' => 'table',
-    'itemsCssClass' => 'items',
+    'itemsCssClass' => 'table table-condensed table-striped',
 ));
 echo '</div>';
-?>

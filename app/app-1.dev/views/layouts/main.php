@@ -1,5 +1,6 @@
 <?php
 /**
+ * @var $this WebController
  * @var $content
  */
 ?>
@@ -16,7 +17,6 @@
 <body id="top" class="<?php echo $this->id . '-' . $this->action->id; ?>">
 
 <?php
-$this->renderPartial('//layouts/_navbar');
 echo $content;
 ?>
 

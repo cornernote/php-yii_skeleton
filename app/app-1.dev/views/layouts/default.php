@@ -1,5 +1,19 @@
-<?php if (!Yii::app()->request->isAjaxRequest) $this->beginContent('//layouts/main'); ?>
-<div class="container-fluid">
-    <?php $this->renderPartial('//layouts/_content', array('content' => $content)); ?>
-</div>
-<?php if (!Yii::app()->request->isAjaxRequest) $this->endContent(); ?>
+<?php
+/**
+ * @var $this WebController
+ * @var $content
+ */
+if (Yii::app()->request->isAjaxRequest) {
+    $this->beginContent('//layouts/ajax');
+    echo user()->multiFlash();
+    echo $content;
+    $this->endContent();
+}
+else {
+    $this->beginContent('//layouts/main');
+    $this->renderPartial('//layouts/_navbar');
+    $this->renderPartial('//layouts/_header');
+    $this->renderPartial('//layouts/_content', array('content' => $content));
+    $this->renderPartial('//layouts/_footer');
+    $this->endContent();
+}

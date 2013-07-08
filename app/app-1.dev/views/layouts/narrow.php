@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var $this WebController
+ */
+?>
 <?php $this->beginContent('//layouts/main'); ?>
 <div class="container">
     <div class="row">

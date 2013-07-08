@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var $this SiteController
+ */
+
 $this->pageTitle = t('Error');
 //$this->pageHeading = t('Error');
 //$this->breadcrumbs = array(
@@ -8,7 +12,7 @@ $this->pageTitle = t('Error');
 
 <?php
 $this->beginWidget('bootstrap.widgets.BootHero', array(
-    'heading' => t('Holy shit!'),
+    'heading' => t('Golly gosh!'),
 ));
 ?>
 

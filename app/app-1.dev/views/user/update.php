@@ -1,12 +1,19 @@
 <?php
-$this->pageTitle = 'user-' . $user->id . ' ' . t('Update');
-$this->pageHeading = 'user-' . $user->id . ' ' . t('Update') . ' <small>' . $user->name . '</small>';
-$this->breadcrumbs = array(
-    t('Users') => user()->getState('search.user', array('index')),
-    'user-' . $user->id => array('view', 'id' => $user->id),
-    t('Update'),
-);
-$this->renderPartial('_menu', array('user' => $user));
-?>
+/**
+ * @var $this UserController
+ * @var $user User
+ */
+$this->pageTitle = t('User') . ' ' . $user->name . ' ' . t('Update');
+$this->pageHeading = $user->name . ' ' . t('Update');
 
-<?php $this->renderPartial('_form', array('user' => $user)); ?>
+$this->breadcrumbs = array();
+$this->breadcrumbs[t('Users')] = user()->getState('index.user', array('/user/index'));
+$this->breadcrumbs[$user->name] = $user->getLink();
+$this->breadcrumbs[] = t('Update');
+
+$this->renderPartial('_menu', array(
+    'user' => $user,
+));
+$this->renderPartial('_form', array(
+    'user' => $user,
+));

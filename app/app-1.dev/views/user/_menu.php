@@ -1,29 +1,30 @@
 <?php
-$controller = $this->getId();
-$action = $this->getAction()->getId();
+/**
+ * @var $this UserController
+ * @var $user User
+ */
+$controller = $this->id;
+$action = $this->action->id;
 
 if ($user->isNewRecord) {
     $this->menu[] = array(
         'label' => t('Create'),
-        'url' => ru(),
-        'active' => true,
+        'url' => array('/user/create'),
     );
     return; // no more links
 }
 
-
 $this->menu[] = array(
     'label' => t('View'),
-    'url' => array('/user/view', 'id' => $user->id),
+    'url' => $user->getUrl(),
 );
+
 $this->menu[] = array(
     'label' => t('Update'),
-    'url' => array('/user/update', 'id' => $user->id, 'returnUrl' => ReturnUrl::getLinkValue(true)),
-    'active' => $action == 'update' ? true : false,
+    'url' => array('/user/update', 'id' => $user->id),
+    'active' => $this->id == 'user' && $this->action->id == 'update',
 );
 
-
-// more
 $more = array();
 
 $more[] = array(
@@ -31,35 +32,37 @@ $more[] = array(
     'url' => array('/user/log', 'id' => $user->id),
 );
 
-if (user()->checkAccess('admin')) {
-    $more[] = array(
-        'label' => t('Login As'),
-        'url' => array('/user/changeUser', 'id' => $user->id),
-    );
-}
+$more[] = array(
+    'label' => t('Delete'),
+    'url' => array('/user/delete', 'id' => $user->id),
+    'linkOptions' => array('data-toggle' => 'modal-remote'),
+    'active' => $this->id == 'user' && $this->action->id == 'delete',
+);
 
-if (!$user->deleted) {
-    $more[] = array(
-        'label' => t('Delete'),
-        'url' => array('/user/delete', 'id' => $user->id, 'returnUrl' => ReturnUrl::getLinkValue(true)),
-        'linkOptions' => array(
-            'confirm' => t('Are you sure you want to delete this user?'),
-        ),
-    );
-}
+$more[] = '---';
+$more[] = array(
+    'label' => t('Create Admin'),
+    'url' => array('/user/create', 'role_id' => Role::ROLE_ADMIN),
+);
+$more[] = array(
+    'label' => t('Create Reseller'),
+    'url' => array('/user/create', 'role_id' => Role::ROLE_RESELLER),
+);
+$more[] = array(
+    'label' => t('Create Locksmith'),
+    'url' => array('/user/create', 'role_id' => Role::ROLE_LOCKSMITH),
+);
+$more[] = array(
+    'label' => t('Create Customer'),
+    'url' => array('/user/create', 'role_id' => Role::ROLE_CUSTOMER),
+);
+$more[] = array(
+    'label' => t('Create Key Holder'),
+    'url' => array('/user/create', 'role_id' => Role::ROLE_KEY_HOLDER),
+);
 
-if (YII_DEBUG) {
-    $more[] = array(
-        'label' => t('PhpMyAdmin'),
-        'url' => Helper::getPhpMyAdminUrl($user),
-    );
-}
 
 $this->menu[] = array(
     'label' => t('More'),
     'items' => $more,
 );
-
-
-
-?>

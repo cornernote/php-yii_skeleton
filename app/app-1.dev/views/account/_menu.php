@@ -8,17 +8,29 @@ $this->menu[] = array(
 );
 $this->menu[] = array(
     'label' => t('Update'),
-    'url' => array('/account/update', 'returnUrl' => ReturnUrl::getLinkValue(true)),
+    'url' => array('/account/update'),
     'active' => ($this->id == 'account' && $this->action->id == 'update'),
 );
 $this->menu[] = array(
     'label' => t('Password'),
-    'url' => array('/account/password', 'returnUrl' => ReturnUrl::getLinkValue(true)),
+    'url' => array('/account/password'),
     'active' => ($this->id == 'account' && $this->action->id == 'password'),
 );
-$this->menu[] = array(
-    'label' => t('Settings'),
-    'url' => array('/account/settings', 'returnUrl' => ReturnUrl::getLinkValue(true)),
-    'active' => ($this->id == 'account' && $this->action->id == 'settings'),
-);
-?>
+//$this->menu[] = array(
+//    'label' => t('Settings'),
+//    'url' => array('/account/settings'),
+//    'active' => ($this->id == 'account' && $this->action->id == 'settings'),
+//);
+if (user()->checkAccess('locksmith')) {
+    $this->menu[] = array(
+        'label' => t('Locksmith Plan'),
+        'url' => array('/checkout/plan'),
+        'active' => ($this->id == 'checkout' && $this->action->id == 'plan'),
+    );
+    $this->menu[] = array(
+        'label' => t('Transactions'),
+        'url' => array('/transaction/index'),
+        'active' => ($this->id == 'transaction'),
+    );
+}
+

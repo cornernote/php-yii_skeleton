@@ -1,63 +1,64 @@
 <?php
-$controller_params = Yii::app()->controller->getActionParams();
-if (isset($controller_params['id'])) {
-    $company_id = $controller_params['id'];
-}
-else {
-    $company_id = null;
-}
-
-if ($company_id) {
-    $company = Company::model()->findByPk((int)$company_id);
-    $default_user_id = $company->default_user_id;
-}
-else {
-    $default_user_id = null;
-}
-
-if (Yii::app()->controller->id == 'company') {
-    $default_output = '."&nbsp;".l(i(bu().$data->getDefaultUserIcon(' . $default_user_id . '),"set as default user"),array("company/ChangeDefaultUser","user_id"=>$data->id,"company_id"=>' . $company_id . '))';
-}
-else {
-    $default_output = '';
-}
+/**
+ * @var $this UserController
+ * @var $user User
+ */
 
 $columns = array();
-$columns[] = array(
-    'name' => 'id',
-    'type' => 'raw',
-    'value' => '$data->getLink("update")' . $default_output,
-);
-$columns[] = 'username';
-$columns[] = 'first_name';
-$columns[] = 'last_name';
-$columns[] = 'email';
-$columns[] = 'phone';
-
-if (!$user->company_id) {
+if (user()->checkAccess('admin')) {
     $columns[] = array(
-        'name' => 'company_name',
-        'type' => 'raw',
-        'value' => 'implode(", ",CHtml::listData($data->company,"id","name"))',
+        'name' => 'id',
+        'htmlOptions' => array('width' => '80'),
     );
 }
+
 $columns[] = array(
-    'name' => 'role_id',
-    'value' => 'implode(", ",CHtml::listData($data->role,"id","name"))',
-    'filter' => CHtml::listData(Role::model()->findAll(), 'id', 'name'),
+    'name' => 'name',
+    'value' => '$data->getLink(array("update","delete"))',
     'type' => 'raw',
 );
 $columns[] = array(
-    'name' => 'login_enabled',
-    'value' => '$data->getLoginEnabledString()',
-    'filter' => array('0' => 'disabled', '1' => 'enabled'),
+    'name' => 'email',
+    'value' => '$data->email ? l($data->email, "mailto:" . $data->email) : null',
     'type' => 'raw',
 );
-//$columns[] = array(
-//    'header' => t('Viewed'),
-//    'value' => '$data->last_viewed?date("Y-m-d H:i:s",$data->last_viewed):null',
-//    'filter' => false,
-//);
+$columns[] = array(
+    'name' => 'phone',
+    'filter' => false,
+);
+
+if (user()->checkAccess('admin')) {
+    $columns[] = array(
+        'name' => 'locksmith_id',
+        'value' => '$data->locksmith?$data->locksmith->getLink():null',
+        'type' => 'raw',
+        'filter' => false,
+    );
+}
+if (user()->checkAccess('admin,locksmith')) {
+    $columns[] = array(
+        'name' => 'customer_id',
+        'value' => '$data->customer?$data->customer->getLink():null',
+        'type' => 'raw',
+        'filter' => false,
+    );
+}
+if (!$user->role_id) {
+    $columns[] = array(
+        'name' => 'role_id',
+        'value' => 'implode(", ",CHtml::listData($data->role,"id","name"))',
+        'filter' => CHtml::listData(Role::model()->findAll(), 'id', 'name'),
+        'type' => 'raw',
+    );
+}
+
+
+// multi actions
+$multiActions = array();
+$multiActions[] = array(
+    'name' => t('Delete'),
+    'url' => url('/user/delete'),
+);
 
 // grid
 $this->widget('GridView', array(
@@ -65,6 +66,6 @@ $this->widget('GridView', array(
     'dataProvider' => $user->search(),
     'filter' => $user,
     'columns' => $columns,
+    'multiActions' => $multiActions,
 ));
 
-?>
