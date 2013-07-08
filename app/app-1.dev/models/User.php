@@ -1,12 +1,66 @@
 <?php
 
+/**
+ * This is the model class for table 'user'
+ *
+ *
+ * @method User with() with()
+ * @method User find() find($condition, array $params = array())
+ * @method User[] findAll() findAll($condition = '', array $params = array())
+ * @method User findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method User[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method User findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method User[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method User findBySql() findBySql(string $sql, array $params = array())
+ * @method User[] findAllBySql() findAllBySql(string $sql, array $params = array())
+ *
+ *
+ *
+ * Methods from behavior SoftDeleteBehavior
+ * @method undelete() undelete()
+ * @method deleteds() deleteds()
+ * @method notdeleteds() notdeleteds()
+ *
+ * Methods from behavior EavBehavior
+ * @method loadEavAttributes() loadEavAttributes($attributes)
+ * @method setModelTableFk() setModelTableFk($modelTableFk)
+ * @method setSafeAttributes() setSafeAttributes($safeAttributes)
+ * @method saveEavAttributes() saveEavAttributes($attributes)
+ * @method deleteEavAttributes() deleteEavAttributes($attributes = array(), $save = false)
+ * @method setEavAttributes() setEavAttributes($attributes, $save = false)
+ * @method setEavAttribute() setEavAttribute($attribute, $value, $save = false)
+ * @method getEavAttributes() getEavAttributes($attributes = array())
+ * @method getEavAttribute() getEavAttribute($attribute)
+ * @method withEavAttributes() withEavAttributes($attributes = array())
+ *
+ *
+ * Properties from relation
+ * @property Role[] $role
+ * @property UserToRole[] $userToRole
+ * @property User $locksmith
+ * @property User $customer
+ *
+ *
+ * Properties from table fields
+ * @property string $id
+ * @property string $reseller_id
+ * @property string $locksmith_id
+ * @property string $customer_id
+ * @property string $email
+ * @property string $username
+ * @property string $password
+ * @property string $name
+ * @property string $phone
+ * @property string $fax
+ * @property integer $web_status
+ * @property integer $api_status
+ * @property string $api_key
+ * @property datetime $created
+ * @property datetime $deleted
+ *
+ */
 class User extends ActiveRecord
 {
-
-    /**
-     * @var string used to confirm change of password
-     */
-    public $confirm_password;
 
     /**
      * @var integer search by role_id
@@ -16,7 +70,7 @@ class User extends ActiveRecord
     /**
      * Returns the static model of the specified AR class.
      * @param string $className
-     * @return \CActiveRecord|\User the static model class
+     * @return User the static model class
      */
     public static function model($className = __CLASS__)
     {
@@ -32,13 +86,66 @@ class User extends ActiveRecord
     }
 
     /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        return array(
+            'role' => array(
+                self::MANY_MANY,
+                'Role',
+                'user_to_role(user_id, role_id)',
+            ),
+            'userToRole' => array(
+                self::HAS_MANY,
+                'UserToRole',
+                'user_id',
+            ),
+            'locksmith' => array(
+                self::BELONGS_TO,
+                'Locksmith',
+                'locksmith_id',
+            ),
+            'customer' => array(
+                self::BELONGS_TO,
+                'Customer',
+                'customer_id',
+            ),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => t('ID'),
+            'reseller_id' => t('Reseller'),
+            'locksmith_id' => t('Locksmith'),
+            'customer_id' => t('Customer'),
+            'email' => t('Email'),
+            'username' => t('Username'),
+            'password' => t('Password'),
+            'name' => t('Name'),
+            'role_id' => t('Role'),
+            'web_status' => t('Web Login'),
+        );
+    }
+
+    /**
      * @return array containing model behaviours
      */
     public function behaviors()
     {
         return array(
+            'CTimestampBehavior' => array(
+                'class' => 'zii.behaviors.CTimestampBehavior',
+                'createAttribute' => 'created',
+                'updateAttribute' => null,
+            ),
+            'SoftDeleteBehavior' => 'SoftDeleteBehavior',
             'AuditBehavior' => 'AuditBehavior',
-            'SaveRelationsBehavior' => 'SaveRelationsBehavior',
             'EavBehavior' => array(
                 'class' => 'EavBehavior',
                 'tableName' => 'user_eav',
@@ -51,201 +158,58 @@ class User extends ActiveRecord
      */
     public function rules()
     {
-        $rules = array(
-            // search fields
-            array('id, username, email, deleted, role_id, team_id, company_name, login_enabled', 'safe', 'on' => 'search'),
+        $rules = array();
+
+        // search
+        if ($this->scenario == 'search') {
+            $rules[] = array('id, role_id, locksmith_id, customer_id, username, email, name, web_status, api_status, created, deleted', 'safe', 'on' => 'search');
+        }
+
+        // create/update/account
+        if (in_array($this->scenario, array('create', 'update', 'account'))) {
+
+            // locksmith_id
+            if (user()->checkAccess('admin')) {
+                $rules[] = array('locksmith_id', 'required');
+                $rules[] = array('locksmith_id', 'type', 'type' => 'string');
+                $rules[] = array('locksmith_id', 'length', 'max' => 255);
+            }
+
+            // customer_id
+            if (user()->checkAccess('locksmith')) {
+                $rules[] = array('customer_id', 'required');
+                $rules[] = array('customer_id', 'type', 'type' => 'string');
+                $rules[] = array('customer_id', 'length', 'max' => 255);
+            }
 
             // email
-            array('email', 'required', 'on' => 'create, update, account'),
-            array('email', 'length', 'max' => 255),
-            array('email', 'email'),
-            array('email', 'unique', 'criteria' => array('condition' => 't.deleted IS NULL')),
+            $rules[] = array('email', 'length', 'max' => 255);
+            $rules[] = array('email', 'email');
+            $rules[] = array('email', 'unique', 'criteria' => array('condition' => 't.deleted IS NULL'));
+            $rules[] = array('email', 'validateEmail');
 
             // username
-            array('username', 'length', 'max' => 255),
-            array('username', 'unique', 'criteria' => array('condition' => 'deleted IS NULL')),
+            $rules[] = array('username', 'length', 'max' => 255);
+            $rules[] = array('username', 'unique', 'criteria' => array('condition' => 'deleted IS NULL'));
 
-            // status
-            array('status', 'numerical', 'integerOnly' => true, 'on' => 'create, update'),
-
-            // api_status
-            array('api_status', 'numerical', 'integerOnly' => true, 'on' => 'create, update'),
-
-            // first_name
-            array('first_name', 'required', 'on' => 'create, update, account'),
-            array('first_name', 'length', 'max' => 255),
-
-            // last_name
-            array('last_name', 'required', 'on' => 'create, update, account'),
-            array('last_name', 'length', 'max' => 255),
+            // name
+            $rules[] = array('name', 'required');
+            $rules[] = array('name', 'length', 'max' => 255);
 
             // phone
-            array('phone', 'length', 'max' => 255),
+            $rules[] = array('phone', 'length', 'max' => 255);
+        }
 
-            // fax
-            array('fax', 'length', 'max' => 255),
-        );
+        // create/update
+        if (in_array($this->scenario, array('create', 'update'))) {
+            // web_status
+            $rules[] = array('web_status', 'numerical', 'integerOnly' => true, 'on' => 'create, update');
 
-        if (user()->checkAccess('admin')) {
-            // password
-            $rules[] = array('password', 'length', 'max' => 64, 'min' => 5);
-
-            // confirm_password
-            $rules[] = array('confirm_password', 'length', 'max' => 64, 'min' => 5);
-            $rules[] = array('confirm_password', 'compare', 'compareAttribute' => 'password');
+            // api_status
+            $rules[] = array('api_status', 'numerical', 'integerOnly' => true, 'on' => 'create, update');
         }
 
         return $rules;
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        return array(
-            'role' => array(
-                self::MANY_MANY,
-                'Role',
-                'user_to_role(user_id, role_id)',
-            ),
-        );
-    }
-
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
-    public function attributeLabels()
-    {
-        return array(
-            'id' => t('ID'),
-            'email' => t('Email'),
-            'password' => t('Password'),
-            'confirm_password' => t('Confirm Password'),
-            'first_name' => t('First Name'),
-            'last_name' => t('Last Name'),
-            'role_id' => t('Role'),
-        );
-    }
-
-    /**
-     * @param $plain
-     * @param null $encrypted
-     * @return boolean validates a password
-     */
-    public function validatePassword($plain, $encrypted = null)
-    {
-        $encrypted = $encrypted ? $encrypted : $this->password;
-        if ($plain && $encrypted) {
-            $stack = explode(':', $encrypted);
-            if (sizeof($stack) != 2) {
-                return false;
-            }
-            if (sha1($stack[1] . $plain) == $stack[0]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param $plain
-     * @return string creates a password hash
-     */
-    public function hashPassword($plain)
-    {
-        $password = '';
-        for ($i = 0; $i < 10; $i++) {
-            $password .= mt_rand();
-        }
-        $salt = substr(sha1($password), 0, 2);
-        $password = sha1($salt . $plain) . ':' . $salt;
-        return $password;
-    }
-
-    /**
-     * Actions to be performed before the model is saved
-     * @return bool
-     */
-    public function beforeSave()
-    {
-        if (!parent::beforeSave()) {
-            return false;
-        }
-
-        // hash the password if it is being changed
-        if ($this->password && $this->confirm_password) {
-            $this->password = $this->hashPassword($this->password);
-        }
-
-        // generate an api key
-        if ($this->api_enabled && (!isset($this->dbAttributes['api_enabled']) || !$this->dbAttributes['api_enabled'])) {
-            $plainApiKey = $this->getApiKey();
-            if ($plainApiKey) {
-                $this->api_key = $this->hashPassword($plainApiKey);
-            }
-        }
-        if (!$this->api_enabled) {
-            $this->api_key = null;
-        }
-
-        // if they have no password
-        if (!$this->password) {
-            // new user - assign password so that forgot password links work
-            if ($this->isNewRecord) {
-                $this->password = $this->hashPassword(md5(uniqid('', true)));
-            }
-            // admin updating user - get existing password
-            else {
-                $this->password = $this->dbAttributes['password'];
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiKey()
-    {
-        if (!$this->api_enabled) {
-            return '';
-        }
-        $password = $this->password;
-        if (!$password && isset($this->dbAttributes['password'])) {
-            $password = $this->dbAttributes['password'];
-        }
-        if (!$password) {
-            return '';
-        }
-        return md5($password . Setting::item('app', 'hashKey'));
-    }
-
-    /**
-     * @return array url to view the model
-     */
-    public function getUrl()
-    {
-        return url('/user/view', array(
-            'id' => $this->id,
-        ));
-    }
-
-    /**
-     * @return string full name of the user
-     */
-    public function getName()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLoginName()
-    {
-        return $this->username ? $this->username : $this->email;
     }
 
     /**
@@ -256,19 +220,26 @@ class User extends ActiveRecord
     public function search($options = array())
     {
         $criteria = new CDbCriteria;
-        $criteria->compare('t.id', $this->getSearchField('id', 'id'));
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.locksmith_id', $this->locksmith_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
         $criteria->compare('t.email', $this->email, true);
         $criteria->compare('t.username', $this->username, true);
-        $criteria->compare('t.first_name', $this->first_name, true);
-        $criteria->compare('t.last_name', $this->last_name, true);
-        $criteria->compare('t.phone', $this->phone, true);
-        if ($this->status === 0 || $this->status === '0') {
-            $criteria->addCondition('t.status=0');
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.created', $this->created);
+
+        if ($this->web_status === 0 || $this->web_status === '0') {
+            $criteria->addCondition('t.web_status=0');
         }
         else {
-            $criteria->compare('t.status', $this->status);
+            $criteria->compare('t.web_status', $this->web_status);
         }
-        $criteria->compare('t.created', $this->created);
+        if ($this->api_status === 0 || $this->api_status === '0') {
+            $criteria->addCondition('t.api_status=0');
+        }
+        else {
+            $criteria->compare('t.api_status', $this->api_status);
+        }
 
         if ($this->role_id) {
             $criteria->compare('u2r.role_id', $this->role_id, true);
@@ -289,76 +260,172 @@ class User extends ActiveRecord
     }
 
     /**
-     * Gets a link to the user
-     * @param string $format
+     * @param $plain
+     * @param null $encrypted
+     * @return boolean validates a password
+     */
+    public function validatePassword($plain, $encrypted = null)
+    {
+        $encrypted = $encrypted ? $encrypted : $this->password;
+        if (!$plain || !$encrypted) {
+            return false;
+        }
+        $ph = new PasswordHash(8, false);
+        return $ph->CheckPassword($plain, $encrypted);
+    }
+
+    /**
+     * @param $plain
+     * @return string creates a password hash
+     */
+    public function hashPassword($plain)
+    {
+        $ph = new PasswordHash(8, false);
+        return $ph->HashPassword($plain);
+    }
+
+    /**
+     *
+     */
+    public function beforeSave()
+    {
+        if (!parent::beforeSave()) {
+            return false;
+        }
+
+        // generate an api key
+        if ($this->api_status && empty($this->dbAttributes['api_status'])) {
+            $plainApiKey = $this->getApiKey();
+            if ($plainApiKey) {
+                $this->api_key = $this->hashPassword($plainApiKey);
+            }
+        }
+        if (!$this->api_status) {
+            $this->api_key = null;
+        }
+
+        // if they have no password - assign password so that forgot password links work
+        if ($this->isNewRecord && !$this->password) {
+            $this->password = $this->hashPassword(md5(uniqid('', true)));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param null $options
      * @return string
      */
-    public function getLink($format = 'default')
+    public function getUrl($options = null)
     {
-        if (!is_array($format)) $format = array($format);
-        $update = '';
-        if (in_array('update', $format)) {
-            $update = l(i(au() . '/icons/update.png'), array('/user/update', 'id' => $this->id, 'returnUrl' => ReturnUrl::getLinkValue(true)));
+        $params = !empty($options['params']) ? $options['params'] : array();
+        return CMap::mergeArray($params, array(
+            '/user/view',
+            'id' => $this->id,
+        ));
+    }
+
+    /**
+     * @param array $parts
+     * @param array $urlOptions
+     * @return string
+     */
+    public function getLink($parts = array(), $urlOptions = array())
+    {
+        $link = l($this->name, $this->getUrl($urlOptions));
+        if (in_array('update', $parts)) {
+            $link .= ' ' . l('', array('/user/update', 'id' => $this->id, 'returnUrl' => ReturnUrl::getLinkValue(true)), array('class' => 'icon-pencil icon-grey', 'data-toggle' => 'modal-remote'));
         }
-        if (in_array('inline', $format)) {
-            return l('user-' . $this->id . ' ' . h($this->getName()), $this->getUrl()) . ' ' . $update;
+        if (in_array('delete', $parts)) {
+            $link .= ' ' . l('', array('/user/update', 'id' => $this->id, 'returnUrl' => ReturnUrl::getLinkValue(true)), array('class' => 'icon-remove icon-grey', 'data-toggle' => 'modal-remote'));
         }
-        return l('user-' . $this->id, $this->getUrl()) . ' ' . $update;
+        return $link;
     }
 
     /**
      * @return string
      */
-    public function getStatusString()
+    public function getApiKey()
     {
-        if ($this->status) {
-            return t('enabled');
+        if (!$this->api_status) {
+            return '';
         }
-        return t('disabled');
+        $password = $this->password;
+        if (!$password && isset($this->dbAttributes['password'])) {
+            $password = $this->dbAttributes['password'];
+        }
+        if (!$password) {
+            return '';
+        }
+        return md5($password . Setting::item('app', 'hashKey'));
     }
 
     /**
-     * @return string
-     */
-    public function getApiStatusString()
-    {
-        if ($this->api_status) {
-            return t('enabled');
-        }
-        return t('disabled');
-    }
-
-    /**
-     * @param $viewParams array
      * @return array
      */
-    public function getTemplateHash($viewParams)
+    public function getEmailTemplateParams()
     {
-        $viewParams['user_id'] = $this->id;
-        $viewParams['user_first_name'] = $this->first_name;
-        $viewParams['user_last_name'] = $this->last_name;
-        $viewParams['user_name'] = $this->getName();
-        $viewParams['user_ip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'No IP';
-        $viewParams['user_recovery_url'] = $this->getRecoveryUrl();
-        $viewParams['user_app_name'] = Yii::app()->name;
-        $viewParams['user_welcome_url'] = 'http://' . param('host');
-        $viewParams['user_login_user_name'] = $this->username ? $this->username : $this->email;
-
-        return $viewParams;
+        $params = array();
+        $params['User__id'] = $this->id;
+        $params['User__name'] = $this->name;
+        $params['User__email'] = $this->email;
+        return $params;
     }
 
     /**
-     * @return string
+     * @param $attribute
+     * @param $params
      */
-    public function getRecoveryUrl()
+    public function validateEmail($attribute, $params)
     {
-        // get recovery temp login link
-        $ttl = time() + (24 * 60 * 60);
-        $url = SecureLink::getUrl('/user/recover', array(
-            'email' => $this->email,
-            'hash' => $this->password,
-        ), $ttl);
-        return $url;
+        if (!$this->web_status) {
+            return;
+        }
+        if (!$this->$attribute) {
+            $this->addError($attribute, t('You must enter an email when Web Login is enabled'));
+        }
+    }
+
+    /**
+     * @param int $user_id
+     * @param null $type
+     * @return bool
+     */
+    public function checkUserAccess($user_id, $type = null)
+    {
+        $user = User::model()->findByPk($user_id);
+        if (!$user) {
+            return false;
+        }
+        if ($user->checkAccess('admin')) {
+            return true;
+        }
+        if ($user->checkAccess('locksmith')) {
+            if ($this->locksmith_id == $user->id)
+                return true;
+        }
+        if ($user->checkAccess('customer')) {
+            if ($this->customer_id == $user->id)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Performs access check for this user.
+     * @param string $roles comma separated list of roles, any role allows access
+     * @return boolean whether the operations can be performed by this user.
+     */
+    public function checkAccess($roles)
+    {
+        $needRoles = explode(',', $roles);
+        $hasRoles = CHtml::listData($this->role, 'id', 'name');
+        foreach ($needRoles as $needRole) {
+            if (in_array(trim($needRole), $hasRoles)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

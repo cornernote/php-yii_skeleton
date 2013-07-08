@@ -13,7 +13,7 @@ class UserLogin extends FormModel
     /**
      * @var
      */
-    public $username;
+    public $email;
 
     /**
      * @var
@@ -44,8 +44,8 @@ class UserLogin extends FormModel
     public function rules()
     {
         $rules = array(
-            // username
-            array('username', 'required'),
+            // email
+            array('email', 'required'),
 
             // password
             array('password', 'required'),
@@ -68,7 +68,7 @@ class UserLogin extends FormModel
     public function attributeLabels()
     {
         return array(
-            'username' => t('Username'),
+            'email' => t('Email'),
             'password' => t('Password'),
             'remember_me' => t('Remember me next time'),
             'recaptcha' => t('Enter both words separated by a space'),
@@ -83,20 +83,20 @@ class UserLogin extends FormModel
      */
     public function authenticate($attribute, $params)
     {
-        $this->_identity = new UserIdentity($this->username, $this->password);
+        $this->_identity = new UserIdentity($this->email, $this->password);
         if (!$this->_identity->authenticate()) {
-            $this->addError('password', 'Incorrect username or password.');
+            $this->addError('password', 'Incorrect email or password.');
         }
     }
 
     /**
-     * Logs in the user using the given username and password in the model.
+     * Logs in the user using the given email and password in the model.
      * @return boolean whether login is successful
      */
     public function login()
     {
         if ($this->_identity === null) {
-            $this->_identity = new UserIdentity($this->username, $this->password);
+            $this->_identity = new UserIdentity($this->email, $this->password);
         }
         if ($this->_identity->authenticate()) {
             $duration = $this->remember_me ? 3600 * 24 * 30 : 0; // 30 days

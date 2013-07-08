@@ -1,12 +1,44 @@
 <?php
 
+/**
+ * This is the model class for table 'log'
+ *
+ *
+ * @method Log with() with()
+ * @method Log find() find($condition, array $params = array())
+ * @method Log[] findAll() findAll($condition = '', array $params = array())
+ * @method Log findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method Log[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method Log findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Log[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Log findBySql() findBySql(string $sql, array $params = array())
+ * @method Log[] findAllBySql() findAllBySql(string $sql, array $params = array())
+ *
+ *
+ *
+ *
+ * Properties from relation
+ * @property User $user
+ *
+ *
+ * Properties from table fields
+ * @property integer $id
+ * @property string $ip
+ * @property integer $user_id
+ * @property string $model
+ * @property integer $model_id
+ * @property string $message
+ * @property string $details
+ * @property datetime $created
+ *
+ */
 class Log extends ActiveRecord
 {
 
     /**
      * Returns the static model of the specified AR class.
      * @param string $className
-     * @return \CActiveRecord|\Log the static model class
+     * @return Log the static model class
      */
     public static function model($className = __CLASS__)
     {
@@ -24,32 +56,26 @@ class Log extends ActiveRecord
     /**
      * Add a row to the log table
      * @param $message
-     * @param array $options
-     * @return bool|\Log
+     * @param array $fields
+     * @return bool|Log
      */
-    public function add($message, $options = array())
+    public function add($message, $fields = array())
     {
         $log = new Log;
         $log->ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
         $log->message = $message;
         $log->user_id = user()->id;
         $log->created = date('Y-m-d H:i:s');
-        if (isset($options['details'])) {
-            $log->details = serialize($options['details']);
+        if (isset($fields['model'])) {
+            $log->model = $fields['model'];
         }
-        if (isset($options['model'])) {
-            $log->model = $options['model'];
-            if (isset($options['model_id'])) {
-                $log->model_id = $options['model_id'];
-            }
+        if (isset($fields['model_id'])) {
+            $log->model_id = $fields['model_id'];
         }
-        if ($log->save()) {
-            return $log;
+        if (isset($fields['details'])) {
+            $log->details = serialize($fields['details']);
         }
-        else {
-            return false;
-        }
-
+        return $log->save();
     }
 
     /**
@@ -107,12 +133,6 @@ class Log extends ActiveRecord
         $criteria->compare('t.ip', $this->ip, true);
         $criteria->compare('t.created', $this->created);
         $criteria->compare('t.details', $this->details);
-        if ($this->messageSearch == 'start') {
-            $criteria->addSearchCondition('t.message', $this->message . '%', $escape = false);
-        }
-        elseif ($this->messageSearch == 'exact') {
-            $criteria->compare('t.message', $this->message);
-        }
 
         return new ActiveDataProvider(get_class($this), CMap::mergeArray(array(
             'criteria' => $criteria,

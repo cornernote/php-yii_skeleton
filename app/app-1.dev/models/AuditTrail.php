@@ -1,11 +1,45 @@
 <?php
 
+/**
+ * This is the model class for table 'audit_trail'
+ *
+ *
+ * @method AuditTrail with() with()
+ * @method AuditTrail find() find($condition, array $params = array())
+ * @method AuditTrail[] findAll() findAll($condition = '', array $params = array())
+ * @method AuditTrail findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method AuditTrail[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method AuditTrail findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method AuditTrail[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method AuditTrail findBySql() findBySql(string $sql, array $params = array())
+ * @method AuditTrail[] findAllBySql() findAllBySql(string $sql, array $params = array())
+ *
+ *
+ *
+ *
+ * Properties from relation
+ * @property User $user
+ * @property PageTrail $pageTrail
+ *
+ *
+ * Properties from table fields
+ * @property string $id
+ * @property string $old_value
+ * @property string $new_value
+ * @property string $action
+ * @property string $model
+ * @property string $field
+ * @property datetime $created
+ * @property integer $user_id
+ * @property string $model_id
+ * @property integer $page_trail_id
+ */
 class AuditTrail extends CActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
      * @param string $className
-     * @return \AuditTrail|\CActiveRecord the static model class
+     * @return AuditTrail the static model class
      */
     public static function model($className = __CLASS__)
     {

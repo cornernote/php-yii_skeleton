@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * UserRecover class.
  * UserRecover is the data structure for keeping user recover form data.
  * It is used by the 'recover' action of 'UserController'.
