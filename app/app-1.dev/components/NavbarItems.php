@@ -24,7 +24,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function user()
+    static function userMenu()
     {
         $items = array();
         if (!user()->isGuest) {
@@ -58,7 +58,7 @@ class NavbarItems
             );
         }
         ob_start();
-        Yii::app()->controller->widget('bootstrap.widgets.BootButtonGroup', array(
+        app()->controller->widget('bootstrap.widgets.BootButtonGroup', array(
             'type' => '', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
             'htmlOptions' => array(
                 'id' => 'navmenu-header-account',
@@ -91,76 +91,15 @@ class NavbarItems
         );
         if (user()->checkAccess('admin')) {
             $menu['items'][] = array(
-                'label' => t('Locksmiths'),
-                'url' => array('/locksmith/index'),
-                'active' => $controller == 'locksmith',
-            );
-            $menu['items'][] = array(
-                'label' => t('Customers'),
-                'url' => array('/customer/index'),
-                'active' => $controller == 'customer',
-            );
-            $menu['items'][] = array(
-                'label' => t('Systems'),
-                'url' => array('/system/index'),
-                'active' => $controller == 'system',
-            );
-            $menu['items'][] = array(
-                'label' => t('Orders'),
-                'url' => array('/order/index'),
-                'active' => $controller == 'order',
-            );
-        }
-        elseif (user()->checkAccess('locksmith')) {
-            $menu['items'][] = array(
-                'label' => t('Customers'),
-                'url' => array('/customer/index'),
-                'icon' => 'icon-group',
-                'active' => in_array($controller, array('customer', 'keyHolder', 'system', 'key', 'lock', 'keyIssue')),
-            );
-            $menu['items'][] = array(
-                'label' => t('Orders'),
-                'url' => array('/order/index'),
-                'icon' => 'icon-shopping-cart',
-                'active' => $controller == 'order',
-            );
-        }
-        elseif (user()->checkAccess('customer,key_holder')) {
-            $menu['items'][] = array(
-                'label' => t('Systems'),
-                'url' => array('/system/index'),
-                'icon' => 'icon-briefcase',
-                'active' => in_array($controller, array('system', 'lock', 'key', 'keyIssue')),
-            );
-            $menu['items'][] = array(
-                'label' => t('Key Holders'),
-                'url' => array('/keyHolder/index'),
-                'icon' => 'icon-user',
-                'active' => $controller == 'keyHolder',
-            );
-            $menu['items'][] = array(
-                'label' => t('Orders'),
-                'url' => array('/order/index'),
-                'icon' => 'icon-shopping-cart',
-                'active' => in_array($controller, array('order', 'orderKey')),
+                'label' => t('Users'),
+                'url' => array('/user/index'),
+                'active' => $controller == 'user',
             );
         }
         elseif (user()->isGuest) {
             $menu['items'][] = array(
-                'label' => t('Features'),
-                'url' => array('/site/page', 'view' => 'features'),
-            );
-            $menu['items'][] = array(
-                'label' => t('Screencasts'),
-                'url' => array('/site/page', 'view' => 'screencasts'),
-            );
-            $menu['items'][] = array(
-                'label' => t('Pricing'),
-                'url' => array('/site/page', 'view' => 'pricing'),
-            );
-            $menu['items'][] = array(
-                'label' => t('About'),
-                'url' => array('/site/page', 'view' => 'about'),
+                'label' => t('Example'),
+                'url' => array('/site/page', 'view' => 'example'),
             );
         }
         return $menu;
@@ -208,18 +147,14 @@ class NavbarItems
                         ),
                         '---',
                         array(
-                            'label' => t('Core Settings'),
-                            'url' => array('/setting/updateCore'),
+                            'label' => t('Settings'),
+                            'url' => array('/setting/index'),
                         ),
-                        array(
-                            'label' => t('App Settings'),
-                            'url' => array('/setting/updateApp'),
-                        ),
-                        '---',
                         array(
                             'label' => t('Email Templates'),
                             'url' => array('/emailTemplate/index'),
                         ),
+                        '---',
                         array(
                             'label' => t('Page Trails'),
                             'url' => array('/pageTrail/index'),

@@ -7,7 +7,7 @@
 if (!isset($this->showNavBar) || !$this->showNavBar) {
     cs()->registerCSS('reset', 'body{padding-top:20px;}', '', array('order' => -6));
 }
-//cs()->registerCSSFile(au() . '/css/style.css', '', array('order' => -6));
+cs()->registerCSSFile(au() . '/css/style.css', '', array('order' => -6));
 
 // load here so modals don't have to load it
 cs()->registerCoreScript('yiiactiveform');

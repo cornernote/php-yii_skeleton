@@ -9,6 +9,6 @@ $this->widget('Navbar', array(
     'collapse' => true,
     'items' => NavbarItems::mainMenu(),
     'constantItems' => array(
-        NavbarItems::user(),
+        NavbarItems::userMenu(),
     ),
 ));
