@@ -14,24 +14,24 @@ $web['preload'][] = 'bootstrap';
 // CProfileLogRoute: displays profiling messages at the end of the current Web page.
 
 $web['components']['log']['routes'] = array();
-if ($GLOBALS['settings']['core']['debug']) {
+if ($_ENV['_settings']['core']['debug']) {
 
     // enable the debug toolbar
-    if ($GLOBALS['settings']['core']['debug_toolbar']) {
+    if ($_ENV['_settings']['core']['debug_toolbar']) {
         $web['components']['log']['routes'][] = array(
             'class' => 'XWebDebugRouter',
             'config' => 'alignLeft, opaque, runInDebug, fixedPos, collapsed, yamlStyle',
-            'levels' => $GLOBALS['settings']['core']['debug_levels'] ? $GLOBALS['settings']['core']['debug_levels'] : 'none',
+            'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
             'allowedIPs' => array('.*'),
         );
     } // web log route
     else {
         $web['components']['log']['routes'][] = array(
             'class' => 'CWebLogRoute',
-            'levels' => $GLOBALS['settings']['core']['debug_levels'] ? $GLOBALS['settings']['core']['debug_levels'] : 'none',
+            'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
             //'levels' => 'trace, info, error, warning, profile',
         );
-        if ($GLOBALS['settings']['core']['debug_db']) {
+        if ($_ENV['_settings']['core']['debug_db']) {
             $web['components']['log']['routes'][] = array(
                 'class' => 'ProfileLogRoute',
                 'levels' => 'profile',
@@ -39,12 +39,13 @@ if ($GLOBALS['settings']['core']['debug']) {
         }
     }
 
-} else {
+}
+else {
 
     // no debug, file log route
     $web['components']['log']['routes'][] = array(
         'class' => 'CFileLogRoute',
-        'levels' => $GLOBALS['settings']['core']['debug_levels'] ? $GLOBALS['settings']['core']['debug_levels'] : 'none',
+        'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
     );
 
 }
@@ -61,10 +62,11 @@ $web['components']['assetManager'] = array(
 );
 
 // default theme
-$web['theme'] = $GLOBALS['settings']['app']['theme'];
+$web['theme'] = $_ENV['_settings']['app']['theme'];
 $web['params']['themes'] = array(
     '' => 'Default',
     'admingrey' => 'Admin Grey',
+    //'bounce' => 'Bounce',
 );
 
 // local web config overrides

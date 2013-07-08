@@ -7,7 +7,7 @@ defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 /**
  * This is the shortcut to Yii::app()
- * @return \CWebApplication
+ * @return WebApplication
  */
 function app()
 {
@@ -30,8 +30,10 @@ function cs()
  */
 function user()
 {
+    if (!isset(app()->user)) {
+        return false;
+    }
     return app()->user;
-
 }
 
 /**
@@ -42,6 +44,11 @@ url('package/view', array(
  */
 function url($route, $params = array(), $ampersand = '&')
 {
+    if (is_array($route)) {
+        $params = CMap::mergeArray($route, $params);
+        $route = $params[0];
+        unset($params[0]);
+    }
     return Yii::app()->createUrl($route, $params, $ampersand);
 }
 

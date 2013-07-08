@@ -2,9 +2,9 @@
 $config = array(
 
     // yii settings
-    'id' => $GLOBALS['settings']['core']['id'],
-    'name' => $GLOBALS['settings']['app']['name'],
-    'language' => $GLOBALS['settings']['app']['language'],
+    'id' => $_ENV['_settings']['core']['id'],
+    'name' => $_ENV['_settings']['app']['name'],
+    'language' => $_ENV['_settings']['app']['language'],
 
     // paths
     'basePath' => dirname(dirname(__FILE__)),
@@ -21,15 +21,14 @@ $config = array(
     ),
 
     // modules
-    'modules' => array(
-    ),
+    'modules' => array(),
 
     // components
     'components' => array(
         'user' => array(
             'class' => 'application.components.WebUser',
             'allowAutoLogin' => true,
-            'loginUrl' => array('/user/login'),
+            'loginUrl' => array('/account/login'),
         ),
         'urlManager' => array(
             'urlFormat' => isset($_GET['r']) ? 'get' : 'path', // allow filters in pageTrail/index work
@@ -39,17 +38,17 @@ $config = array(
             'basePath' => dirname(dirname(__FILE__)) . '/themes',
         ),
         'db' => array(
-            'connectionString' => "mysql:host={$GLOBALS['settings']['db']['host']};dbname={$GLOBALS['settings']['db']['name']}",
+            'connectionString' => "mysql:host={$_ENV['_settings']['db']['host']};dbname={$_ENV['_settings']['db']['name']}",
             'emulatePrepare' => true,
-            'username' => $GLOBALS['settings']['db']['user'],
-            'password' => $GLOBALS['settings']['db']['pass'],
+            'username' => $_ENV['_settings']['db']['user'],
+            'password' => $_ENV['_settings']['db']['pass'],
             'charset' => 'utf8',
             'schemaCachingDuration' => 3600,
-            'enableProfiling' => $GLOBALS['settings']['core']['debug_db'],
-            'enableParamLogging' => $GLOBALS['settings']['core']['debug_db'],
+            'enableProfiling' => $_ENV['_settings']['core']['debug_db'],
+            'enableParamLogging' => $_ENV['_settings']['core']['debug_db'],
         ),
         'errorHandler' => array(
-            // use 'site/error' action to display errors
+            'class' => 'ErrorHandler',
             'errorAction' => 'site/error',
         ),
         'cacheFile' => array(
@@ -57,7 +56,7 @@ $config = array(
         ),
         'cache' => array(
             'class' => 'CMemCache',
-            'keyPrefix' => 'kv.',
+            'keyPrefix' => 'keyvault.',
             'servers' => array(
                 array(
                     'host' => '127.0.0.1',

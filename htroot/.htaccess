@@ -11,6 +11,11 @@ Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
     RewriteEngine on
+    # force domain to be https://www.keyterminal.com
+    RewriteCond %{HTTP_HOST} !\.local$
+    RewriteCond %{SERVER_PORT} !443 [OR]
+    RewriteCond %{HTTP_HOST} !www\.keyterminal\.com$ [NC]
+    RewriteRule ^(.*)$ https://www.keyterminal.com/$1 [L,R=301]
     # if a directory or a file exists, use it directly
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -35,7 +40,7 @@ Options +FollowSymLinks
 	ExpiresByType text/javascript "access plus 1 day"
 	ExpiresByType application/javascript "access plus 1 day"
 	ExpiresByType application/x-javascript "access plus 1 day"
-    <FilesMatch "\.(jpe?g|png|gif|js|css)$">
+    <FilesMatch "\.(jpe?g|png|gif|js|css|woff)$">
         ExpiresDefault "access plus 1 day"
     </FilesMatch>
 </IfModule>
