@@ -97,6 +97,8 @@ class ReturnUrl
             // load from current page
             $url = Yii::app()->request->getUrl();
         }
+        // unset the session
+        user()->setReturnUrl(null);
         return $url;
     }
 

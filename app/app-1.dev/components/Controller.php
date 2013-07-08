@@ -6,9 +6,9 @@
 class Controller extends CController
 {
     /**
-     * @var PageTrail
+     * @var
      */
-    protected $pageTrail;
+    protected $loadModel;
 
     /**
      * @return array action filters
@@ -27,24 +27,8 @@ class Controller extends CController
      */
     protected function beforeAction($action)
     {
-        // log the page request
-        $this->pageTrail = new PageTrail();
-        $this->pageTrail->recordPageTrail();
-
-        // handle errors
-        app()->onEndRequest = array($this->pageTrail, 'updatePageTrail');
-        app()->onError = array($this, 'logError');
-
+        PageTrail::model()->findCurrent();
         return parent::beforeAction($action);
-    }
-
-    /**
-     * @param $event CErrorEvent
-     */
-    public function logError($event)
-    {
-        $errorHandler = new ErrorHandler();
-        $errorHandler->LogError($event);
     }
 
     /**

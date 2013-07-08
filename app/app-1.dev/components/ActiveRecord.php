@@ -15,7 +15,6 @@
  * @method ActiveRecord[] findAllBySql() findAllBySql(string $sql, array $params = array())
  *
  *
- * @property ActiveRecord $auditModel
  * @property string $errorString
  * @property boolean isNewRecord
  * @property string $scenario
@@ -27,11 +26,6 @@ class ActiveRecord extends CActiveRecord
      * @var array
      */
     public $dbAttributes = array();
-
-    /**
-     * @var array
-     */
-    public $savedAttributes = array();
 
     /**
      * @var bool
@@ -134,17 +128,20 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * @param array $parts
+     * @param array $urlOptions
      * @return string
      */
-    public function getLink()
+    public function getLink($parts = array(), $urlOptions = array())
     {
         return '';
     }
 
     /**
+     * @param $options mixed
      * @return string
      */
-    public function getUrl()
+    public function getUrl($options = null)
     {
         return '';
     }
@@ -246,8 +243,9 @@ class ActiveRecord extends CActiveRecord
     protected function afterSave()
     {
         parent::afterSave();
-        $this->savedAttributes = $this->attributes;
         $this->clearCache();
+        $this->isNewRecord = false;
+        $this->dbAttributes = $this->attributes;
     }
 
     /**
@@ -282,7 +280,6 @@ class ActiveRecord extends CActiveRecord
         parent::afterFind();
         // preserve an array containing the current database values
         $this->dbAttributes = $this->attributes;
-        $this->savedAttributes = $this->attributes;
     }
 
     /**
@@ -325,35 +322,30 @@ class ActiveRecord extends CActiveRecord
      *
      * @param string $field
      * @param bool $details return the field name that was changed
-     * @param bool $useSavedAttributes
      * @return bool|string|array
      */
-    public function changed($field = '*', $details = false, $useSavedAttributes = false)
+    public function changed($field = '*', $details = false)
     {
-        $previousAttributes = $this->dbAttributes;
-        if ($useSavedAttributes) {
-            $previousAttributes = $this->savedAttributes;
-        }
         if ($this->isNewRecord)
             return false;
         $changed = array();
         if ($field != '*') {
             if ($details) {
-                if ($previousAttributes[$field] == $this->{$field}) {
-                    $changed[$field] = array($previousAttributes[$field], $this->{$field});
+                if ($this->dbAttributes[$field] == $this->{$field}) {
+                    $changed[$field] = array($this->dbAttributes[$field], $this->{$field});
                 }
                 return !empty($changed) ? $changed : false;
             }
-            return $previousAttributes[$field] != $this->{$field};
+            return $this->dbAttributes[$field] != $this->{$field};
         }
         $changed = array();
         foreach ($this->attributes as $k => $v) {
-            $dbAttribute = isset($previousAttributes[$k]) ? $previousAttributes[$k] : null;
+            $dbAttribute = isset($this->dbAttributes[$k]) ? $this->dbAttributes[$k] : null;
             if ($dbAttribute != $v) {
                 if (!$details)
                     return true;
                 else {
-                    $changed[$k] = array($previousAttributes[$k], $v);
+                    $changed[$k] = array('old' => $this->dbAttributes[$k], 'new' => $v);
                 }
             }
         }
@@ -537,14 +529,6 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     * @return ActiveRecord
-     */
-    public function getAuditModel()
-    {
-        return $this;
-    }
-
-    /**
      * @param $attribute
      * @return null
      */
@@ -557,4 +541,5 @@ class ActiveRecord extends CActiveRecord
             return null;
         }
     }
+
 }

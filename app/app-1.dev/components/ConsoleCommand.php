@@ -8,20 +8,28 @@ class ConsoleCommand extends CConsoleCommand
     /**
      * @var array
      */
-    private static $_models = array();
+    private static $_instances = array();
 
     /**
      * @static
-     * @param string $className
+     * @param string $class
      * @return ConsoleCommand
      */
-    public static function model($className = __CLASS__)
+    public static function instance($class = __CLASS__)
     {
-        if (isset(self::$_models[$className]))
-            return self::$_models[$className];
+        if (isset(self::$_instances[$class]))
+            return self::$_instances[$class];
         else
-            return self::$_models[$className] = new $className(null, null);
+            return self::$_instances[$class] = new $class(null, null);
     }
 
+    /**
+     *
+     */
+    public function init()
+    {
+        PageTrail::model()->findCurrent();
+        parent::init();
+    }
 
 }

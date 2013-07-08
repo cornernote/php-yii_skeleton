@@ -10,7 +10,7 @@ class GridView extends BootGridView
     /**
      * @var string
      */
-    public $template = "{summary}{pager}{pageSelect}{items}{multiActions}{submitButton}";
+    public $template = "{summary}{pager}{pageSelect}{items}{multiActions}";
 
     /**
      * @var string
@@ -23,11 +23,6 @@ class GridView extends BootGridView
     public $multiActions = array();
 
     /**
-     * @var string
-     */
-    public $submitButton;
-
-    /**
      * @var int
      */
     public $selectableRows = 1000;
@@ -37,6 +32,21 @@ class GridView extends BootGridView
      */
     public function init()
     {
+        // pager labels
+        if (!isset($this->pager['firstPageLabel']))
+            $this->pager['firstPageLabel'] = '<i class="icon-fast-backward"></i>';
+        if (!isset($this->pager['lastPageLabel']))
+            $this->pager['lastPageLabel'] = '<i class="icon-fast-forward"></i>';
+        if (!isset($this->pager['nextPageLabel']))
+            $this->pager['nextPageLabel'] = '<i class="icon-forward"></i>';
+        if (!isset($this->pager['prevPageLabel']))
+            $this->pager['prevPageLabel'] = '<i class="icon-backward"></i>';
+        if (!isset($this->pager['maxButtonCount']))
+            $this->pager['maxButtonCount'] = 5;
+        if (!isset($this->pager['displayFirstAndLast']))
+            $this->pager['displayFirstAndLast'] = true;
+
+
         // userPageSize drop down changed
         if (isset($_GET['userPageSize'])) {
             foreach ($_GET['userPageSize'] as $type => $size) {
@@ -72,38 +82,50 @@ class GridView extends BootGridView
     {
         parent::registerClientScript();
 
-        if ($this->multiActions || $this->submitButton) {
+        if ($this->multiActions) {
             Yii::app()->clientScript->registerScriptFile(au() . '/js/jquery.form.js');
             // put the url from the button into the form action
-            // capture the response into fancybox
-            Yii::app()->clientScript->registerScript("{$this->id}-multiForm", "
-                $('#{$this->id}-form .multiAction').click(function(){
+            // handle submit form to capture the response into a modal
+            Yii::app()->controller->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+            ?>
+            <script type="text/javascript">
+                var modalRemote = $('#modal-remote');
+                $('#<?php echo $this->id; ?>-form').on('change', '.multi-actions', function () {
                     var checked = false;
-                    $('.select-on-check').each(function(){
-                        if ($(this).attr('checked')) {
-                            checked = true;
-                        }
-                    });
-                    if (checked) {
-                        $('#{$this->id}-form').attr('action',$(this).attr('value'));
-                    }
-                    else {
-                        alert('No rows selected');
-                        return false;
-                    }
-                });
-                $('#{$this->id}-form').ajaxForm({
-                    beforeSubmit: function(response){
-                        $.fancybox.showActivity();
-                    },
-                    success: function(response){
-                        $.fancybox({'content':response});
-                    },
-                    error: function(response){
-                        $.fancybox({'content':'<h1>Error</h1>  The server did not provide a valid response'});
+                    var action = $('#<?php echo $this->id; ?>-form').attr('action');
+                    var url = $(this).val();
+                    $(this).val('');
+                    if (url) {
+                        $('.select-on-check').each(function () {
+                            if ($(this).attr('checked'))
+                                checked = true;
+                        });
+                        if (checked)
+                            $('#<?php echo $this->id; ?>-form').attr('action', url).submit();
+                        else
+                            alert('No rows selected');
                     }
                 });
-            ", CClientScript::POS_READY);
+                $('#<?php echo $this->id; ?>-form').ajaxForm({
+                    beforeSubmit:function (response) {
+                        if (!modalRemote.length) modalRemote = $('<div class="modal hide fade" id="modal-remote"></div>');
+                        modalRemote.modalResponsiveFix();
+                        modalRemote.touchScroll();
+                        modalRemote.html('<div class="modal-header"><h3><?php echo t('Loading...'); ?></h3></div><div class="modal-body"><div class="modal-remote-indicator"></div>').modal();
+                    },
+                    success:function (response) {
+                        modalRemote.html(response);
+                        $(window).resize();
+                        $('#modal-remote input:text:visible:first').focus();
+                    },
+                    error:function (response) {
+                        modalRemote.children('.modal-header').html('<button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button><h3><?php echo t('Error!'); ?></h3>');
+                        modalRemote.children('.modal-body').html(response);
+                    }
+                });
+            </script>
+            <?php
+            Yii::app()->controller->endWidget();
         }
     }
 
@@ -112,7 +134,7 @@ class GridView extends BootGridView
      */
     public function run()
     {
-        if ($this->multiActions || $this->submitButton) {
+        if ($this->multiActions) {
             echo CHtml::openTag('div', array(
                 'id' => $this->id . '-multi-checkbox',
                 'class' => 'multi-checkbox-table',
@@ -125,7 +147,7 @@ class GridView extends BootGridView
 
         parent::run();
 
-        if ($this->multiActions || $this->submitButton) {
+        if ($this->multiActions) {
             echo CHtml::endForm();
             echo CHtml::closeTag('div');
         }
@@ -149,13 +171,8 @@ class GridView extends BootGridView
         $size = user()->getState('userPageSize.' . str_replace('-', '_', $this->id), param('defaultPageSize'));
         $label = t('per page');
         $options = array(
-            5 => '5 ' . $label,
             10 => '10 ' . $label,
-            20 => '20 ' . $label,
-            50 => '50 ' . $label,
             100 => '100 ' . $label,
-            200 => '200 ' . $label,
-            500 => '500 ' . $label,
             1000 => '1000 ' . $label,
         );
         echo CHtml::dropDownList("userPageSize[{$this->id}]", $size, $options, array(
@@ -169,23 +186,15 @@ class GridView extends BootGridView
      */
     public function renderMultiActions()
     {
-        if ($this->multiActions) {
+        if ($this->dataProvider->getItemCount() > 0 && $this->multiActions) {
             echo '<div class="form-multi-actions">';
-            foreach ($this->multiActions as $multiAction) {
-                echo '<button class="btn multiAction" value="' . $multiAction['url'] . '">' . $multiAction['name'] . '</button> ';
-            }
-            echo '</div>';
-        }
-    }
-
-    /**
-     *
-     */
-    public function renderSubmitButton()
-    {
-        if ($this->submitButton) {
-            echo '<div class="form-actions">';
-            echo $this->submitButton;
+//            foreach ($this->multiActions as $multiAction) {
+//                echo '<button class="btn multiAction" value="' . $multiAction['url'] . '">' . $multiAction['name'] . '</button> ';
+//            }
+            echo CHtml::dropDownList("multiAction[{$this->id}]", '', CHtml::listData($this->multiActions, 'url', 'name'), array(
+                'empty' => t('with selected...'),
+                'class' => 'multi-actions',
+            ));
             echo '</div>';
         }
     }

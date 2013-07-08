@@ -31,12 +31,12 @@ class WebController extends Controller
     /**
      * @var
      */
-    public $showNavBar = true;
+    public $pageIcon;
 
     /**
      * @var
      */
-    protected $loadModel;
+    public $showNavBar = true;
 
     /**
      * Initializes the controller.
@@ -122,8 +122,8 @@ class WebController extends Controller
     /**
      * @param $id
      * @param bool|string $model
+     * @return ActiveRecord
      * @throws CHttpException
-     * @return \ActiveRecord|\CActiveRecord|mixed
      */
     public function loadModel($id, $model = false)
     {

@@ -4,57 +4,76 @@
  */
 class ErrorHandler extends CErrorHandler
 {
-
-    var $data = array();
-
     /**
-     * @param $event CErrorEvent
+     * @param CEvent $event
      */
-    public function LogError($event)
+    public function handle($event)
     {
-        ob_start();
-        self::handleError($event);
-        $output = ob_get_clean();
-        $dir = app()->getRuntimePath() . '/ErrorList';
-        if (!file_exists($dir)) mkdir($dir, 0777, true);
-        $path = $dir . '/' . static_id('page_trail_id') . '-error.html';
-        file_put_contents($path, $output);
+        PageTrail::model()->findCurrent();
+        if ($event instanceof CExceptionEvent)
+            $this->logException($event);
+        else
+            $this->logError($event);
+        parent::handle($event);
     }
 
     /**
-     * @param $event CErrorEvent
+     * @param $event CEvent|CErrorEvent
      */
-
-    public function handleError($event)
+    public function logError($event)
     {
-        $trace = debug_backtrace();
-        // skip the first 3 stacks as they do not tell the error position
-        if (count($trace) > 6)
-            $trace = array_slice($trace, 6);
-        $traceString = '';
-        foreach ($trace as $i => $t)
-        {
-            if (!isset($t['file']))
-                $trace[$i]['file'] = 'unknown';
+        $errorMessage = $this->getErrorHtml($event);
+        $dir = app()->getRuntimePath() . '/errors';
+        if (!file_exists($dir))
+            mkdir($dir, 0777, true);
+        $path = $dir . '/pt-' . static_id('page_trail_id') . '.html';
+        file_put_contents($path, $errorMessage);
+    }
 
-            if (!isset($t['line']))
-                $trace[$i]['line'] = 0;
+    /**
+     * @param $event CEvent|CExceptionEvent
+     */
+    public function logException($event)
+    {
+        $errorMessage = $this->getExceptionHtml($event->exception);
+        $dir = app()->getRuntimePath() . '/errors';
+        if (!file_exists($dir))
+            mkdir($dir, 0777, true);
+        $path = $dir . '/pt-' . static_id('page_trail_id') . '.html';
+        file_put_contents($path, $errorMessage);
+    }
 
-            if (!isset($t['function']))
-                $trace[$i]['function'] = 'unknown';
+    /**
+     * @param $event CEvent|CErrorEvent
+     * @return string
+     */
+    public function getErrorHtml($event)
+    {
+        ob_start();
+        if (app() instanceof CWebApplication) {
+            $trace = debug_backtrace();
+            // skip the first 3 stacks as they do not tell the error position
+            if (count($trace) > 6)
+                $trace = array_slice($trace, 6);
+            $traceString = '';
+            foreach ($trace as $i => $t) {
+                if (!isset($t['file']))
+                    $trace[$i]['file'] = 'unknown';
 
-            $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
-            if (isset($t['object']) && is_object($t['object']))
-                $traceString .= get_class($t['object']) . '->';
-            $traceString .= "{$trace[$i]['function']}()\n";
+                if (!isset($t['line']))
+                    $trace[$i]['line'] = 0;
 
-            unset($trace[$i]['object']);
-        }
+                if (!isset($t['function']))
+                    $trace[$i]['function'] = 'unknown';
 
-        $app = Yii::app();
-        if ($app instanceof CWebApplication) {
-            switch ($event->code)
-            {
+                $traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
+                if (isset($t['object']) && is_object($t['object']))
+                    $traceString .= get_class($t['object']) . '->';
+                $traceString .= "{$trace[$i]['function']}()\n";
+
+                unset($trace[$i]['object']);
+            }
+            switch ($event->code) {
                 case E_WARNING:
                     $type = 'PHP warning';
                     break;
@@ -85,47 +104,66 @@ class ErrorHandler extends CErrorHandler
                 'trace' => $traceString,
                 'traces' => $trace,
             );
-            //            $this->render('print', array(
-            //                'job' => $job,
-            //            ));
             $data['version'] = $this->getVersionInfo();
             $data['time'] = time();
             $data['admin'] = $this->adminInfo;
-            app()->controller->renderPartial('application.views.site.exception', array(
-                'data' => $data,
-                'errorHandler' => $this,
-            ));
-            $this->data = $data;
+            ob_start();
+            $this->render('application.views.error.exception', $data);
         }
-        else
-            $app->displayError($event->code, $event->message, $event->file, $event->line);
-    }
-
-
-    public function renderSourceCode($file, $errorLine, $maxLines)
-    {
-        return parent::renderSourceCode($file, $errorLine, $maxLines);
+        else {
+            app()->displayError($event->code, $event->message, $event->file, $event->line);
+        }
+        return ob_get_clean();
     }
 
     /**
-     * Returns a value indicating whether the call stack is from application code.
-     * @param array $trace the trace data
-     * @return boolean whether the call stack is from application code.
+     * @param $exception CEvent|CException
+     * @return string
      */
-    public function isCoreCode($trace)
+    public function getExceptionHtml($exception)
     {
-        return parent::isCoreCode($trace);
-    }
+        ob_start();
+        if (app() instanceof CWebApplication) {
+            if (($trace = $this->getExactTrace($exception)) === null) {
+                $fileName = $exception->getFile();
+                $errorLine = $exception->getLine();
+            }
+            else {
+                $fileName = $trace['file'];
+                $errorLine = $trace['line'];
+            }
 
-    /**
-     * Converts arguments array to its string representation
-     *
-     * @param array $args arguments array to be converted
-     * @return string string representation of the arguments array
-     */
-    public function argumentsToString($args)
-    {
-        return parent::argumentsToString($args);
+            $trace = $exception->getTrace();
+
+            foreach ($trace as $i => $t) {
+                if (!isset($t['file']))
+                    $trace[$i]['file'] = 'unknown';
+
+                if (!isset($t['line']))
+                    $trace[$i]['line'] = 0;
+
+                if (!isset($t['function']))
+                    $trace[$i]['function'] = 'unknown';
+
+                unset($trace[$i]['object']);
+            }
+
+            $data = array(
+                'code' => ($exception instanceof CHttpException) ? $exception->statusCode : 500,
+                'type' => get_class($exception),
+                'errorCode' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+                'file' => $fileName,
+                'line' => $errorLine,
+                'trace' => $exception->getTraceAsString(),
+                'traces' => $trace,
+            );
+            $this->render('application.views.error.exception', $data);
+        }
+        else {
+            app()->displayException($exception);
+        }
+        return ob_get_clean();
     }
 
 }

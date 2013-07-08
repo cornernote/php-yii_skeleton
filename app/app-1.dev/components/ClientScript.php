@@ -37,7 +37,7 @@ class ClientScript extends CClientScript
      * @var array the registered JavaScript code blocks (position, key => code)
      * @since 1.0.5
      */
-    protected $scripts = array();
+    public $scripts = array();
     /**
      * @var array
      */
@@ -48,10 +48,27 @@ class ClientScript extends CClientScript
      * @param string $url URL of the CSS file
      * @param string $media media that the CSS file should be applied to. If empty, it means all media types.
      * @param array $options
-     * @return CClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
+     * @return ClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
      */
     public function registerCssFile($url, $media = '', $options = array())
     {
+        // do not load these scripts on ajax
+        $ignoreAjax = array(
+            'bootstrap-yii.css',
+            'bootstrap-responsive.css',
+            'bootstrap-responsive.min.css',
+            'bootstrap.css',
+            'bootstrap.min.css',
+            'font-awesome.css',
+            'font-awesome.min.css',
+        );
+        if (app()->request->isAjaxRequest) {
+            foreach ($ignoreAjax as $ignore) {
+                if (StringHelper::endsWith($url, $ignore))
+                    return $this;
+            }
+        }
+
         $options = array_merge(array(
             'order' => 0,
         ), $options);
@@ -68,7 +85,7 @@ class ClientScript extends CClientScript
      * @param string $css
      * @param string $media
      * @param array $options
-     * @return \CClientScript
+     * @return ClientScript
      */
     public function registerCss($id, $css, $media = '', $options = array())
     {
@@ -163,30 +180,45 @@ class ClientScript extends CClientScript
      * <li>CClientScript::POS_BEGIN : the script is inserted at the beginning of the body section.</li>
      * <li>CClientScript::POS_END : the script is inserted at the end of the body section.</li>
      * </ul>
-     * @return CClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
+     * @return ClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
      */
     public function registerScriptFile($url, $position = self::POS_HEAD)
     {
         // do not load these scripts on ajax
-        if (isAjax() && strpos($url, 'jquery-ui.min.js') !== false) {
-            return;
+        $ignoreAjax = array(
+            'jquery-ui.min.js',
+            'jquery-ui.js',
+            'jquery-ui-i18n.min.js',
+            'jquery-ui-i18n.js',
+            'bootstrap.min.js',
+            'bootstrap.js',
+        );
+        if (app()->request->isAjaxRequest) {
+            foreach ($ignoreAjax as $ignore) {
+                if (StringHelper::endsWith($url, $ignore))
+                    return $this;
+            }
         }
-        parent::registerScriptFile($url, $position);
+        return parent::registerScriptFile($url, $position);
     }
 
     /**
      * Registers a script package that is listed in {@link packages}.
      * @param string $name the name of the script package.
-     * @return CClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
+     * @return ClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
      * @see renderCoreScript
      */
     public function registerCoreScript($name)
     {
         // do not load these scripts on ajax
-        if (isAjax() && in_array($name, array('jquery', 'yiiactiveform'))) {
-            return;
+        $ignoreAjax = array(
+            'jquery',
+            'yiiactiveform',
+        );
+        if (app()->request->isAjaxRequest && in_array($name, $ignoreAjax)) {
+            return $this;
         }
-        parent::registerCoreScript($name);
+        return parent::registerCoreScript($name);
     }
 
 }

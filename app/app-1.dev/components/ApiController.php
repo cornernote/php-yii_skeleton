@@ -53,8 +53,8 @@ class ApiController extends Controller
      */
     public function actionError()
     {
-        if ($error = Yii::app()->errorHandler->error) {
-            if (Yii::app()->request->isAjaxRequest)
+        if ($error = app()->errorHandler->error) {
+            if (app()->request->isAjaxRequest)
                 echo $error['message'];
             else {
                 $this->HTTPStatus = $this->getHttpStatus($error['code']);

@@ -13,28 +13,13 @@ class Navbar extends BootNavbar
      */
     public function run()
     {
-        $classes = array('navbar');
-
-        if ($this->fixed !== false) {
-            $validFixes = array(self::FIXED_TOP, self::FIXED_BOTTOM);
-            if (in_array($this->fixed, $validFixes))
-                $classes[] = 'navbar-fixed-' . $this->fixed;
-        }
-
         $this->htmlOptions['id'] = $this->id;
-
-        $classes = implode(' ', $classes);
-        if (isset($this->htmlOptions['class']))
-            $this->htmlOptions['class'] .= ' ' . $classes;
-        else
-            $this->htmlOptions['class'] = $classes;
-
         $this->brandOptions['id'] = 'brand';
 
         $containerCssClass = $this->fluid ? 'container-fluid' : 'container';
 
         echo CHtml::openTag('div', $this->htmlOptions);
-        echo '<div class="navbar-inner"><div class="' . $containerCssClass . '">';
+        echo '<div class="navbar-inner"><div class="' . trim($containerCssClass) . '">';
 
         if ($this->collapse) {
             echo '<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">';

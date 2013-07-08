@@ -4,6 +4,11 @@
  * This extension ask for a confirmation to user before leaving the page
  * when he is editing or creating something
  *
+ *
+ * USAGE:
+ * $this->widget('AskToSaveWork', array('watchElement' => '#my-form :input', 'message' => t('Please save before leaving the page')));
+ *
+ *
  * @author aleksdj
  */
 class AskToSaveWork extends CWidget

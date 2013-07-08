@@ -2,7 +2,6 @@
 /**
  *
  * @property User $user
- * @property Role[] $roles
  * @property integer $id
  * @property bool $api
  */
@@ -48,15 +47,7 @@ class WebUser extends CWebUser
         if (!$this->user) {
             return false;
         }
-        $needRoles = explode(',', $operation);
-        $hasRoles = CHtml::listData($this->user->role, 'id', 'name');
-        foreach ($needRoles as $needRole) {
-            if (in_array(trim($needRole), $hasRoles)) {
-                return true;
-            }
-        }
-        //return parent::checkAccess($operation,$params,$allowCaching);
-        return false;
+        return $this->user->checkAccess($operation);
     }
 
     /**
