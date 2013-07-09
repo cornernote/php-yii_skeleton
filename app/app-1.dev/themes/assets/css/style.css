@@ -118,6 +118,10 @@ footer {
     color: #999;
 }
 
+span.required {
+    color: #ff0000;
+}
+
 span.help-inline, span.help-block {
     color: #ff0000;
 }

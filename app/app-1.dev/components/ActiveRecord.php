@@ -542,4 +542,12 @@ class ActiveRecord extends CActiveRecord
         }
     }
 
+    /**
+     * @return $this
+     */
+    public function getAuditModel()
+    {
+        return $this;
+    }
+
 }

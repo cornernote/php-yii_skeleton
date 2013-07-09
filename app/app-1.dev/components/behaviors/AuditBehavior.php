@@ -10,102 +10,94 @@
 class AuditBehavior extends CActiveRecordBehavior
 {
     /**
+     * @var ActiveRecord
+     */
+    public $auditModel;
+
+    /**
      * @var array
      */
-    private $_oldattributes = array();
+    public $additionalAuditModels = array();
+
+    /**
+     * @var array
+     */
+    public $ignoreValues = array('0', '0.0', '0.00', '0.000', '0.0000', '0.00000', '0.000000', '0000-00-00', '0000-00-00 00:00:00');
+
     /**
      * @var array
      */
     public $ignoreFields = array(
-        'create' => array('modified', 'modified_by', 'deleted', 'deleted_by'),
-        'update' => array('created', 'created_by', 'modified', 'modified_by'),
+        'insert' => array('modified', 'modified_by', 'deleted', 'deleted_by'),
+        'update' => array('created', 'created_by', 'modified'),
     );
-    /**
-     * @var array
-     */
-    public $ignoreValuess = array('0', '0000-00-00', '0000-00-00 00:00:00');
 
     /**
      * @param $event
      */
     public function afterSave($event)
     {
-        try {
-            $userid = user()->id;
-        } catch (Exception $e) { //If we have no user object, this must be a command line program
-            $userid = 0;
-        }
+        $date = date('Y-m-d H:i:s');
+        $newAttributes = $this->owner->attributes;
+        $oldAttributes = $this->owner->dbAttributes;
+        $logModels = $this->getLogModels();
 
-        $newattributes = $this->owner->getAttributes();
-        $oldattributes = $this->getOldAttributes();
-        $pageTrailId = static_id('page_trail_id');
+        // insert
+        if ($this->owner->isNewRecord) {
+            foreach ($newAttributes as $name => $new) {
+                if (in_array($name, $this->ignoreFields['insert'])) continue;
 
-        // update
-        if (!$this->owner->isNewRecord) {
-            // compare old and new
-            foreach ($newattributes as $name => $new) {
-                if (in_array($name, $this->ignoreFields['update'])) continue;
-
-                if (!empty($oldattributes)) {
-                    $old = $oldattributes[$name];
-                } else {
-                    $old = '';
-                }
-                if (in_array($old, $this->ignoreValuess)) $old = '';
-                if (in_array($new, $this->ignoreValuess)) $new = '';
-
-                $old = trim($old);
+                // prepare the values
                 $new = trim($new);
+                if (!$new) continue;
 
-                // log any changes
-                if ($new != $old) {
-                    $log = new AuditTrail();
-                    $log->old_value = $old;
+                // write the logs
+                foreach ($logModels as $logModel) {
+                    if (isset($logModel['ignoreFields']) && in_array($name, $logModel['ignoreFields'])) continue;
+                    $log = new AuditTrail;
+                    $log->old_value = '';
                     $log->new_value = $new;
-                    $log->action = 'CHANGE';
-                    //$log->model = get_class($this->owner);
-                    $log->model = get_class($this->owner->auditModel);
-                    //$log->model_id = $this->owner->getPrimaryKey();
-                    $log->model_id = $this->owner->auditModel->getPrimaryKey();
-                    $log->field = $this->fieldPrefix() . $name;
-                    $log->created = date('Y-m-d H:i:s');
-                    $log->user_id = $userid;
-                    $log->page_trail_id = $pageTrailId;
+                    $log->action = 'INSERT';
+                    $log->model = $logModel['model'];
+                    $log->model_id = $logModel['model_id'];
+                    $log->field = $logModel['prefix'] . $name;
+                    $log->created = $date;
+                    $log->user_id = user() ? user()->id : 0;
+                    $log->page_trail_id = static_id('page_trail_id');
                     $log->save();
                 }
             }
         }
 
-        // new record was created so action created
+        // update
         else {
-            $log = new AuditTrail();
-            $log->old_value = '';
-            $log->new_value = '';
-            $log->action = 'CREATE';
-            $log->model = get_class($this->owner->auditModel);
-            $log->model_id = $this->owner->auditModel->getPrimaryKey();
-            $log->field = 'N/A';
-            $log->created = date('Y-m-d H:i:s');
-            $log->user_id = $userid;
-            $log->page_trail_id = $pageTrailId;
-            $log->save();
+            // compare old and new
+            foreach ($newAttributes as $name => $new) {
+                if (in_array($name, $this->ignoreFields['update'])) continue;
 
-            foreach ($newattributes as $name => $new) {
-                if (in_array($name, $this->ignoreFields['create'])) continue;
-                if (!$new) continue;
-                $log = new AuditTrail;
-                $log->old_value = '';
-                $log->new_value = $new;
-                $log->action = 'SET';
-                $log->model = get_class($this->owner->auditModel);
-                $log->model_id = $this->owner->auditModel->getPrimaryKey();
-                $log->field = $name;
-                $log->created = date('Y-m-d H:i:s');
-                $log->user_id = $userid;
-                $log->page_trail_id = $pageTrailId;
-                $log->save();
+                // prepare the values
+                $old = !empty($oldAttributes) ? trim($oldAttributes[$name]) : '';
+                $new = trim($new);
+                if (in_array($old, $this->ignoreValues)) $old = '';
+                if (in_array($new, $this->ignoreValues)) $new = '';
+                if ($new == $old) continue;
+
+                // write the logs
+                foreach ($logModels as $logModel) {
+                    if (isset($logModel['ignoreFields']) && in_array($name, $logModel['ignoreFields'])) continue;
+                    $log = new AuditTrail();
+                    $log->old_value = $old;
+                    $log->new_value = $new;
+                    $log->action = 'UPDATE';
+                    $log->model = $logModel['model'];
+                    $log->model_id = $logModel['model_id'];
+                    $log->field = $logModel['prefix'] . $name;
+                    $log->created = $date;
+                    $log->user_id = user() ? user()->id : 0;
+                    $log->page_trail_id = static_id('page_trail_id');
+                    $log->save();
+                }
             }
-
         }
         parent::afterSave($event);
     }
@@ -115,54 +107,26 @@ class AuditBehavior extends CActiveRecordBehavior
      */
     public function afterDelete($event)
     {
-
-        try {
-            $userid = user()->id;
-        } catch (Exception $e) {
-            $userid = 0;
-        }
-
-        $pageTrailId = static_id('page_trail_id');
+        $date = date('Y-m-d H:i:s');
+        $logModels = $this->getLogModels();
 
         // delete
-        $log = new AuditTrail;
-        $log->old_value = '';
-        $log->new_value = '';
-        $log->action = 'DELETE';
-        $log->model = get_class($this->owner->auditModel);
-        $log->model_id = $this->owner->auditModel->getPrimaryKey();
-        $log->field = 'N/A';
-        $log->created = date('Y-m-d H:i:s');
-        $log->user_id = $userid;
-        $log->page_trail_id = $pageTrailId;
-        $log->save();
+        $pk = $this->getPkString($this->owner->getPrimaryKey());
+        foreach ($logModels as $logModel) {
+            $prefix = isset($logModel['prefix']) ? $logModel['prefix'] . '.' . $pk : '';
+            $log = new AuditTrail;
+            $log->old_value = '';
+            $log->new_value = '';
+            $log->action = 'DELETE';
+            $log->model = $logModel['model'];
+            $log->model_id = $logModel['model_id'];
+            $log->field = $prefix . '*';
+            $log->created = $date;
+            $log->user_id = user() ? user()->id : 0;
+            $log->page_trail_id = static_id('page_trail_id');
+            $log->save();
+        }
         parent::afterDelete($event);
-    }
-
-    /**
-     * @param $event
-     */
-    public function afterFind($event)
-    {
-        // Save old values
-        $this->setOldAttributes($this->owner->getAttributes());
-        parent::afterFind($event);
-    }
-
-    /**
-     * @return array
-     */
-    public function getOldAttributes()
-    {
-        return $this->_oldattributes;
-    }
-
-    /**
-     * @param $value
-     */
-    public function setOldAttributes($value)
-    {
-        $this->_oldattributes = $value;
     }
 
     /**
@@ -170,8 +134,51 @@ class AuditBehavior extends CActiveRecordBehavior
      */
     protected function fieldPrefix()
     {
-        if (get_class($this->owner) != get_class($this->owner->auditModel)) {
+        if (get_class($this->owner) != get_class($this->auditModel)) {
             return get_class($this->owner) . '.';
         }
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    protected function getLogModels()
+    {
+        if ($this->auditModel === null) {
+            $this->auditModel = $this->owner->getAuditModel();
+        }
+
+        $logModels = array();
+
+        // get log models
+        if ($this->auditModel) {
+            $logModels[] = array(
+                'model' => get_class($this->auditModel),
+                'model_id' => $this->getPkString($this->auditModel->getPrimaryKey()),
+                'prefix' => $this->fieldPrefix(),
+            );
+        }
+
+        // also log to additionalAuditModels
+        foreach ($this->additionalAuditModels as $model => $fk_field) {
+            $logModels[] = array(
+                'model' => $model,
+                'model_id' => $this->owner->$fk_field,
+                'prefix' => get_class($this->owner) . '.',
+                'ignoreFields' => array($fk_field),
+            );
+        }
+
+        return $logModels;
+    }
+
+    /**
+     * @param $pk
+     * @return string|array
+     */
+    protected function getPkString($pk)
+    {
+        return is_array($pk) ? implode(',', $pk) : $pk;
     }
 }

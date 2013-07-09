@@ -1,10 +1,10 @@
 <?php
 
-Yii::import('bootstrap.widgets.BootActiveForm');
+Yii::import('bootstrap.widgets.TbActiveForm');
 /**
  * Class ActiveForm
  */
-class ActiveForm extends BootActiveForm
+class ActiveForm extends TbActiveForm
 {
     /**
      * @var ActiveFormModel

@@ -13,6 +13,7 @@ body {
 #holder {
     min-height: 100%;
     position: relative;
+    margin-bottom: -71px;
 }
 
 #body {
@@ -36,6 +37,10 @@ body {
 /*********************
    HTML
 *********************/
+#holder>header {
+    margin-bottom: 20px;
+}
+
 #content {
     padding-bottom: 80px;
 }

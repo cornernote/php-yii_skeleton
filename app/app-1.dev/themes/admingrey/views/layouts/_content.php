@@ -26,7 +26,13 @@ if (!app()->request->isAjaxRequest) {
     echo '<div id="inner">';
 }
 if ($this->breadcrumbs) {
-    $this->widget('bootstrap.widgets.TbBreadcrumbs', array('links' => $this->breadcrumbs));
+    $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+        'htmlOptions' => array(
+            'id' => 'breadcrumbs',
+        ),
+        'separator' => '',
+        'links' => $this->breadcrumbs,
+    ));
 }
 
 echo user()->multiFlash();

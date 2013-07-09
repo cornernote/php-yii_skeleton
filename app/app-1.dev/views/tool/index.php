@@ -1,13 +1,25 @@
 <?php
+/**
+ * @var $this ToolController
+ */
+
 $this->pageTitle = t('Tools');
 $this->pageHeading = t('Tools');
-//ReturnUrl::setCurrentUrlAsReturnUrl();
 $this->breadcrumbs = array(
     t('Tools'),
 );
-$this->renderPartial('_menu');
-echo '<br/> '.CHtml::link('generate properties for IDE',array('tool/generateProperties','tableName'=>'OCOrder'));
-//echo '<br/> '.CHtml::link('Execute Command update Approval Date',array('tool/','id'=>'updateApprovalDate','returnUrl'=>ReturnUrl::getLinkValue(true)));
-//echo '<br/> '.CHtml::link('Execute Command fix Item Status',array('tool/executeCommand','id'=>'fixItemStatus','returnUrl'=>ReturnUrl::getLinkValue(true)));
-//echo '<br/> '.CHtml::link('List Errors',array('tool/executeCommand','id'=>'listErrors'));
-?>
+
+// menu
+$menu = NavbarItems::systemMenu();
+$this->menu = $menu['items'][0]['items'];
+
+
+$this->widget('bootstrap.widgets.TbMenu', array(
+    'type' => 'pills', // '', 'tabs', 'pills' (or 'list')
+    'stacked' => true, // whether this is a stacked menu
+    'items' => array(
+        array('label' => t('Documentation'), 'url' => array('/tool/page', 'view' => 'documentation')),
+        array('label' => t('Generate Model PHPDocs'), 'url' => array('/tool/generateProperties')),
+        array('label' => t('Generate Model Rules'), 'url' => array('/tool/generateRules')),
+    ),
+));

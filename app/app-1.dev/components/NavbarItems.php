@@ -89,21 +89,19 @@ class NavbarItems
             'class' => 'bootstrap.widgets.TBMenu',
             'items' => array(),
         );
+        $menu['items'][] = array(
+            'label' => t('Example'),
+            'url' => array('/site/page', 'view' => 'example'),
+        );
+        $menu['items'][] = array(
+            'label' => t('Documentation'),
+            'url' => array('/tool/page', 'view' => 'documentation'),
+        );
         if (user()->checkAccess('admin')) {
             $menu['items'][] = array(
                 'label' => t('Users'),
                 'url' => array('/user/index'),
                 'active' => $controller == 'user',
-            );
-        }
-        elseif (user()->isGuest) {
-            $menu['items'][] = array(
-                'label' => t('Example'),
-                'url' => array('/site/page', 'view' => 'example'),
-            );
-            $menu['items'][] = array(
-                'label' => t('Documentation'),
-                'url' => array('/site/page', 'view' => 'documentation'),
             );
         }
         return $menu;
@@ -136,6 +134,7 @@ class NavbarItems
      */
     static function systemMenu()
     {
+        $controller = app()->controller->id;
         return array(
             'class' => 'bootstrap.widgets.TBMenu',
             'htmlOptions' => array(
@@ -144,6 +143,7 @@ class NavbarItems
             'items' => array(
                 array(
                     'label' => t('System'),
+                    'active' => in_array($controller, array('tool', 'setting', 'emailTemplate', 'pageTrail', 'auditTrail', 'log')),
                     'items' => array(
                         array(
                             'label' => t('Clear Cache'),
@@ -155,21 +155,30 @@ class NavbarItems
                             'url' => array('/setting/index'),
                         ),
                         array(
+                            'label' => t('Tools'),
+                            'url' => array('/tool/index'),
+                            'active' => ($controller == 'tool'),
+                        ),
+                        array(
                             'label' => t('Email Templates'),
                             'url' => array('/emailTemplate/index'),
+                            'active' => ($controller == 'emailTemplate'),
                         ),
                         '---',
                         array(
                             'label' => t('Page Trails'),
                             'url' => array('/pageTrail/index'),
+                            'active' => ($controller == 'pageTrail'),
                         ),
                         array(
                             'label' => t('Audit Trails'),
                             'url' => array('/auditTrail/index'),
+                            'active' => ($controller == 'auditTrail'),
                         ),
                         array(
                             'label' => t('Logs'),
                             'url' => array('/log/index'),
+                            'active' => ($controller == 'log'),
                         ),
                     ),
                 ),

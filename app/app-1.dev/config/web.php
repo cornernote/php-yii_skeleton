@@ -64,9 +64,9 @@ $web['components']['assetManager'] = array(
 // default theme
 $web['theme'] = $_ENV['_settings']['app']['theme'];
 $web['params']['themes'] = array(
-    '' => 'Default',
+    '' => 'Bootstrap',
     'admingrey' => 'Admin Grey',
-    //'bounce' => 'Bounce',
+    'bounce' => 'Bounce',
 );
 
 // local web config overrides

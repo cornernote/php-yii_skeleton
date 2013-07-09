@@ -5,7 +5,7 @@
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
-class ToolController extends Controller
+class ToolController extends WebController
 {
 
     /**
@@ -17,7 +17,7 @@ class ToolController extends Controller
     {
         return array(
             array('allow',
-                'actions' => array('index', 'clearCache', 'generateProperties', 'generateRules'),
+                'actions' => array('index', 'page', 'clearCache', 'generateProperties', 'generateRules'),
                 'roles' => array('dev', 'admin'),
             ),
             array('deny',

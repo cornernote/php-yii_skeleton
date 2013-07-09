@@ -11,7 +11,7 @@ $this->pageTitle = t('Error');
 ?>
 
 <?php
-$this->beginWidget('bootstrap.widgets.TbHero', array(
+$this->beginWidget('bootstrap.widgets.TbHeroUnit', array(
     'heading' => t('Golly gosh!'),
 ));
 ?>

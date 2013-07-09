@@ -7,13 +7,13 @@ $this->pageHeading = t('Documentation');
 
 // menu
 $menu = NavbarItems::systemMenu();
-$this->menu = $menu['items'];
+$this->menu = $menu['items'][0]['items'];
 
-//// breadcrumbs
-//$this->breadcrumbs = array(
-//    t('Account') => array('/account/index'),
-//    t('Example'),
-//);
+// breadcrumbs
+$this->breadcrumbs = array(
+    t('Tools') => array('/tool/index'),
+    t('Documentation'),
+);
 
 $this->widget('bootstrap.widgets.TbMenu', array(
     'type' => 'pills', // '', 'tabs', 'pills' (or 'list')

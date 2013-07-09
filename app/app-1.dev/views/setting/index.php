@@ -12,7 +12,8 @@ foreach ($_settings as $setting) {
 }
 $this->pageTitle = t('Settings');
 $this->pageHeading = t('Settings');
-$this->renderPartial('/site/_system_menu');
+$menu = NavbarItems::systemMenu();
+$this->menu = $menu['items'][0]['items'];
 ?>
 
 
@@ -59,7 +60,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 $p = dirname(bp());
                 $d = dir($p);
                 while (false !== ($entry = $d->read())) {
-                    if (substr($entry, 0, 6) == 'app-3.') {
+                    if (substr($entry, 0, 4) == 'app-') {
                         $time = filemtime($p . DS . $entry);
                         $_versions[$time] = array(
                             'entry' => $entry,
@@ -189,8 +190,55 @@ $this->widget('bootstrap.widgets.TbButton', array(
     </fieldset>
 
 
-
     <h2><?php echo t('App Settings'); ?></h2>
+
+    <fieldset>
+        <legend><?php echo t('Application Settings') ?></legend>
+
+        <div class="control-group">
+            <?php echo CHtml::label(t('Theme'), 'SettingEav_app_theme', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::textField('SettingEav[app][theme]', $settings['app']->getEavAttribute('theme'));
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php echo CHtml::label(t('Default Page Size'), 'SettingEav_app_defaultPageSize', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::textField('SettingEav[app][defaultPageSize]', $settings['app']->getEavAttribute('defaultPageSize'));
+                ?>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset>
+        <legend><?php echo t('Login Settings') ?></legend>
+
+        <div class="control-group">
+            <?php echo CHtml::label(t('Allow Auto Login'), 'SettingEav_app_allowAutoLogin', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::hiddenField('SettingEav[app][allowAutoLogin]', 0);
+                echo CHtml::checkBox('SettingEav[app][allowAutoLogin]', $settings['app']->getEavAttribute('allowAutoLogin'));
+                ?>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <?php echo CHtml::label(t('Default Remember Me Value'), 'SettingEav_app_rememberMe', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::hiddenField('SettingEav[app][rememberMe]', 0);
+                echo CHtml::checkBox('SettingEav[app][rememberMe]', $settings['app']->getEavAttribute('rememberMe'));
+                ?>
+            </div>
+        </div>
+
+    </fieldset>
 
     <fieldset>
         <legend><?php echo t('Company Settings') ?></legend>
@@ -270,92 +318,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
     </fieldset>
 
     <fieldset>
-        <legend><?php echo t('Login Settings') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Allow Auto Login'), 'SettingEav_app_allowAutoLogin', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::hiddenField('SettingEav[app][allowAutoLogin]', 0);
-                echo CHtml::checkBox('SettingEav[app][allowAutoLogin]', $settings['app']->getEavAttribute('allowAutoLogin'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Default Remember Me Value'), 'SettingEav_app_rememberMe', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::hiddenField('SettingEav[app][rememberMe]', 0);
-                echo CHtml::checkBox('SettingEav[app][rememberMe]', $settings['app']->getEavAttribute('rememberMe'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Print') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Print Logo Source'), 'SettingEav_app_print_logo_src', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][print_logo_src]', $settings['app']->getEavAttribute('print_logo_src'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Print Logo Width'), 'SettingEav_app_print_logo_width', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][print_logo_width]', $settings['app']->getEavAttribute('print_logo_width'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Print Logo Height'), 'SettingEav_app_print_logo_height', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][print_logo_height]', $settings['app']->getEavAttribute('print_logo_height'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Print Signature on PDF Footer'), 'SettingEav_app_job_print_show_signature', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::hiddenField('SettingEav[app][job_print_show_signature]', 0);
-                echo CHtml::checkBox('SettingEav[app][job_print_show_signature]', $settings['app']->getEavAttribute('job_print_show_signature'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Application Settings') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Default Page Size'), 'SettingEav_app_defaultPageSize', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][defaultPageSize]', $settings['app']->getEavAttribute('defaultPageSize'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Theme'), 'SettingEav_app_theme', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][theme]', $settings['app']->getEavAttribute('theme'));
-                ?>
-            </div>
-        </div>
+        <legend><?php echo t('Recaptcha Settings') ?></legend>
 
         <div class="control-group">
             <?php echo CHtml::label(t('Recaptcha'), 'SettingEav_app_recaptcha', array('class' => 'control-label')); ?>
@@ -384,33 +347,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
             </div>
         </div>
 
-        <div class="control-group">
-            <?php echo CHtml::label(t('Input Unit'), 'SettingEav_app_input_unit', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][input_unit]', $settings['app']->getEavAttribute('input_unit'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Output Unit'), 'SettingEav_app_output_unit', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][output_unit]', $settings['app']->getEavAttribute('output_unit'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Output Unit Area'), 'SettingEav_app_output_unit_area', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][output_unit_area]', $settings['app']->getEavAttribute('output_unit_area'));
-                ?>
-            </div>
-        </div>
-
     </fieldset>
 
     <fieldset>
@@ -424,270 +360,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
                 ?>
             </div>
         </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format'), 'SettingEav_app_dateFormat', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormat]', $settings['app']->getEavAttribute('dateFormat'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format Long'), 'SettingEav_app_dateFormatLong', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormatLong]', $settings['app']->getEavAttribute('dateFormatLong'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format Short'), 'SettingEav_app_dateFormatShort', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormatShort]', $settings['app']->getEavAttribute('dateFormatShort'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format Short Word'), 'SettingEav_app_dateFormatShortWord', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormatShortWord]', $settings['app']->getEavAttribute('dateFormatShortWord'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format Word'), 'SettingEav_app_dateFormatWord', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormatWord]', $settings['app']->getEavAttribute('dateFormatWord'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Format Word Without Day'), 'SettingEav_app_dateFormatWordWithoutDay', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateFormatWordWithoutDay]', $settings['app']->getEavAttribute('dateFormatWordWithoutDay'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Time Format'), 'SettingEav_app_dateTimeFormat', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateTimeFormat]', $settings['app']->getEavAttribute('dateTimeFormat'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Date Time Format Short'), 'SettingEav_app_dateTimeFormatShort', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][dateTimeFormatShort]', $settings['app']->getEavAttribute('dateTimeFormatShort'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-
-    <fieldset>
-        <legend><?php echo t('Path Settings') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Attachment Spool Path'), 'SettingEav_app_attachmentSpoolPath', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][attachmentSpoolPath]', $settings['app']->getEavAttribute('attachmentSpoolPath'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Print Spool Path'), 'SettingEav_app_printSpoolPath', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][printSpoolPath]', $settings['app']->getEavAttribute('printSpoolPath'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Email Settings') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('New Job Email BCC'), 'SettingEav_app_new_job_email_bcc', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][new_job_email_bcc]', $settings['app']->getEavAttribute('new_job_email_bcc'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Approval Email BCC'), 'SettingEav_app_approval_email_bcc', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][approval_email_bcc]', $settings['app']->getEavAttribute('approval_email_bcc'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Approval Email BCC'), 'SettingEav_app_approval_email_team', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][approval_email_team]', $settings['app']->getEavAttribute('approval_email_team'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Approval Email Customer To'), 'SettingEav_app_approval_email_customer_to', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::dropDownList('SettingEav[app][approval_email_customer_to]', $settings['app']->getEavAttribute('approval_email_customer_to'), array(
-                    'customer' => t('Customer'),
-                    'customer_sales_rep' => t('Customer Sales Rep'),
-                ));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Approval Email Supplier To'), 'SettingEav_app_approval_email_supplier_to', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::dropDownList('SettingEav[app][approval_email_supplier_to]', $settings['app']->getEavAttribute('approval_email_supplier_to'), array(
-                    'supplier' => t('Supplier'),
-                    'customer_sales_rep' => t('Customer Sales Rep'),
-                ));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Is Customer Sales Rep required for Jobs?'), 'SettingEav_app_job_customer_sales_rep_required', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][job_customer_sales_rep_required]', $settings['app']->getEavAttribute('job_customer_sales_rep_required'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Production Time') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Jobs with COD Payments Require Manager Approval'), 'SettingEav_app_job_cod_requires_manager_approval', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::hiddenField('SettingEav[app][job_cod_requires_manager_approval]', 0);
-                echo CHtml::checkBox('SettingEav[app][job_cod_requires_manager_approval]', $settings['app']->getEavAttribute('job_cod_requires_manager_approval'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Working Days to Produce an Item'), 'SettingEav_app_item_production_days', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][item_production_days]', $settings['app']->getEavAttribute('item_production_days'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Days before Due that Customer can Approve Items'), 'SettingEav_app_item_max_approval_days', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[app][item_max_approval_days]', $settings['app']->getEavAttribute('item_max_approval_days'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Holiday Dates'), 'SettingEav_app_holiday_dates', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textArea('SettingEav[app][holiday_dates]', $settings['app']->getEavAttribute('holiday_dates'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Work on Weekend'), 'SettingEav_app_work_on_weekend', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][work_on_weekend]', $settings['app']->getEavAttribute('work_on_weekend'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
-
-    <fieldset>
-        <legend><?php echo t('Item Print Fields') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Show Finishing'), 'SettingEav_app_item_print_show_finishing', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][item_print_show_finishing]', $settings['app']->getEavAttribute('item_print_show_finishing'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Show Sleeve'), 'SettingEav_app_item_print_show_sleeve', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][item_print_show_sleeve]', $settings['app']->getEavAttribute('item_print_show_sleeve'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Show Corner'), 'SettingEav_app_item_print_show_corner', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][item_print_show_corner]', $settings['app']->getEavAttribute('item_print_show_corner'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Show Rip Number'), 'SettingEav_app_item_print_show_rip_number', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][item_print_show_rip_number]', $settings['app']->getEavAttribute('item_print_show_rip_number'));
-                ?>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('Show Edge'), 'SettingEav_app_item_print_show_edge', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::checkBox('SettingEav[app][item_print_show_edge]', $settings['app']->getEavAttribute('item_print_show_edge'));
-                ?>
-            </div>
-        </div>
-
 
     </fieldset>
 

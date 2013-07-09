@@ -1,7 +1,8 @@
 <?php
 Yii::import('ext.yiiext.behaviors.model.eav.EEavBehavior');
 /**
- *
+ * @property ActiveRecord $owner
+ * @method ActiveRecord getOwner() getOwner()
  */
 class EavBehavior extends EEavBehavior
 {
@@ -53,8 +54,8 @@ class EavBehavior extends EEavBehavior
                 $log->old_value = $old;
                 $log->new_value = $new;
                 $log->action = 'EAV SAVE';
-                $log->model = get_class($this->owner->auditModel);
-                $log->model_id = $this->owner->auditModel->getPrimaryKey();
+                $log->model = get_class($this->owner->getAuditModel());
+                $log->model_id = $this->owner->getAuditModel()->getPrimaryKey();
                 $log->field = $this->tableName . '.' . $attribute;
                 $log->created = date('Y-m-d H:i:s');
                 $log->user_id = $userid;
