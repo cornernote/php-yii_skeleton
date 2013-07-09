@@ -3,6 +3,9 @@
 /**
  * This is the shortcut to DIRECTORY_SEPARATOR
  */
+/**
+ *
+ */
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 /**
@@ -163,7 +166,16 @@ function au()
  */
 function ap()
 {
-    return bp() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+    return bp() . DS . 'themes' . DS . 'assets' . DS;
+}
+
+/**
+ * Vendors Path
+ * @return string
+ */
+function vp()
+{
+    return dirname(dirname(dirname(__FILE__))) . DS . 'vendors';
 }
 
 /**
@@ -219,7 +231,7 @@ function email()
  */
 function dump($target)
 {
-    return CVarDumper::dump($target, 10, true);
+    CVarDumper::dump($target, 10, true);
 }
 
 /**

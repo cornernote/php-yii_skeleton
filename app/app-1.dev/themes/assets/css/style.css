@@ -1,6 +1,10 @@
 /*********************
    HTML
 *********************/
+body {
+    padding-top: 60px;
+}
+
 h1 {
     padding-bottom: 0.2em;
 }
@@ -147,7 +151,7 @@ input, textarea, select, .uneditable-input {
     border-bottom: 4px solid transparent;
     content: "";
     opacity: .3;
-    filter: alpha(opacity = 30);
+    filter: alpha(opacity=30);
 }
 
 .accordion-heading .in:before {
@@ -161,7 +165,7 @@ input, textarea, select, .uneditable-input {
     border-left: 4px solid transparent;
     content: "";
     opacity: .3;
-    filter: alpha(opacity = 30);
+    filter: alpha(opacity=30);
 }
 
 .accordion-heading {
@@ -185,6 +189,7 @@ input, textarea, select, .uneditable-input {
 .accordion-heading a:hover {
     text-decoration: none;
 }
+
 .accordion-heading a {
     font-size: 15px;
     font-weight: bold;
@@ -309,12 +314,12 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
 #navbar .nav li.dropdown.open.active .caret,
 #navbar .nav li.dropdown.open a:hover .caret {
     opacity: 0.3;
-    filter: alpha(opacity = 30);
+    filter: alpha(opacity=30);
 }
 
 #navbar .nav li.dropdown.open a:hover .caret {
     opacity: 1;
-    filter: alpha(opacity = 100);
+    filter: alpha(opacity=100);
 }
 
 /*********************
@@ -468,7 +473,6 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
     color: #333;
 }
 
-
 /*********************
    Grids
 *********************/
@@ -571,7 +575,7 @@ ul.ui-sortable, ul.ui-sortable li {
 .btn-grey {
     background-color: hsl(214, 10%, 69%) !important;
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#fcfcfc", endColorstr = "#a8aeb7");
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fcfcfc", endColorstr="#a8aeb7");
     background-image: -khtml-gradient(linear, left top, left bottom, from(#fcfcfc), to(#a8aeb7));
     background-image: -moz-linear-gradient(top, #fcfcfc, #a8aeb7);
     background-image: -ms-linear-gradient(top, #fcfcfc, #a8aeb7);
@@ -588,7 +592,7 @@ ul.ui-sortable, ul.ui-sortable li {
 .btn-black {
     background-color: hsl(0, 0%, 1%) !important;
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = "#353535", endColorstr = "#020202");
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#353535", endColorstr="#020202");
     background-image: -khtml-gradient(linear, left top, left bottom, from(#353535), to(#020202));
     background-image: -moz-linear-gradient(top, #353535, #020202);
     background-image: -ms-linear-gradient(top, #353535, #020202);

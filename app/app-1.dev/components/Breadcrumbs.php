@@ -1,9 +1,9 @@
 <?php
-Yii::import('bootstrap.widgets.BootBreadcrumbs');
+Yii::import('bootstrap.widgets.TbBreadcrumbs');
 /**
  *
  */
-class Breadcrumbs extends BootBreadcrumbs
+class Breadcrumbs extends TbBreadcrumbs
 {
     /**
      * @var array

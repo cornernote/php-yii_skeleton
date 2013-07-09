@@ -9,12 +9,10 @@
         echo '<div id="content">';
     }
     if ($this->menu) {
-        $this->widget('bootstrap.widgets.BootMenu', array(
+        $this->widget('bootstrap.widgets.TBMenu', array(
+            'id' => 'menu',
             'type' => 'tabs',
             'items' => $this->menu,
-            'htmlOptions' => array(
-                'id' => 'menu',
-            ),
         ));
     }
     if (!app()->request->isAjaxRequest) {

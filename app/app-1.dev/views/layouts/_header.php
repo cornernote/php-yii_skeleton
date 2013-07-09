@@ -10,16 +10,14 @@
         echo '<h1 class="header">' . $this->pageHeading . '</h1>';
     }
     if ($this->menu) {
-        $this->widget('bootstrap.widgets.BootMenu', array(
+        $this->widget('bootstrap.widgets.TBMenu', array(
+            'id' => 'menu',
             'type' => 'tabs',
             'items' => $this->menu,
-            'htmlOptions' => array(
-                'id' => 'menu',
-            ),
         ));
     }
     if ($this->breadcrumbs) {
-        $this->widget('bootstrap.widgets.BootBreadcrumbs', array('links' => $this->breadcrumbs));
+        $this->widget('bootstrap.widgets.TbBreadcrumbs', array('links' => $this->breadcrumbs));
     }
     ?>
 </div>

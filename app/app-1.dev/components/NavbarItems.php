@@ -58,7 +58,7 @@ class NavbarItems
             );
         }
         ob_start();
-        app()->controller->widget('bootstrap.widgets.BootButtonGroup', array(
+        app()->controller->widget('bootstrap.widgets.TbButtonGroup', array(
             'type' => '', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
             'htmlOptions' => array(
                 'id' => 'navmenu-header-account',
@@ -86,7 +86,7 @@ class NavbarItems
     {
         $controller = app()->controller->id;
         $menu = array(
-            'class' => 'bootstrap.widgets.BootMenu',
+            'class' => 'bootstrap.widgets.TBMenu',
             'items' => array(),
         );
         if (user()->checkAccess('admin')) {
@@ -112,7 +112,7 @@ class NavbarItems
     static function helpMenu()
     {
         return array(
-            'class' => 'bootstrap.widgets.BootMenu',
+            'class' => 'bootstrap.widgets.TBMenu',
             'htmlOptions' => array(
                 'class' => 'pull-right',
             ),
@@ -133,7 +133,7 @@ class NavbarItems
     static function systemMenu()
     {
         return array(
-            'class' => 'bootstrap.widgets.BootMenu',
+            'class' => 'bootstrap.widgets.TBMenu',
             'htmlOptions' => array(
                 'class' => 'pull-right',
             ),

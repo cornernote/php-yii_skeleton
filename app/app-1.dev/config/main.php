@@ -13,6 +13,7 @@ $config = array(
     // preload classes and autoload paths
     'preload' => array('log'),
     'import' => array(
+        'application.extensions.*',
         'application.commands.*',
         'application.models.*',
         'application.components.*',
@@ -82,7 +83,7 @@ $config = array(
         ),
         'bootstrap' => array(
             'class' => 'ext.bootstrap.components.Bootstrap',
-            'responsiveCss' => true,
+            //'responsiveCss' => true,
         ),
     ),
 

@@ -1,7 +1,7 @@
 <?php
-Yii::import('bootstrap.widgets.BootNavbar');
+Yii::import('bootstrap.widgets.TbNavbar');
 
-class Navbar extends BootNavbar
+class Navbar extends TbNavbar
 {
     /**
      * @var array navigation items that cannot be collapsed.
