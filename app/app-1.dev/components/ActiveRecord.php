@@ -18,6 +18,7 @@
  * @property string $errorString
  * @property boolean isNewRecord
  * @property string $scenario
+ * @property string $controllerName
  *
  */
 class ActiveRecord extends CActiveRecord
@@ -36,6 +37,11 @@ class ActiveRecord extends CActiveRecord
      * @var array
      */
     public $cacheRelations = array();
+
+    /**
+     * @var string
+     */
+    protected $_controllerName;
 
     /**
      * @var array
@@ -125,25 +131,6 @@ class ActiveRecord extends CActiveRecord
             $output[] = $attribute . ': ' . implode(' ', $errors);
         }
         return implode(' | ', $output);
-    }
-
-    /**
-     * @param array $parts
-     * @param array $urlOptions
-     * @return string
-     */
-    public function getLink($parts = array(), $urlOptions = array())
-    {
-        return '';
-    }
-
-    /**
-     * @param $options mixed
-     * @return string
-     */
-    public function getUrl($options = null)
-    {
-        return '';
     }
 
     /**
@@ -548,6 +535,87 @@ class ActiveRecord extends CActiveRecord
     public function getAuditModel()
     {
         return $this;
+    }
+
+    /**
+     * @param string $action
+     * @param array $params
+     * @return string
+     */
+    public function getUrl($action = 'view', $params = array())
+    {
+        //$pk = $this->getPrimaryKeySchemaString();
+        $pk = 'id'; // for FF
+        return url('/' . $this->controllerName . '/' . $action, array_merge(array(
+            $pk => $this->getPrimaryKeyString(),
+        ), (array)$params));
+    }
+
+    /**
+     * @param string $format
+     * @param string $urlAction
+     * @param array $urlParams
+     * @return string
+     */
+    public function getLink($format = 'default', $urlAction = 'view', $urlParams = array())
+    {
+        return l($this->primaryKey, $this->getUrl($urlAction, $urlParams));
+    }
+
+    /**
+     * @return array
+     */
+    public function getDropdownLinks()
+    {
+        $links = array(
+            array('label' => $this->primaryKey, 'url' => $this->getUrl()),
+        );
+        $items = $this->getDropdownLinkItems();
+        if ($items) {
+            $links[] = array('items' => $this->getDropdownLinkItems());
+        }
+        return $links;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDropdownLinkItems()
+    {
+        //$pk = $this->getPrimaryKeySchemaString();
+        $pk = 'id'; // for FF
+        return array(
+            array('label' => t('Update'), 'url' => array('/' . $this->controllerName . '/update', $pk => $this->getPrimaryKeyString())),
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeySchemaString()
+    {
+        if (is_array($this->tableSchema->primaryKey))
+            return implode('-', $this->tableSchema->primaryKey);
+        return $this->tableSchema->primaryKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeyString()
+    {
+        if (is_array($this->getPrimaryKey()))
+            return implode('-', $this->getPrimaryKey());
+        return $this->getPrimaryKey();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getControllerName()
+    {
+        return $this->_controllerName ? $this->_controllerName : lcfirst(get_class($this));
     }
 
 }

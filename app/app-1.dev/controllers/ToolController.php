@@ -53,15 +53,32 @@ class ToolController extends WebController
         $this->redirect(ReturnUrl::getUrl());
     }
 
-
     /**
      *
      */
     public function actionGenerateProperties()
     {
         $modelName = sf('modelName');
+        //just to make an easier to change bookmark
+        if (in_array($modelName, array('list_all', 'listall'))) {
+            $modelName = false;
+        }
         if (!$modelName) {
-            echo "<br/> add a get attribute <b>modelName</b>=SomeModel to request url<br/>";
+            $pathList = CFileHelper::findFiles(Yii::getPathOfAlias("application.models"), array(
+                    'fileTypes' => array('php'),
+                )
+            );
+            //            array_walk($fileList,'basename');
+            $linkList = array();
+            foreach ($pathList as $path) {
+                $modelName = basename($path, '.php');
+                @$model = new $modelName;
+                if ($model && is_subclass_of($model, 'ActiveRecord')) {
+                    $link = l($modelName, array('tool/generateProperties', 'modelName' => $modelName));
+                    $linkList [] = $link;
+                }
+            }
+            echo implode("<br/>\r\n", $linkList);
             return;
         }
         $model = CActiveRecord::model($modelName);
