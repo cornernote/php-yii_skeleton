@@ -101,6 +101,10 @@ class NavbarItems
                 'label' => t('Example'),
                 'url' => array('/site/page', 'view' => 'example'),
             );
+            $menu['items'][] = array(
+                'label' => t('Documentation'),
+                'url' => array('/site/page', 'view' => 'documentation'),
+            );
         }
         return $menu;
     }

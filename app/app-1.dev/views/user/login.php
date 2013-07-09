@@ -35,13 +35,13 @@ echo CHtml::errorSummary($user);
 
 <div class="form-actions">
     <?php
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Login'),
         'type' => 'primary',
         'buttonType' => 'submit',
     ));
     echo ' ';
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Lost Password'),
         'url' => array('/user/recover'),
     ));

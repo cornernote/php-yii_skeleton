@@ -12,8 +12,6 @@ if (app()->request->isAjaxRequest) {
 else {
     $this->beginContent('//layouts/main');
     $this->renderPartial('//layouts/_navbar');
-    $this->renderPartial('//layouts/_header');
     $this->renderPartial('//layouts/_content', array('content' => $content));
-    $this->renderPartial('//layouts/_footer');
     $this->endContent();
 }

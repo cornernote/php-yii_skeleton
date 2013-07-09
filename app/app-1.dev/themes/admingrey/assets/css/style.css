@@ -99,3 +99,25 @@ h5 {
     border-radius: 4px;
 }
 
+/*********************
+    Tabs Menu
+*********************/
+#menu {
+    margin: 0 0 0 18px;
+}
+
+#menu > li > a {
+    background: #ccc;
+    color: #000;
+    border: 1px solid #ccc;
+}
+
+#menu > li > a:hover {
+    background: #ebebeb;
+}
+
+#menu > .active > a, #menu > .active > a:hover {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-bottom: 1px solid #f9f9f9;
+}

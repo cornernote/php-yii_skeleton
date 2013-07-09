@@ -11,7 +11,7 @@ $this->pageTitle = t('Error');
 ?>
 
 <?php
-$this->beginWidget('bootstrap.widgets.BootHero', array(
+$this->beginWidget('bootstrap.widgets.TbHero', array(
     'heading' => t('Golly gosh!'),
 ));
 ?>
@@ -22,7 +22,7 @@ $this->beginWidget('bootstrap.widgets.BootHero', array(
 
 <p>
     <?php
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'type' => 'primary',
         'size' => 'large',
         'label' => t('OK, whatever! Just take me back home.'),

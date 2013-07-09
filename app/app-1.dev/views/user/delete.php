@@ -42,6 +42,6 @@ if (app()->request->isAjaxRequest) echo '<div class="modal-body">';
 
 <?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
 <div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
-    <?php $this->widget('bootstrap.widgets.BootButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => t('Confirm Delete'))); ?>
+    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => t('Confirm Delete'))); ?>
 </div>
 <?php $this->endWidget(); ?>

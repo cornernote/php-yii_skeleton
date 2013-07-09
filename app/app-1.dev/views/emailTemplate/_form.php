@@ -27,7 +27,7 @@ echo $form->textAreaRow($emailTemplate, 'message_text');
 <?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
 <div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
     <?php
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'submit',
         'type' => 'primary',
         'icon' => 'ok white',

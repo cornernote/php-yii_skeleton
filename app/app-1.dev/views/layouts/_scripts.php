@@ -9,6 +9,9 @@ if (!isset($this->showNavBar) || !$this->showNavBar) {
 }
 cs()->registerCSSFile(au() . '/css/style.css', '', array('order' => -6));
 
+// font awesome
+$this->widget('FontAwesome');
+
 // load here so modals don't have to load it
 cs()->registerCoreScript('yiiactiveform');
 

@@ -69,7 +69,7 @@ footer {
     color: #999;
 }
 
-footer, footer p {
+footer {
     font-size: 86%;
 }
 
@@ -320,29 +320,6 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
 #navbar .nav li.dropdown.open a:hover .caret {
     opacity: 1;
     filter: alpha(opacity=100);
-}
-
-/*********************
-    Tabs Menu
-*********************/
-#menu {
-    margin: 0 0 0 18px;
-}
-
-#menu > li > a {
-    background: #ccc;
-    color: #000;
-    border: 1px solid #ccc;
-}
-
-#menu > li > a:hover {
-    background: #ebebeb;
-}
-
-#menu > .active > a, #menu > .active > a:hover {
-    background: #f9f9f9;
-    border: 1px solid #ccc;
-    border-bottom: 1px solid #f9f9f9;
 }
 
 /*********************
@@ -653,4 +630,15 @@ ul.ui-sortable, ul.ui-sortable li {
     background: none;
     padding: 0;
     border: 0;
+}
+
+/*********************
+    Modal
+*********************/
+
+.modal-remote-indicator {
+    background: url("../img/modal-indicator.gif") no-repeat 50% 50%;
+    width: 50px;
+    height: 100px;
+    margin: 0 auto;
 }

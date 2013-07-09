@@ -12,20 +12,20 @@ $this->breadcrumbs = array(
 $this->renderPartial('/site/_system_menu');
 
 echo '<div class="spacer">';
-$this->widget('bootstrap.widgets.BootButton', array(
+$this->widget('bootstrap.widgets.TbButton', array(
     'label' => t('Create'),
     'url' => array('/log/create'),
     'type' => 'primary',
 ));
 //echo ' ';
-//$this->widget('bootstrap.widgets.BootButton', array(
+//$this->widget('bootstrap.widgets.TbButton', array(
 //    'label' => t('Search'),
 //    'htmlOptions' => array('class' => 'search-button'),
 //    'toggle' => true,
 //));
 if (user()->getState('index.log') != url('/log/index')) {
     echo ' ';
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Reset Filters'),
         'url' => array('/log/index'),
     ));

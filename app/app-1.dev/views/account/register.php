@@ -27,13 +27,13 @@ echo $form->dropDownListRow($user, 'locksmith_plan', Locksmith::model()->getLock
 <?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
 <div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
     <?php
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Register'),
         'type' => 'primary',
         'buttonType' => 'submit',
     ));
     echo ' ';
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Already have an account?'),
         'url' => array('/account/login'),
     ));

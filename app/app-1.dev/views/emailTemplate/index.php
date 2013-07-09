@@ -11,7 +11,7 @@ $this->breadcrumbs = array(t('Email Templates'));
 echo '<div class="spacer">';
 if (user()->getState('index.emailTemplate') != url('/emailTemplate/index')) {
     //echo ' ';
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Reset Filters'),
         'url' => array('/emailTemplate/index'),
     ));

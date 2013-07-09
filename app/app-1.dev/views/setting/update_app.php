@@ -26,7 +26,7 @@ echo $form->errorSummary($setting);
 ?>
 
 <?php
-$this->widget('bootstrap.widgets.BootButton', array(
+$this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'submit',
     'type' => 'primary',
     'icon' => 'ok white',
@@ -170,7 +170,7 @@ $this->widget('bootstrap.widgets.BootButton', array(
 
 <div class="form-actions">
     <?php
-    $this->widget('bootstrap.widgets.BootButton', array(
+    $this->widget('bootstrap.widgets.TbButton', array(
         'buttonType' => 'submit',
         'type' => 'primary',
         'icon' => 'ok white',
