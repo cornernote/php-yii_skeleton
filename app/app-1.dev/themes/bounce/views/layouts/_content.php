@@ -5,6 +5,19 @@
  */
 ?>
 
+<?php
+$this->widget('Navbar', array(
+    'id' => 'navbar',
+    'fixed' => 'top',
+    //'fluid' => true,
+    'collapse' => true,
+    'items' => NavbarItems::mainMenu(),
+    'constantItems' => array(
+        NavbarItems::userMenu(),
+    ),
+));
+?>
+
 <div id="holder" class="content">
     <header>
         <?php if ($this->id == 'site' && $this->action->id == 'index') { ?>

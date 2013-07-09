@@ -4,6 +4,17 @@
  * @var $content
  */
 
+$this->widget('Navbar', array(
+    'id' => 'navbar',
+    'fixed' => 'top',
+    'fluid' => true,
+    'collapse' => true,
+    'items' => NavbarItems::mainMenu(),
+    'constantItems' => array(
+        NavbarItems::userMenu(),
+    ),
+));
+
 echo '<div class="holder">';
 
 echo '<div class="container-fluid">';
