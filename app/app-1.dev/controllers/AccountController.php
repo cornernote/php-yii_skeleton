@@ -282,7 +282,7 @@ class AccountController extends WebController
      */
     public function actionPassword()
     {
-        /**@var $user User **/
+        /**@var $user User * */
         $user = $this->loadModel(user()->id, 'User');
         $userPassword = new UserPassword('password');
         $this->performAjaxValidation($userPassword, 'password-form');
@@ -290,9 +290,10 @@ class AccountController extends WebController
             $userPassword->attributes = $_POST['UserPassword'];
             if ($userPassword->validate()) {
                 $user->password = $user->hashPassword($userPassword->password);
-                $user->save();
-                user()->addFlash('Your password has been saved.', 'success');
-                $this->redirect(array('/account/index'));
+                if ($user->save(false)) {
+                    user()->addFlash('Your password has been saved.', 'success');
+                    $this->redirect(array('/account/index'));
+                }
             }
             else {
                 user()->addFlash('Your password could not be saved.', 'warning');

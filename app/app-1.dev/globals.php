@@ -376,3 +376,22 @@ function isAjax()
 {
     return Yii::app()->request->isAjaxRequest;
 }
+
+/**
+ * @return bool
+ */
+function assetCopy()
+{
+    static $assetCopy = 'init';
+    if ($assetCopy != 'init')
+        return $assetCopy;
+
+    $assetCopy = YII_DEBUG;
+    if (!$assetCopy) {
+        $lastTime = cache()->get('AssetsAction.run');
+        if ((time() - $lastTime) < 30) {
+            return $assetCopy = true;
+        }
+    }
+    return $assetCopy;
+}

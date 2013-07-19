@@ -23,7 +23,7 @@ $this->widget('Navbar', array(
             echo '<h1 class="header">' . $this->pageHeading . '</h1>';
         }
         if ($this->menu) {
-            $this->widget('bootstrap.widgets.TBMenu', array(
+            $this->widget('bootstrap.widgets.TbMenu', array(
                 'id' => 'menu',
                 'type' => 'tabs',
                 'items' => $this->menu,

@@ -27,7 +27,7 @@ if (!app()->request->isAjaxRequest) {
 }
 
 if ($this->menu) {
-    $this->widget('bootstrap.widgets.TBMenu', array(
+    $this->widget('bootstrap.widgets.TbMenu', array(
         'id' => 'menu',
         'type' => 'tabs',
         'items' => $this->menu,

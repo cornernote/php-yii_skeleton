@@ -57,7 +57,7 @@ $this->widget('Navbar', array(
     <div id="body" class="container">
         <?php
         if ($this->menu) {
-            $this->widget('bootstrap.widgets.TBMenu', array(
+            $this->widget('bootstrap.widgets.TbMenu', array(
                 'id' => 'menu',
                 'type' => 'tabs',
                 'items' => $this->menu,

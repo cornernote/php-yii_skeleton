@@ -86,7 +86,7 @@ class NavbarItems
     {
         $controller = app()->controller->id;
         $menu = array(
-            'class' => 'bootstrap.widgets.TBMenu',
+            'class' => 'bootstrap.widgets.TbMenu',
             'items' => array(),
         );
         $menu['items'][] = array(
@@ -114,7 +114,7 @@ class NavbarItems
     static function helpMenu()
     {
         return array(
-            'class' => 'bootstrap.widgets.TBMenu',
+            'class' => 'bootstrap.widgets.TbMenu',
             'htmlOptions' => array(
                 'class' => 'pull-right',
             ),
@@ -136,7 +136,7 @@ class NavbarItems
     {
         $controller = app()->controller->id;
         return array(
-            'class' => 'bootstrap.widgets.TBMenu',
+            'class' => 'bootstrap.widgets.TbMenu',
             'htmlOptions' => array(
                 'class' => 'pull-right',
             ),
