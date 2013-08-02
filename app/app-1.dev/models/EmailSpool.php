@@ -123,7 +123,7 @@ class EmailSpool extends ActiveRecord
             'attachment' => array(
                 self::HAS_MANY,
                 'Attachment',
-                'foreign_key',
+                'model_id',
                 'condition' => 'attachment.model=:model AND deleted IS NULL',
                 'params' => array(':model' => 'EmailSpool'),
                 'order' => 'weight',

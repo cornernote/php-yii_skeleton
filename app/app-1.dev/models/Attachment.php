@@ -91,13 +91,13 @@ class Attachment extends ActiveRecord
     {
         return array(
             // search fields
-            array('id,model,foreign_key,notes,filename', 'safe', 'on' => 'search'),
+            array('id,model,model_id,notes,filename', 'safe', 'on' => 'search'),
 
             // model
             array('model', 'safe', 'on' => 'create'),
 
-            // foreign_key
-            array('foreign_key', 'safe', 'on' => 'create'),
+            // model_id
+            array('model_id', 'safe', 'on' => 'create'),
 
             // notes
             array('notes', 'type', 'type' => 'string'),
@@ -174,7 +174,7 @@ class Attachment extends ActiveRecord
 
         // clear cache for jobs and items
         if (in_array($this->model, array('Job', 'Item'))) {
-            $model = ActiveRecord::model($this->model)->findByPk($this->foreign_key);
+            $model = ActiveRecord::model($this->model)->findByPk($this->model_id);
             if ($model) {
                 $model->clearCache();
             }
@@ -188,7 +188,7 @@ class Attachment extends ActiveRecord
      */
     function getAttachmentPath()
     {
-        $folder = dirname(dirname(bp())) . '/sites/' . param('host') . '/attachment/' . $this->model . '/' . $this->foreign_key;
+        $folder = dirname(dirname(bp())) . '/sites/' . param('host') . '/attachment/' . $this->model . '/' . $this->model_id;
         //$path = $folder . '/' . $this->filename;
         if (!file_exists($folder)) {
             $success = @mkdir($folder, 0777, true);

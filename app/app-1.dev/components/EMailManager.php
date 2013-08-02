@@ -55,7 +55,7 @@ class EMailManager extends CApplicationComponent
      */
     public function sendError($count)
     {
-        $relation = array('model' => 'Error', 'foreign_key' => 0);
+        $relation = array('model' => 'Error', 'model_id' => 0);
 
         $url = 'http://' . param('domain') . url('/error/index');
         $messageString = t('errors have been archived') . ' ' . $url;

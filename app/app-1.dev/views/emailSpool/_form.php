@@ -1,12 +1,12 @@
 <?php
 /**
- * @var $this EmailTemplateController
- * @var $emailTemplate EmailTemplate
+ * @var $this EmailSpoolController
+ * @var $emailSpool EmailSpool
  */
 
 /* @var $form ActiveForm */
 $form = $this->beginWidget('ActiveForm', array(
-    'id' => 'emailTemplate-form',
+    'id' => 'emailSpool-form',
     'enableAjaxValidation' => true,
     'type' => 'horizontal',
     'htmlOptions' => array(
@@ -14,11 +14,11 @@ $form = $this->beginWidget('ActiveForm', array(
     ),
 ));
 echo $form->beginModalWrap();
-echo $form->errorSummary($emailTemplate);
-echo $form->textAreaRow($emailTemplate, 'description');
-echo $form->textFieldRow($emailTemplate, 'message_subject');
-echo $form->textAreaRow($emailTemplate, 'message_html');
-echo $form->textAreaRow($emailTemplate, 'message_text');
+echo $form->errorSummary($emailSpool);
+echo $form->textAreaRow($emailSpool, 'description');
+echo $form->textFieldRow($emailSpool, 'message_subject');
+echo $form->textAreaRow($emailSpool, 'message_html');
+echo $form->textAreaRow($emailSpool, 'message_text');
 
 echo $form->endModalWrap();
 echo '<div class="' . $form->getSubmitRowClass() . '">';
@@ -26,7 +26,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'submit',
     'type' => 'primary',
     'icon' => 'ok white',
-    'label' => $emailTemplate->isNewRecord ? t('Create') : t('Save'),
+    'label' => $emailSpool->isNewRecord ? t('Create') : t('Save'),
     'htmlOptions' => array('class' => 'pull-right'),
 ));
 echo '</div>';

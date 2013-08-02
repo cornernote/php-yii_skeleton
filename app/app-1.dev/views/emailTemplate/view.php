@@ -3,13 +3,11 @@
  * @var $this EmailTemplateController
  * @var $emailTemplate EmailTemplate
  */
-user()->setState('index.emailTemplate.' . $emailTemplate->id, ru());
-$this->pageTitle = t('Email Template') . ' ' . $emailTemplate->name;
-$this->pageHeading = $emailTemplate->name;
+$this->pageTitle = $this->pageHeading = $emailTemplate->getName() . ' - ' . $this->getName() . ' ' . t('View');
 
 $this->breadcrumbs = array();
-$this->breadcrumbs[t('Email Templates')] = user()->getState('index.emailTemplate', array('/emailTemplate/index'));
-$this->breadcrumbs[] = $emailTemplate->name;
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.emailTemplate', array('/emailTemplate/index'));
+$this->breadcrumbs[] = $emailTemplate->getName();
 
 $this->renderPartial('_menu', array(
     'emailTemplate' => $emailTemplate,

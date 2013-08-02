@@ -1,9 +1,9 @@
 <?php
 $criteria = new CDbCriteria();
-$criteria->condition = 'model=:model AND foreign_key=:foreign_key';
+$criteria->condition = 'model=:model AND model_id=:model_id';
 $criteria->params = array(
     ':model' => $model,
-    ':foreign_key' => $foreign_key,
+    ':model_id' => $model_id,
 );
 $dataProvider = new CActiveDataProvider('Log', array(
     'criteria' => $criteria,
@@ -14,7 +14,7 @@ $dataProvider = new CActiveDataProvider('Log', array(
 
 echo '<div class="grid-view">';
 $this->widget('ListView', array(
-    'id' => "log-list-$model-$foreign_key",
+    'id' => "log-list-$model-$model_id",
     'dataProvider' => $dataProvider,
     'itemView' => '/log/_history_view',
     'itemsTagName' => 'table',

@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $this EmailTemplateController
- * @var $emailTemplate EmailTemplate
+ * @var $this AuditTrailController
+ * @var $auditTrail AuditTrail
  */
 
 // index
@@ -11,10 +11,10 @@ if ($this->action->id == 'index') {
 }
 
 // create
-//if ($emailTemplate->isNewRecord) {
+//if ($auditTrail->isNewRecord) {
 //    $this->menu[] = array(
 //        'label' => t('Create'),
-//        'url' => array('/emailTemplate/create'),
+//        'url' => array('/auditTrail/create'),
 //    );
 //    return; // no more links
 //}
@@ -22,17 +22,17 @@ if ($this->action->id == 'index') {
 // view
 $this->menu[] = array(
     'label' => t('View'),
-    'url' => $emailTemplate->getUrl(),
+    'url' => $auditTrail->getUrl(),
 );
 
 // others
-foreach ($emailTemplate->getDropdownLinkItems() as $linkItem) {
+foreach ($auditTrail->getDropdownLinkItems() as $linkItem) {
     $this->menu[] = $linkItem;
 }
 
 // more
 $more = array();
-foreach ($emailTemplate->getMoreDropdownLinkItems() as $linkItem) {
+foreach ($auditTrail->getMoreDropdownLinkItems() as $linkItem) {
     $more[] = $linkItem;
 }
 if ($more) {
