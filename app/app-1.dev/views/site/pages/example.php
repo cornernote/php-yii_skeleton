@@ -2,11 +2,10 @@
 /**
  * @var $this SiteController
  */
-$this->pageTitle = t('Example');
-$this->pageHeading = t('Example');
+$this->pageTitle = $this->pageHeading = t('Example');
 
 // menu
-$menu = NavbarItems::systemMenu();
+$menu = NavbarItems::topMenu();
 $this->menu = $menu['items'];
 
 // breadcrumbs

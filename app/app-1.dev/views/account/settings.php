@@ -4,15 +4,12 @@
  * @var $form ActiveForm
  * @var $user User
  */
-?>
-<?php
-$this->pageTitle = t('Account Settings');
-$this->pageHeading = t('Account Settings');
+$this->pageTitle = $this->pageHeading = t('Account Settings');
 $this->breadcrumbs = array(
     t('My Account') => array('index'),
     t('Account Settings'),
 );
-$this->renderPartial('_menu', array('user' => $user));
+$this->menu = NavbarItems::userMenuItems();
 
 /** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(

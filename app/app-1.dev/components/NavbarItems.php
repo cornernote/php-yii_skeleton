@@ -26,26 +26,6 @@ class NavbarItems
      */
     static public function userMenu()
     {
-        $items = array();
-        if (!user()->isGuest) {
-            $items[] = array(
-                'label' => t('Account'),
-                'url' => array('/account/index'),
-            );
-            //$items[] = array(
-            //    'label' => t('Settings'),
-            //    'url' => array('/account/settings'),
-            //);
-            $items[] = array(
-                'label' => t('Password'),
-                'url' => array('/account/password'),
-            );
-            $items[] = '---';
-            $items[] = array(
-                'label' => t('Logout'),
-                'url' => array('/account/logout'),
-            );
-        }
         ob_start();
         app()->controller->widget('bootstrap.widgets.TbButtonGroup', array(
             'type' => '', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
@@ -57,7 +37,7 @@ class NavbarItems
                 array(
                     'label' => user()->isGuest ? t('Login') : user()->name,
                     'icon' => user()->isGuest ? 'icon-user' : 'icon-wrench',
-                    'items' => $items,
+                    'items' => self::userMenuItems(),
                     'url' => user()->isGuest ? array('/account/login') : null,
                     //'htmlOptions' => user()->isGuest ? array('data-toggle' => 'modal-remote') : null,
                 ),
@@ -68,12 +48,42 @@ class NavbarItems
 
 
     /**
-     * @static
+     * @return array
+     */
+    static public function userMenuItems()
+    {
+        $items = array();
+        if (!user()->isGuest) {
+            $items[] = array(
+                'label' => t('Account'),
+                'url' => array('/account/index'),
+            );
+            //$items[] = array(
+            //    'label' => t('Settings'),
+            //    'url' => array('/account/settings'),
+            //);
+            $items[] = array(
+                'label' => t('Update'),
+                'url' => array('/account/update'),
+            );
+            $items[] = array(
+                'label' => t('Password'),
+                'url' => array('/account/password'),
+            );
+            $items[] = '---';
+            $items[] = array(
+                'label' => t('Logout'),
+                'url' => array('/account/logout'),
+            );
+        }
+        return $items;
+    }
+
+    /**
      * @return array
      */
     static public function topMenu()
     {
-        $controller = app()->controller->id;
         $menu = array(
             'class' => 'bootstrap.widgets.TbMenu',
             'items' => array(),
@@ -84,15 +94,8 @@ class NavbarItems
         );
         $menu['items'][] = array(
             'label' => t('Documentation'),
-            'url' => array('/tool/page', 'view' => 'documentation'),
+            'url' => array('/site/page', 'view' => 'documentation'),
         );
-        if (user()->checkAccess('admin')) {
-            $menu['items'][] = array(
-                'label' => t('Users'),
-                'url' => array('/user/index'),
-                'active' => $controller == 'user',
-            );
-        }
         return $menu;
     }
 
@@ -102,19 +105,37 @@ class NavbarItems
      */
     static public function helpMenu()
     {
-        return array(
+        $menu = array(
             'class' => 'bootstrap.widgets.TbMenu',
             'htmlOptions' => array(
                 'class' => 'pull-right',
             ),
-            'items' => array(
-                array(
-                    'label' => t('Help'),
-                    'icon' => 'icon-question-sign',
-                    'url' => 'javascript:showUserVoicePopupWidget();',
-                ),
-            ),
+            'items' => array(),
         );
+        $menu['items'][] = array(
+            'label' => t('Help'),
+            'icon' => 'icon-question-sign',
+            'items' => self::helpMenuItems(),
+        );
+        return $menu;
+    }
+
+    /**
+     * @static
+     * @return array
+     */
+    static public function helpMenuItems()
+    {
+        $items = array();
+        $items[] = array(
+            'label' => t('Help'),
+            'url' => array('/site/page', 'view' => 'help'),
+        );
+        $items[] = array(
+            'label' => t('Documentation'),
+            'url' => array('/site/page', 'view' => 'documentation'),
+        );
+        return $items;
     }
 
     /**
@@ -145,43 +166,56 @@ class NavbarItems
     static public function systemMenuItems()
     {
         $controller = app()->controller->id;
-        return array(
-            array(
-                'label' => t('Clear Cache'),
-                'url' => array('/tool/clearCache', 'returnUrl' => ReturnUrl::getLinkValue(true)),
-            ),
-            '---',
-            array(
-                'label' => t('Settings'),
-                'url' => array('/setting/index'),
-            ),
-            array(
-                'label' => t('Tools'),
-                'url' => array('/tool/index'),
-                'active' => ($controller == 'tool'),
-            ),
-            array(
-                'label' => t('Email Templates'),
-                'url' => array('/emailTemplate/index'),
-                'active' => ($controller == 'emailTemplate'),
-            ),
-            '---',
-            array(
-                'label' => t('Page Trails'),
-                'url' => array('/pageTrail/index'),
-                'active' => ($controller == 'pageTrail'),
-            ),
-            array(
-                'label' => t('Audit Trails'),
-                'url' => array('/auditTrail/index'),
-                'active' => ($controller == 'auditTrail'),
-            ),
-            array(
-                'label' => t('Logs'),
-                'url' => array('/log/index'),
-                'active' => ($controller == 'log'),
-            ),
+
+        $items = array();
+        $items[] = array(
+            'label' => t('Clear Cache'),
+            'url' => array('/tool/clearCache', 'returnUrl' => ReturnUrl::getLinkValue(true)),
         );
+        $items[] = '---';
+        $items[] = array(
+            'label' => t('Users'),
+            'url' => array('/user/index'),
+            'active' => ($controller == 'user'),
+        );
+        $items[] = array(
+            'label' => t('Settings'),
+            'url' => array('/setting/index'),
+            'active' => ($controller == 'setting'),
+        );
+        $items[] = array(
+            'label' => t('Tools'),
+            'url' => array('/tool/index'),
+            'active' => ($controller == 'tool'),
+        );
+        $items[] = '---';
+        $items[] = array(
+            'label' => t('Email Spool'),
+            'url' => array('/emailSpool/index'),
+            'active' => ($controller == 'emailSpool'),
+        );
+        $items[] = array(
+            'label' => t('Email Templates'),
+            'url' => array('/emailTemplate/index'),
+            'active' => ($controller == 'emailTemplate'),
+        );
+        $items[] = '---';
+        $items[] = array(
+            'label' => t('Page Trails'),
+            'url' => array('/pageTrail/index'),
+            'active' => ($controller == 'pageTrail'),
+        );
+        $items[] = array(
+            'label' => t('Audit Trails'),
+            'url' => array('/auditTrail/index'),
+            'active' => ($controller == 'auditTrail'),
+        );
+        $items[] = array(
+            'label' => t('Logs'),
+            'url' => array('/log/index'),
+            'active' => ($controller == 'log'),
+        );
+        return $items;
     }
 
 }

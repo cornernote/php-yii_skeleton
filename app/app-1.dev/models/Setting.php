@@ -23,14 +23,16 @@
  * @method CActiveRecord loadEavAttributes() loadEavAttributes(array $attributes)
  * @method setModelTableFk() setModelTableFk($modelTableFk)
  * @method setSafeAttributes() setSafeAttributes($safeAttributes)
+ * @method afterSave() afterSave($event)
+ * @method afterDelete() afterDelete($event)
  * @method afterFind() afterFind($event)
  * @method CActiveRecord saveEavAttributes() saveEavAttributes($attributes)
- * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array ( ), $save = false)
+ * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array (), $save = false)
  * @method CActiveRecord setEavAttributes() setEavAttributes($attributes, $save = false)
  * @method CActiveRecord setEavAttribute() setEavAttribute($attribute, $value, $save = false)
- * @method array getEavAttributes() getEavAttributes($attributes = array ( ))
+ * @method array getEavAttributes() getEavAttributes($attributes = array ())
  * @method getEavAttribute() getEavAttribute($attribute)
- * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array ( ))
+ * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array ())
  *
  * Properties from table fields
  * @property string $id

@@ -233,7 +233,7 @@ class ToolController extends WebController
             if ($oldDoc && ($contents != $oldDoc)) {
                 $newFileContents = str_replace($oldDoc, $contents, $fileContents);
                 file_put_contents($fileName, $newFileContents);
-                echo "<br/>**  overwrited $fileName<br/>\r\n";
+                echo "<br/>**  overwrote $fileName<br/>\r\n";
             }
         }
     }

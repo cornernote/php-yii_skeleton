@@ -8,7 +8,7 @@ $this->breadcrumbs = array(
     t('My Account') => array('/account/index'),
     t('Change Password'),
 );
-$this->renderPartial('_menu', array('user' => $user));
+$this->menu = NavbarItems::userMenuItems();
 
 /** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(

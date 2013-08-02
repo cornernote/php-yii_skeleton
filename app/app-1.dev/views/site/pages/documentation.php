@@ -2,16 +2,14 @@
 /**
  * @var $this WebController
  */
-$this->pageTitle = t('Documentation');
-$this->pageHeading = t('Documentation');
+$this->pageTitle = $this->pageHeading = t('Documentation');
 
 // menu
-$menu = NavbarItems::systemMenu();
-$this->menu = $menu['items'][0]['items'];
+$this->menu = NavbarItems::helpMenuItems();
 
 // breadcrumbs
 $this->breadcrumbs = array(
-    t('Tools') => array('/tool/index'),
+    t('Help') => array('/site/page', 'view' => 'help'),
     t('Documentation'),
 );
 

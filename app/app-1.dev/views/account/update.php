@@ -8,7 +8,7 @@ $this->breadcrumbs = array(
     t('My Account') => array('index'),
     t('Update Account'),
 );
-$this->renderPartial('_menu', array('user' => $user));
+$this->menu = NavbarItems::userMenuItems();
 
 /* @var $form ActiveForm */
 $form = $this->beginWidget('ActiveForm', array(
