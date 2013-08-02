@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 08, 2013 at 02:09 PM
+-- Generation Time: Aug 02, 2013 at 06:27 AM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -17,8 +17,31 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `test`
+-- Database: `yii_skeleton`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `attachment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `extension` varchar(255) NOT NULL,
+  `filetype` varchar(255) NOT NULL,
+  `filesize` int(11) NOT NULL,
+  `notes` varchar(255) NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model` (`model`,`model_id`),
+  KEY `created_dt` (`created`,`deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -45,6 +68,54 @@ CREATE TABLE IF NOT EXISTS `audit_trail` (
   KEY `action` (`action`),
   KEY `page_trail_id` (`page_trail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_spool`
+--
+
+CREATE TABLE IF NOT EXISTS `email_spool` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(32) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `to_email` varchar(255) NOT NULL,
+  `to_name` varchar(255) NOT NULL,
+  `from_email` varchar(255) NOT NULL,
+  `from_name` varchar(255) NOT NULL,
+  `message_subject` varchar(255) NOT NULL,
+  `message_html` text NOT NULL,
+  `message_text` text NOT NULL,
+  `sent` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model_foreign_key` (`model`,`model_id`),
+  KEY `deleted` (`deleted`),
+  KEY `status` (`status`),
+  KEY `sent` (`sent`) USING BTREE,
+  KEY `created_deleted` (`created`,`deleted`) USING BTREE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=110 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_template`
+--
+
+CREATE TABLE IF NOT EXISTS `email_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `message_subject` text NOT NULL,
+  `message_html` text NOT NULL,
+  `message_text` text NOT NULL,
+  `description` text NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -216,7 +287,26 @@ INSERT INTO `setting_eav` (`entity`, `attribute`, `value`) VALUES
 ('core', 'timezone', 'Australia/Adelaide'),
 ('core', 'time_limit', '600'),
 ('core', 'yii_lite', '0'),
-('core', 'yii_version', 'yii-1.1.12.b600af');
+('core', 'yii_version', 'yii-1.1.13.e9e4a0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `token`
+--
+
+CREATE TABLE IF NOT EXISTS `token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(64) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `uses_allowed` int(11) NOT NULL,
+  `uses_remaining` int(11) NOT NULL,
+  `expires` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `token` (`token`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
 
 -- --------------------------------------------------------
 

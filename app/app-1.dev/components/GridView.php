@@ -1,10 +1,10 @@
 <?php
 
-Yii::import('bootstrap.widgets.BootGridView');
+Yii::import('bootstrap.widgets.TbGridView');
 /**
  *
  */
-class GridView extends BootGridView
+class GridView extends TbGridView
 {
 
     /**

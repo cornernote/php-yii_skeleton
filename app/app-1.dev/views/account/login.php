@@ -13,17 +13,11 @@ $form = $this->beginWidget('ActiveForm', array(
     'id' => 'login-form',
     'enableAjaxValidation' => false,
     'type' => 'horizontal',
-    'htmlOptions' => array(
-        'class' => app()->request->isAjaxRequest ? 'modal-form' : '',
-    ),
 ));
-if (app()->request->isAjaxRequest) echo '<div class="modal-body">';
-echo CHtml::errorSummary($user);
-
+echo $form->beginModalWrap();
+echo $form->errorSummary($user);
 echo $form->textFieldRow($user, 'email');
 echo $form->passwordFieldRow($user, 'password');
-
-$user->remember_me = Setting::item('app', 'rememberMe');
 echo $form->checkBoxRow($user, 'remember_me');
 
 if ($recaptcha) {
@@ -35,10 +29,10 @@ if ($recaptcha) {
     ));
     echo CHtml::error($user, 'recaptcha');
 }
+echo $form->endModalWrap();
 ?>
 
-<?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
-<div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
+<div class="<?php echo $form->getSubmitRowClass(); ?>">
     <?php
     $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Login'),
@@ -49,6 +43,11 @@ if ($recaptcha) {
     $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Lost Password'),
         'url' => array('/account/recover'),
+    ));
+    echo ' ';
+    $this->widget('bootstrap.widgets.TbButton', array(
+        'label' => t('Register New Account'),
+        'url' => array('/account/register'),
     ));
     ?>
 </div>

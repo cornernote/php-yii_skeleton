@@ -11,21 +11,15 @@ $form = $this->beginWidget('ActiveForm', array(
     'id' => 'register-form',
     'enableAjaxValidation' => true,
     'type' => 'horizontal',
-    'htmlOptions' => array(
-        'class' => app()->request->isAjaxRequest ? 'modal-form' : '',
-    ),
 ));
-if (app()->request->isAjaxRequest) echo '<div class="modal-body">';
-echo CHtml::errorSummary($user);
-
-echo $form->textFieldRow($user, 'name');
+echo $form->beginModalWrap();
+echo $form->errorSummary($user);
 echo $form->textFieldRow($user, 'email');
 echo $form->passwordFieldRow($user, 'password');
-echo $form->dropDownListRow($user, 'locksmith_plan', Locksmith::model()->getLocksmithPlans());
+echo $form->endModalWrap();
 ?>
 
-<?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
-<div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
+<div class="<?php echo $form->getSubmitRowClass(); ?>">
     <?php
     $this->widget('bootstrap.widgets.TbButton', array(
         'label' => t('Register'),

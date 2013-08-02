@@ -11,7 +11,7 @@ $config = array(
     'runtimePath' => dirname(dirname(dirname(dirname(__FILE__)))) . '/runtime',
 
     // preload classes and autoload paths
-    'preload' => array('log'),
+    'preload' => array('log', 'fatalErrorCatch'),
     'import' => array(
         'application.extensions.*',
         'application.commands.*',
@@ -51,6 +51,9 @@ $config = array(
         'errorHandler' => array(
             'class' => 'ErrorHandler',
             'errorAction' => 'site/error',
+        ),
+        'fatalErrorCatch' => array(
+            'class' => 'FatalErrorCatch',
         ),
         'cacheFile' => array(
             'class' => 'CFileCache',

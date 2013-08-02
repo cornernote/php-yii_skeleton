@@ -64,7 +64,7 @@ class AccountController extends WebController
             $user->attributes = $_POST['UserLogin'];
             if ($user->validate() && $user->login()) {
                 Yii::app()->cache->delete("login.attempt.{$_SERVER['REMOTE_ADDR']}");
-                $this->redirect(app()->getHomeUrl());
+                $this->redirect(ReturnUrl::getUrl(Yii::app()->user->returnUrl));
             }
             // remove all other errors on recaptcha error
             if (isset($user->errors['recaptcha'])) {
@@ -74,6 +74,9 @@ class AccountController extends WebController
                     $user->addError('recaptcha', $error);
             }
             Yii::app()->cache->set("login.attempt.{$_SERVER['REMOTE_ADDR']}", ++$attempts);
+        }
+        else {
+            $user->remember_me = Setting::item('app', 'rememberMe');
         }
 
         // display the login form
@@ -87,7 +90,7 @@ class AccountController extends WebController
     /**
      * Displays the register page
      */
-    public function actionRegister($plan = 'free')
+    public function actionRegister()
     {
         // redirect if the user is already logged in
         if (user()->id) {
@@ -95,14 +98,13 @@ class AccountController extends WebController
         }
 
         $user = new UserRegister();
-        $user->locksmith_plan = $plan;
         $this->performAjaxValidation($user, 'register-form');
 
         // collect user input data
         if (isset($_POST['UserRegister'])) {
             $user->attributes = $_POST['UserRegister'];
             if ($user->save()) {
-                $this->redirect(app()->getHomeUrl());
+                $this->redirect(ReturnUrl::getUrl(Yii::app()->user->returnUrl));
             }
         }
 
@@ -308,12 +310,13 @@ class AccountController extends WebController
      */
     public function actionSettings()
     {
+        /** @var $user User */
         $user = $this->loadModel(user()->id, 'User');
 
         if (isset($_POST['UserEav'])) {
 
             // check access
-            $notAllowed = array('locksmith_plan');
+            $notAllowed = array();
             foreach ($notAllowed as $_notAllowed) {
                 if (isset($_POST['UserEav'][$_notAllowed])) {
                     unset($_POST['UserEav'][$_notAllowed]);

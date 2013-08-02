@@ -4,24 +4,48 @@
  */
 class StringHelper
 {
+
     /**
      * @param $contents
      * @param $start
      * @param $end
      * @param bool $removeStart
+     * @param bool $removeEnd
      * @return string
      */
-    public function getBetweenString($contents, $start, $end, $removeStart = false)
+    static public function getBetweenString($contents, $start, $end, $removeStart = false, $removeEnd = true)
     {
-        $startPos = strpos($contents, $start);
-        $endPos = strpos($contents, $end, $startPos);
+        if ($start) {
+            $startPos = strpos($contents, $start);
+        }
+        else {
+            $startPos = 0;
+        }
+
+        if ($startPos === false) {
+            return false;
+        }
+        if ($end) {
+            $endPos = strpos($contents, $end, $startPos);
+            if ($endPos === false) {
+                $endPos = $endPos = strlen($contents);
+            }
+        }
+        else {
+            $endPos = strlen($contents);
+        }
+
         if ($removeStart) {
             $startPos += strlen($start);
         }
         $len = $endPos - $startPos;
+        if (!$removeEnd && $end && $endPos) {
+            $len = $len + strlen($end);
+        }
         $subString = substr($contents, $startPos, $len);
         return $subString;
     }
+
 
     /**
      * @static
@@ -152,6 +176,110 @@ class StringHelper
     static public function getTextWithIcon($short, $long)
     {
         return $short . '...&nbsp;' . l(i(au() . '/icons/comments.png'), 'javascript:void();', array('title' => $long));
+    }
+
+
+    /**
+     * @param $class
+     * @param $method
+     * @param string $tag
+     * @return array|string
+     */
+    public static function getDocComment($class, $method, $tag = '')
+    {
+        $reflection = new ReflectionMethod($class, $method);
+        $comment = $reflection->getDocComment();
+        if (!$tag) {
+            return $comment;
+        }
+
+        $matches = array();
+        preg_match_all("/" . $tag . " (.*)(\\r\\n|\\r|\\n)/U", $comment, $matches);
+
+        $returns = array();
+        foreach ($matches[1] as $match) {
+            $match = explode(' ', $match);
+            $type = $match[0];
+            $name = isset($match[1]) ? $match[1] : '';
+            if (strpos($type, '$') === 0) {
+                $name_ = $name;
+                $name = $type;
+                $type = $name_;
+            }
+            if (strpos($name, '$') !== 0) {
+                $name = '';
+            }
+            $returns[] = trim($type . ' ' . $name);
+        }
+
+        return $returns;
+    }
+
+    /**
+     * @static
+     * @param $class
+     * @param $method
+     * @param $tag
+     * @return array
+     */
+    public static function getTypeFromDocComment($class, $method, $tag)
+    {
+        $types = self::getDocComment($class, $method, $tag);
+        $returnTypes = array();
+        foreach ($types as $k => $type) {
+            $filteredType = self::filterDocType($type);
+            if ($filteredType) {
+                $returnTypes[$k] = $filteredType;
+            }
+        }
+        return $returnTypes;
+
+    }
+
+    /**
+     * @static
+     * @param $type
+     * @return mixed|string
+     */
+    public static function filterDocType($type)
+    {
+        $ignoreTypes = array('void', 'mixed', 'null');
+        $replace = array(
+            'bool' => 'boolean',
+            'integer' => 'int',
+        );
+        $filteredType = '';
+        if (strpos($type, '|') !== false) {
+            $multiType = explode('|', $type);
+            $multiTypeSafe = array();
+            foreach ($multiType as $singleType) {
+                if (!in_array($singleType, $ignoreTypes)) {
+                    if (isset($replace[$singleType])) {
+                        $singleType = $replace[$singleType];
+                    }
+                    $multiTypeSafe[] = $singleType;
+                }
+            }
+            $filteredType = implode('|', $multiTypeSafe);
+        }
+        else {
+            if (!in_array($type, $ignoreTypes)) {
+                $filteredType = $type;
+                if (isset($replace[$type])) {
+                    $filteredType = $replace[$type];
+                }
+            }
+        }
+        if ($filteredType) {
+            $filteredType = str_replace('-', ' ', $filteredType);
+            $filteredType = trim($filteredType);
+            if (strpos($type, ' ')) {
+                $filteredType = StringHelper::getBetweenString($type, false, ' ');
+            }
+        }
+
+        return $filteredType;
+
     }
 
 }

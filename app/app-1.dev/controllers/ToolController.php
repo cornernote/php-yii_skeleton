@@ -73,7 +73,7 @@ class ToolController extends WebController
             foreach ($pathList as $path) {
                 $modelName = basename($path, '.php');
                 @$model = new $modelName;
-                if ($model && is_subclass_of($model, 'ActiveRecord')) {
+                if ($model && is_subclass_of($model, 'CActiveRecord')) {
                     $link = l($modelName, array('tool/generateProperties', 'modelName' => $modelName));
                     $linkList [] = $link;
                 }
@@ -153,8 +153,8 @@ class ToolController extends WebController
                 }
 
 
-                $methodReturn = Helper::getTypeFromDocComment($className, $methodName, 'return');
-                $paramTypes = Helper::getDocComment($className, $methodName, 'param');
+                $methodReturn = StringHelper::getTypeFromDocComment($className, $methodName, 'return');
+                $paramTypes = StringHelper::getDocComment($className, $methodName, 'param');
                 $methodReturn = $methodReturn ? current($methodReturn) . ' ' : '';
                 echo " * @method $methodReturn$methodName() $methodName(";
                 $r = new ReflectionMethod($className, $methodName);
@@ -168,7 +168,7 @@ class ToolController extends WebController
                     if ($type && strpos($type, '$')) {
                         $typeString = StringHelper::getBetweenString($type, false, '$');
                         $typeString = trim($typeString);
-                        $filterType = Helper::filterDocType($typeString);
+                        $filterType = StringHelper::filterDocType($typeString);
                         $filterType = $filterType ? trim($filterType) . ' ' : '';
                     }
                     next($paramTypes);
@@ -303,119 +303,6 @@ class ToolController extends WebController
         echo '}' . "<br/>\n";
         echo 'return $rules;' . "<br/>\n";
 
-    }
-
-    /**
-     *
-     */
-    public function actionSystemBarcodes()
-    {
-        $print_server_id = sf('print_server_id');
-        if ($print_server_id) {
-
-            $printFile = printSpool()->label('package', array(
-                'package_id' => 'new',
-                'package_title' => 'package-new',
-                'barcode_title' => 'Create New Package',
-            ));
-            if (printSpool()->spool($print_server_id, $printFile)) {
-                user()->addFlash(t('Barcode printed for package-new.'), 'success');
-            }
-            $printFile = printSpool()->label('package', array(
-                'package_id' => 'none',
-                'package_title' => 'package-none',
-                'barcode_title' => 'Unassign Package',
-            ));
-            if (printSpool()->spool($print_server_id, $printFile)) {
-                user()->addFlash(t('Barcode printed for package-none.'), 'success');
-            }
-            if (!isAjax())
-                $this->redirect(array('tool/systemBarcodes'));
-        }
-        $this->render('systemBarcodes');
-    }
-
-
-    /**
-     * @static
-     *
-     */
-    public static function actionListErrors()
-    {
-        $runtime = app()->getRuntimePath();
-        $dir = $runtime . '/ErrorList';
-        $fileName = sf('fileName');
-        if ($fileName) {
-            $path = $dir . '/' . $fileName;
-            $contents = file_get_contents($path);
-            echo $contents;
-        }
-        else {
-            $files = Helper::getDirectoryList($dir);
-            rsort($files);
-
-            $contents = CHtml::link('Clear Errors ', array('tool/executeCommand',
-                'id' => 'clearErrors',
-            )) . '<br/> <br/>';
-            $contents .= '<table class="table table-bordered table-striped table-condensed"><thead> <tr></tr> <td>Error</td><td>pageTrail</td><td>route</td><td>Date</td></tr></thead>';
-            foreach ($files as $file) {
-                $pageTrailId = current(explode('-', $file));
-                $pageTrailLink = '';
-                $pageTrailCreated = '';
-                $pageTrailRoute = '';
-                if ($pageTrailId && is_numeric($pageTrailId)) {
-                    $pageTrail = PageTrail::model()->findByPk($pageTrailId);
-                    if ($pageTrail) {
-                        $pageTrailLink = $pageTrail->getLink();
-                        $pageTrailCreated = $pageTrail->created;
-                        $pageTrailCreated = Time::agoIcon($pageTrailCreated);
-                        $pageTrailRoute = $pageTrail->link;
-                        $pageTrailRoute = str_replace(bu(), '', $pageTrailRoute);
-                        $pageTrailRoute = str_replace($_SERVER['HTTP_HOST'], '', $pageTrailRoute);
-                        $pageTrailRoute = str_replace('http://', '', $pageTrailRoute);
-                        $pageTrailRoute = StringHelper::getFirstLineWithIcon($pageTrailRoute, 60);
-                    }
-                }
-
-                $contents .= '<tr> <td>' . l($file, array(
-                    'tool/executeCommand',
-                    'id' => 'listErrors',
-                    'fileName' => $file,
-                )) . '</td>' .
-                    ' <td> ' . $pageTrailLink . '</td>' .
-                    ' <td> ' . $pageTrailRoute . '</td>' .
-                    '<td> ' . $pageTrailCreated . '</td>' .
-                    '</tr>' . "\r\n";
-            }
-            $contents .= '</table>';
-            app()->controller->renderString($contents);
-        }
-
-        app()->end();
-
-    }
-
-    /**
-     * @static
-     *
-     */
-    public function actionClearErrors()
-    {
-        $confirm = sf('confirm');
-        if ($confirm == 'yes') {
-            $runtime = app()->getRuntimePath();
-            $dir = $runtime . '/ErrorList';
-            foreach (glob($dir . '/' . '*.*') as $v) {
-                unlink($v);
-            }
-        }
-        else {
-            echo CHtml::link('Confirm Clear Errors ', array('tool/executeCommand',
-                'id' => 'clearErrors',
-                'confirm' => 'yes',
-            ));
-            app()->end();
-        }
     }
 
 }
