@@ -16,7 +16,6 @@
  * @method Attachment[] findAllBySql() findAllBySql($sql, array $params = array())
  *
  * Methods from behavior AuditBehavior
- * @method afterSave() afterSave($event)
  * @method afterDelete() afterDelete($event)
  *
  * Properties from table fields

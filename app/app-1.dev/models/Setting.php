@@ -23,8 +23,6 @@
  * @method CActiveRecord loadEavAttributes() loadEavAttributes(array $attributes)
  * @method setModelTableFk() setModelTableFk($modelTableFk)
  * @method setSafeAttributes() setSafeAttributes($safeAttributes)
- * @method afterSave() afterSave($event)
- * @method afterDelete() afterDelete($event)
  * @method afterFind() afterFind($event)
  * @method CActiveRecord saveEavAttributes() saveEavAttributes($attributes)
  * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array (), $save = false)
