@@ -538,28 +538,35 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getControllerName() . '-' . $this->getPrimaryKeyString();
+    }
+
+    /**
      * @param string $action
      * @param array $params
      * @return string
      */
     public function getUrl($action = 'view', $params = array())
     {
-        //$pk = $this->getPrimaryKeySchemaString();
-        $pk = 'id'; // for FF
         return url('/' . $this->controllerName . '/' . $action, array_merge(array(
-            $pk => $this->getPrimaryKeyString(),
+            $this->getPrimaryKeySchemaString() => $this->getPrimaryKeyString(),
         ), (array)$params));
     }
 
     /**
-     * @param string $format
+     * @param string $title
      * @param string $urlAction
      * @param array $urlParams
      * @return string
      */
-    public function getLink($format = 'default', $urlAction = 'view', $urlParams = array())
+    public function getLink($title = null, $urlAction = 'view', $urlParams = array())
     {
-        return l($this->primaryKey, $this->getUrl($urlAction, $urlParams));
+        $title = $title ? $title : $this->getName();
+        return l($title, $this->getUrl($urlAction, $urlParams));
     }
 
     /**
@@ -568,11 +575,11 @@ class ActiveRecord extends CActiveRecord
     public function getDropdownLinks()
     {
         $links = array(
-            array('label' => $this->primaryKey, 'url' => $this->getUrl()),
+            array('label' => $this->getName(), 'url' => $this->getUrl()),
         );
         $items = $this->getDropdownLinkItems();
         if ($items) {
-            $links[] = array('items' => $this->getDropdownLinkItems());
+            $links[] = array('items' => $items);
         }
         return $links;
     }
@@ -582,10 +589,8 @@ class ActiveRecord extends CActiveRecord
      */
     public function getDropdownLinkItems()
     {
-        //$pk = $this->getPrimaryKeySchemaString();
-        $pk = 'id'; // for FF
         return array(
-            array('label' => t('Update'), 'url' => array('/' . $this->controllerName . '/update', $pk => $this->getPrimaryKeyString())),
+            array('label' => t('Update'), 'url' => $this->getUrl('update')),
         );
     }
 

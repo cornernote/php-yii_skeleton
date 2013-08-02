@@ -116,25 +116,6 @@ class PageTrail extends ActiveRecord
     }
 
     /**
-     * @param array $extraArgs
-     * @return array url to view the model
-     */
-    public function getUrl($extraArgs = array())
-    {
-        return url('/pageTrail/view', array_merge(array(
-            'id' => $this->id,
-        ), (array)$extraArgs));
-    }
-
-    /**
-     * @return string
-     */
-    public function getLink()
-    {
-        return l('pageTrail-' . $this->id, $this->getUrl());
-    }
-
-    /**
      * @return string
      */
     public function getLinkString()

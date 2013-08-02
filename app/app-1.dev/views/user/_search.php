@@ -18,7 +18,6 @@ Helper::searchToggle('user-grid');
     <fieldset>
         <legend><?php echo t('User Search'); ?></legend>
         <?php
-        echo $form->textFieldRow($user, 'customer_id');
         echo $form->textFieldRow($user, 'name');
         echo $form->textFieldRow($user, 'email', array('size' => 60, 'maxlength' => 255));
         echo $form->dropDownListRow($user, 'role', CHtml::listData(Role::model()->findAll(), 'id', 'name'), array('empty' => ''));

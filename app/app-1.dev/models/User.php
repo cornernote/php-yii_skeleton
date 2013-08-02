@@ -285,36 +285,6 @@ class User extends ActiveRecord
     }
 
     /**
-     * @param null $options
-     * @return string
-     */
-    public function getUrl($options = null)
-    {
-        $params = !empty($options['params']) ? $options['params'] : array();
-        return CMap::mergeArray($params, array(
-            '/user/view',
-            'id' => $this->id,
-        ));
-    }
-
-    /**
-     * @param array $parts
-     * @param array $urlOptions
-     * @return string
-     */
-    public function getLink($parts = array(), $urlOptions = array())
-    {
-        $link = l($this->name, $this->getUrl($urlOptions));
-        if (in_array('update', $parts)) {
-            $link .= ' ' . l('', array('/user/update', 'id' => $this->id, 'returnUrl' => ReturnUrl::getLinkValue(true)), array('class' => 'icon-pencil icon-grey', 'data-toggle' => 'modal-remote'));
-        }
-        if (in_array('delete', $parts)) {
-            $link .= ' ' . l('', array('/user/update', 'id' => $this->id, 'returnUrl' => ReturnUrl::getLinkValue(true)), array('class' => 'icon-remove icon-grey', 'data-toggle' => 'modal-remote'));
-        }
-        return $link;
-    }
-
-    /**
      * @return string
      */
     public function getApiKey()

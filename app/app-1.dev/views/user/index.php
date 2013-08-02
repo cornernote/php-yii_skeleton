@@ -13,47 +13,12 @@ $this->renderPartial('_menu', array(
 ));
 
 echo '<div class="spacer">';
-if (user()->checkAccess('admin')) {
-    echo ' ';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => t('Create Admin'),
-        'url' => array('/user/create', 'role_id' => Role::ROLE_ADMIN),
-        'type' => 'primary',
-        'htmlOptions' => array('data-toggle' => 'modal-remote'),
-    ));
-    echo ' ';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => t('Create Reseller'),
-        'url' => array('/user/create', 'role_id' => Role::ROLE_RESELLER),
-        'type' => 'primary',
-        'htmlOptions' => array('data-toggle' => 'modal-remote'),
-    ));
-    echo ' ';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => t('Create Locksmith'),
-        'url' => array('/user/create', 'role_id' => Role::ROLE_LOCKSMITH),
-        'type' => 'primary',
-        'htmlOptions' => array('data-toggle' => 'modal-remote'),
-    ));
-}
-if (user()->checkAccess('admin,locksmith')) {
-    echo ' ';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => t('Create Customer'),
-        'url' => array('/user/create', 'role_id' => Role::ROLE_CUSTOMER),
-        'type' => 'primary',
-        'htmlOptions' => array('data-toggle' => 'modal-remote'),
-    ));
-}
-if (user()->checkAccess('admin,locksmith,customer')) {
-    echo ' ';
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'label' => t('Create Key Holder'),
-        'url' => array('/user/create', 'role_id' => Role::ROLE_KEYHOLDER),
-        'type' => 'primary',
-        'htmlOptions' => array('data-toggle' => 'modal-remote'),
-    ));
-}
+$this->widget('bootstrap.widgets.TbButton', array(
+	'label' => t('Create User'),
+	'url' => array('/user/create'),
+	'type' => 'primary',
+	'htmlOptions' => array('data-toggle' => 'modal-remote'),
+));
 echo ' ';
 $this->widget('bootstrap.widgets.TbButton', array(
     'label' => t('Search'),

@@ -5,18 +5,11 @@
  */
 
 $columns = array();
-if (user()->checkAccess('admin')) {
-    $columns[] = array(
-        'name' => 'id',
-        'htmlOptions' => array('width' => '80'),
-    );
-}
-
 $columns[] = array(
-    'name' => 'name',
-    'value' => '$data->getLink(array("update","delete"))',
-    'type' => 'raw',
+	'name' => 'id',
+	'class' => 'TbDropdownColumn',
 );
+
 $columns[] = array(
     'name' => 'email',
     'value' => '$data->email ? l($data->email, "mailto:" . $data->email) : null',
@@ -27,22 +20,6 @@ $columns[] = array(
     'filter' => false,
 );
 
-if (user()->checkAccess('admin')) {
-    $columns[] = array(
-        'name' => 'locksmith_id',
-        'value' => '$data->locksmith?$data->locksmith->getLink():null',
-        'type' => 'raw',
-        'filter' => false,
-    );
-}
-if (user()->checkAccess('admin,locksmith')) {
-    $columns[] = array(
-        'name' => 'customer_id',
-        'value' => '$data->customer?$data->customer->getLink():null',
-        'type' => 'raw',
-        'filter' => false,
-    );
-}
 if (!$user->role_id) {
     $columns[] = array(
         'name' => 'role_id',
