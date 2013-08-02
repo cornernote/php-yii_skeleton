@@ -1,34 +1,36 @@
 <?php
-/* @var $this AccountController */
-?>
-<?php
-$this->pageTitle = t('Change Password');
-$this->pageHeading = t('Change Password');
+/**
+ * @var $this AccountController
+ * @var $user User
+ */
+$this->pageTitle = $this->pageHeading = t('Change Password');
 $this->breadcrumbs = array(
-    t('My Account') => array('index'),
-    t('Password'),
+    t('My Account') => array('/account/index'),
+    t('Change Password'),
 );
 $this->renderPartial('_menu', array('user' => $user));
-?>
 
-<?php
+/** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(
     'id' => 'password-form',
-    'enableAjaxValidation' => true,
+    //'enableAjaxValidation' => true,
     'type' => 'horizontal',
 ));
-?>
+echo $form->beginModalWrap();
+echo $form->errorSummary($user);
 
-<?php echo CHtml::errorSummary($user); ?>
-
-<?php
 echo $form->passwordFieldRow($user, 'current_password');
 echo $form->passwordFieldRow($user, 'password');
 echo $form->passwordFieldRow($user, 'confirm_password');
-?>
 
-<div class="form-actions">
-    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => t('Save'))); ?>
-</div>
-
-<?php $this->endWidget(); ?>
+echo $form->endModalWrap();
+echo '<div class="' . $form->getSubmitRowClass() . '">';
+$this->widget('bootstrap.widgets.TbButton', array(
+    'buttonType' => 'submit',
+    'type' => 'primary',
+    'icon' => 'ok white',
+    'label' => t('Save'),
+    'htmlOptions' => array('class' => 'pull-right'),
+));
+echo '</div>';
+$this->endWidget();

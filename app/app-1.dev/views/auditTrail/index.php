@@ -3,14 +3,8 @@
  *@var $this AuditTrailController
  *@var $auditTrail AuditTrail
  */
-
-?>
-<?php
-$this->pageTitle = t('Audit Trails');
-$this->pageHeading = t('Audit Trails');
-$this->breadcrumbs = array(
-    t('Audit Trails'),
-);
-$this->renderPartial('/site/_system_menu');
+user()->setState('search.auditTrail', ru());
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('List');
+$this->breadcrumbs = array($this->getName() . ' ' . t('List'));
+$this->renderPartial('_menu');
 $this->renderPartial('/auditTrail/_grid', array('auditTrail' => $auditTrail));
-?>

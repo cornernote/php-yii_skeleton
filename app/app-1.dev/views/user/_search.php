@@ -8,7 +8,7 @@ Helper::searchToggle('user-grid');
 ?>
 <div class="search-form hide">
     <?php
-    /** @var $form ActiveForm **/
+    /** @var ActiveForm $form */
     $form = $this->beginWidget('ActiveForm', array(
         'action' => url($this->route),
         'type' => 'horizontal',

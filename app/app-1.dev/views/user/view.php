@@ -3,37 +3,19 @@
  * @var $this UserController
  * @var $user User
  */
-user()->setState('index.user.' . $user->id, ru());
-$this->pageTitle = t('User') . ' ' . $user->name;
-$this->pageHeading = $user->name;
+$this->pageTitle = $this->pageHeading = $user->getName() . ' - ' . $this->getName() . ' ' . t('View');
 
 $this->breadcrumbs = array();
-$this->breadcrumbs[t('Users')] = user()->getState('index.user', array('/user/index'));
-$this->breadcrumbs[] = $user->name;
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));
+$this->breadcrumbs[] = $user->getName();
 
 $this->renderPartial('_menu', array(
     'user' => $user,
 ));
 
 $attributes = array();
-if (!in_array(Role::ROLE_LOCKSMITH, CHtml::listData($user->role, 'id', 'id'))) {
-    if (user()->checkAccess('admin')) {
-        $attributes[] = array(
-            'name' => 'locksmith_id',
-            'value' => $user->locksmith ? l($user->locksmith->getName(), $user->locksmith->getUrl()) : null,
-            'type' => 'raw',
-        );
-    }
-    if (!in_array(Role::ROLE_CUSTOMER, CHtml::listData($user->role, 'id', 'id'))) {
-        if (user()->checkAccess('admin,locksmith')) {
-            $attributes[] = array(
-                'name' => 'customer_id',
-                'value' => $user->customer ? l($user->customer->getName(), $user->customer->getUrl()) : null,
-                'type' => 'raw',
-            );
-        }
-    }
-}
+$attributes[] = 'id';
+$attributes[] = 'username';
 $attributes[] = 'name';
 $attributes[] = array(
     'name' => 'email',

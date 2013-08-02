@@ -589,9 +589,15 @@ class ActiveRecord extends CActiveRecord
      */
     public function getDropdownLinkItems()
     {
-        return array(
-            array('label' => t('Update'), 'url' => $this->getUrl('update')),
-        );
+        return array();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMoreDropdownLinkItems()
+    {
+        return array();
     }
 
     /**

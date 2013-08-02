@@ -32,12 +32,12 @@
  * @method setSafeAttributes() setSafeAttributes($safeAttributes)
  * @method afterFind() afterFind($event)
  * @method CActiveRecord saveEavAttributes() saveEavAttributes($attributes)
- * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array ( ), $save = false)
+ * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array(), $save = false)
  * @method CActiveRecord setEavAttributes() setEavAttributes($attributes, $save = false)
  * @method CActiveRecord setEavAttribute() setEavAttribute($attribute, $value, $save = false)
- * @method array getEavAttributes() getEavAttributes($attributes = array ( ))
+ * @method array getEavAttributes() getEavAttributes($attributes = array())
  * @method getEavAttribute() getEavAttribute($attribute)
- * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array ( ))
+ * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array())
  *
  * Properties from relation
  * @property Role[] $role
@@ -360,6 +360,28 @@ class User extends ActiveRecord
             }
         }
         return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDropdownLinkItems()
+    {
+        return array(
+            array('label' => t('Update'), 'url' => $this->getUrl('update')),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getMoreDropdownLinkItems()
+    {
+        return array(
+            array('label' => t('Password'), 'url' => $this->getUrl('password')),
+            array('label' => t('Log'), 'url' => $this->getUrl('log')),
+            array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
+        );
     }
 
 }

@@ -1,18 +1,24 @@
 <?php
-/* @var $pageTrail PageTrail */
-$this->pageTitle = 'pageTrail-' . $pageTrail->id;
-$this->pageHeading = 'pageTrail-' . $pageTrail->id;
-$this->breadcrumbs = array(
-    t('Page Trails') => user()->getState('search.pageTrail', array('index')),
-    'pageTrail-' . $pageTrail->id,
-);
-$this->renderPartial('/site/_system_menu');
+/**
+ * @var $this PageTrailController
+ * @var $pageTrail PageTrail
+ */
+$this->pageTitle = $this->pageHeading = $pageTrail->getName() . ' - ' . $this->getName() . ' ' . t('View');
+
+$this->breadcrumbs = array();
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.pageTrail', array('/pageTrail/index'));
+$this->breadcrumbs[] = $pageTrail->getName();
+
+$this->renderPartial('_menu', array(
+    'pageTrail' => $pageTrail,
+));
+
 ?>
 
 <div>
 
     <fieldset>
-        <legend><?php echo t('Page Details') ?></legend>
+        <legend><?php echo $this->getName() . ' ' . t('Details') ?></legend>
         <?php
 
         $attributes = array();
@@ -85,22 +91,25 @@ $this->renderPartial('/site/_system_menu');
         $auditTrail->page_trail_id = $pageTrail->id;
         $this->renderPartial('/auditTrail/_grid', array(
             'auditTrail' => $auditTrail,
-        )); ?>
+        ));
+        ?>
     </fieldset>
 
     <fieldset>
         <legend><?php echo t('Version Settings') ?></legend>
-        <?php $this->widget('DetailView', array(
-        'data' => $pageTrail,
-        'attributes' => array(
-            array(
-                'name' => 'app_version',
+        <?php
+        $this->widget('DetailView', array(
+            'data' => $pageTrail,
+            'attributes' => array(
+                array(
+                    'name' => 'app_version',
+                ),
+                array(
+                    'name' => 'yii_version',
+                ),
             ),
-            array(
-                'name' => 'yii_version',
-            ),
-        ),
-    )); ?>
+        ));
+        ?>
     </fieldset>
 
     <fieldset>
@@ -110,22 +119,23 @@ $this->renderPartial('/site/_system_menu');
             'data' => $pageTrail,
             'attributes' => array(
                 array(
-                    'name' => 'get',
-                    'value' => '<pre>' . print_r($pageTrail->get, true) . '</pre>',
+                    'label' => '$_GET',
+                    'value' => '<pre>' . print_r($pageTrail->unpack('get'), true) . '</pre>',
                     'type' => 'raw',
                 ),
                 array(
-                    'name' => 'post',
-                    'value' => '<pre>' . print_r($pageTrail->post, true) . '</pre>',
+                    'label' => '$_POST',
+                    'value' => '<pre>' . print_r($pageTrail->unpack('post'), true) . '</pre>',
                     'type' => 'raw',
                 ),
                 array(
-                    'name' => 'files',
-                    'value' => '<pre>' . print_r($pageTrail->files, true) . '</pre>',
+                    'label' => '$_FILES',
+                    'value' => '<pre>' . print_r($pageTrail->unpack('files'), true) . '</pre>',
                     'type' => 'raw',
                 ),
             ),
-        )); ?>
+        ));
+        ?>
     </fieldset>
 
     <fieldset>
@@ -141,17 +151,18 @@ $this->renderPartial('/site/_system_menu');
                 'data' => $pageTrail,
                 'attributes' => array(
                     array(
-                        'name' => 'session',
-                        'value' => '<pre>' . print_r($pageTrail->session, true) . '</pre>',
+                        'label' => '$_SESSION',
+                        'value' => '<pre>' . print_r($pageTrail->unpack('session'), true) . '</pre>',
                         'type' => 'raw',
                     ),
                     array(
-                        'name' => 'cookie',
-                        'value' => '<pre>' . print_r($pageTrail->cookie, true) . '</pre>',
+                        'label' => '$_COOKIE',
+                        'value' => '<pre>' . print_r($pageTrail->unpack('cookie'), true) . '</pre>',
                         'type' => 'raw',
                     ),
                 ),
-            )); ?>
+            ));
+            ?>
         </div>
     </fieldset>
 
@@ -168,8 +179,8 @@ $this->renderPartial('/site/_system_menu');
                 'data' => $pageTrail,
                 'attributes' => array(
                     array(
-                        'name' => 'server',
-                        'value' => '<pre>' . print_r($pageTrail->server, true) . '</pre>',
+                        'label' => '$_SERVER',
+                        'value' => '<pre>' . print_r($pageTrail->unpack('server'), true) . '</pre>',
                         'type' => 'raw',
                     ),
                 ),

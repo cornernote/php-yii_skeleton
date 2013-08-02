@@ -30,11 +30,6 @@ class UserRegister extends FormModel
     public $remember_me;
 
     /**
-     * @var
-     */
-    public $locksmith_plan;
-
-    /**
      * @var UserIdentity
      */
     private $_identity;
@@ -61,10 +56,6 @@ class UserRegister extends FormModel
         $rules[] = array('name', 'required');
         $rules[] = array('name', 'length', 'max' => 255);
 
-        // locksmith_plan
-        $rules[] = array('locksmith_plan', 'required');
-        $rules[] = array('locksmith_plan', 'length', 'max' => 255);
-
         return $rules;
     }
 
@@ -90,22 +81,20 @@ class UserRegister extends FormModel
             return false;
         }
 
-        // create locksmith
-        $locksmith = new Locksmith();
-        $locksmith->name = $this->name;
-        $locksmith->email = $this->email;
-        $locksmith->password = $locksmith->hashPassword($this->password);
-        $locksmith->web_status = 1;
-        if (!$locksmith->save()) {
+        // create user
+        $user = new User();
+        $user->name = $this->name;
+        $user->email = $this->email;
+        $user->password = $user->hashPassword($this->password);
+        $user->web_status = 1;
+        if (!$user->save()) {
             return false;
         }
-        $locksmith->setEavAttribute('locksmith_plan', $this->locksmith_plan, true);
-        $locksmith->setEavAttribute('locksmith_plan_expires', date('Y-m-d H:i:s', strtotime('+7 days')), true);
-        email()->sendLocksmithWelcomeEmail($locksmith);
+        email()->sendWelcomeEmail($user);
 
         // login
         $this->login();
-        return $locksmith;
+        return $user;
     }
 
 

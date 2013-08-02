@@ -4,44 +4,48 @@
  * @var $id int
  * @var $form ActiveForm
  */
-$this->pageTitle = t('Delete Users');
-$this->pageHeading = t('Delete');
-?>
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('Delete');
+$this->breadcrumbs = array();
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));
+$this->breadcrumbs[] = t('Delete');
 
-<?php
 $user = $id ? User::model()->findByPk($id) : new User('search');
+/** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(
     'id' => 'user-delete-form',
     'type' => 'horizontal',
     'action' => array('/user/delete', 'id' => $id),
-    'htmlOptions' => array(
-        'class' => app()->request->isAjaxRequest ? 'modal-form' : '',
-    ),
 ));
 echo sfGridHidden($id);
-echo CHtml::hiddenField('returnUrl', ReturnUrl::getFormValue());
 echo CHtml::hiddenField('confirm', 1);
-if (app()->request->isAjaxRequest) echo '<div class="modal-body">';
+echo $form->beginModalWrap();
+echo $form->errorSummary($user);
 ?>
 
-<fieldset>
-    <legend><?php echo t('Selected Users'); ?></legend>
-    <?php
-    $users = User::model()->findAll('t.id IN (' . implode(',', sfGrid($id)) . ')');
-    if ($users) {
-        echo '<ul class="bullet">';
-        foreach ($users as $user) {
-            echo '<li>';
-            echo $user->name;
-            echo '</li>';
+    <fieldset>
+        <legend><?php echo t('Selected Users'); ?></legend>
+        <?php
+        $users = User::model()->findAll('t.id IN (' . implode(',', sfGrid($id)) . ')');
+        if ($users) {
+            echo '<ul>';
+            foreach ($users as $user) {
+                echo '<li>';
+                echo $user->getName();
+                echo '</li>';
+            }
+            echo '</ul>';
         }
-        echo '</ul>';
-    }
-    ?>
-</fieldset>
+        ?>
+    </fieldset>
 
-<?php if (app()->request->isAjaxRequest) echo '</div>'; ?>
-<div class="<?php echo app()->request->isAjaxRequest ? 'modal-footer' : 'form-actions'; ?>">
-    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => t('Confirm Delete'))); ?>
-</div>
-<?php $this->endWidget(); ?>
+<?php
+echo $form->endModalWrap();
+echo '<div class="' . $form->getSubmitRowClass() . '">';
+$this->widget('bootstrap.widgets.TbButton', array(
+    'buttonType' => 'submit',
+    'type' => 'primary',
+    'label' => t('Confirm Delete'),
+    'htmlOptions' => array('class' => 'pull-right'),
+));
+echo '</div>';
+$this->endWidget();

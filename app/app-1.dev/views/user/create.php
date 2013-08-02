@@ -2,19 +2,16 @@
 /**
  * @var $this UserController
  * @var $user User
- * @var $role Role
  */
-$this->pageTitle = ucwords($role->name) . ' ' . t('Create');
-$this->pageHeading = ucwords($role->name) . ' ' . t('Create');
-$this->breadcrumbs = array(
-    t('Users') => user()->getState('index.user', array('/user/index')),
-    ucwords($role->name) . ' ' . t('Create'),
-);
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('Create');
+
+$this->breadcrumbs = array();
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));
+$this->breadcrumbs[] = t('Create');
+
 $this->renderPartial('_menu', array(
     'user' => $user,
 ));
 $this->renderPartial('_form', array(
     'user' => $user,
-    'role' => $role,
 ));
-?>

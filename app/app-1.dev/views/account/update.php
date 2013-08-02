@@ -1,45 +1,37 @@
 <?php
 /**
  * @var $this AccountController
+ * @var $user User
  */
-?>
-<?php
-$this->pageTitle = t('Update Account');
-$this->pageHeading = t('Update Account');
+$this->pageTitle = $this->pageHeading = t('Update Account');
 $this->breadcrumbs = array(
     t('My Account') => array('index'),
-    t('Update'),
+    t('Update Account'),
 );
 $this->renderPartial('_menu', array('user' => $user));
-?>
 
-
-<?php
 /* @var $form ActiveForm */
 $form = $this->beginWidget('ActiveForm', array(
     'id' => 'account-form',
-    'enableAjaxValidation' => true,
+    //'enableAjaxValidation' => true,
     'type' => 'horizontal',
 ));
-echo CHtml::hiddenField('returnUrl', ReturnUrl::getFormValue());
+echo $form->beginModalWrap();
 echo $form->errorSummary($user);
-?>
 
-<fieldset>
-    <legend><?php echo t('User Details') ?></legend>
+echo $form->textFieldRow($user, 'username');
+echo $form->textFieldRow($user, 'name');
+echo $form->textFieldRow($user, 'email');
+echo $form->textFieldRow($user, 'phone');
 
-    <?php
-    echo $form->textFieldRow($user, 'username', array('size' => 60, 'maxlength' => 255));
-    echo $form->textFieldRow($user, 'name', array('size' => 60, 'maxlength' => 255));
-    echo $form->textFieldRow($user, 'email', array('size' => 60, 'maxlength' => 255));
-    echo $form->textFieldRow($user, 'phone', array('size' => 60, 'maxlength' => 255));
-    ?>
-
-</fieldset>
-
-
-<div class="form-actions">
-    <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType' => 'submit', 'type' => 'primary', 'label' => t('Save'))); ?>
-</div>
-
-<?php $this->endWidget(); ?>
+echo $form->endModalWrap();
+echo '<div class="' . $form->getSubmitRowClass() . '">';
+$this->widget('bootstrap.widgets.TbButton', array(
+    'buttonType' => 'submit',
+    'type' => 'primary',
+    'icon' => 'ok white',
+    'label' => t('Save'),
+    'htmlOptions' => array('class' => 'pull-right'),
+));
+echo '</div>';
+$this->endWidget();

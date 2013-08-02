@@ -1,15 +1,19 @@
 <?php
 $columns = array();
-$columns[] = array(
-    'name' => 'user_id',
-    'value' => '$data->user?l($data->user->name,$data->user->url):null',
-    'type' => 'raw',
-);
-$columns[] = array(
-    'name' => 'page_trail_id',
-    'value' => '$data->pageTrail?l("pageTrail-".$data->pageTrail->id,$data->pageTrail->getUrl()):null',
-    'type' => 'raw',
-);
+if ($this->id != 'user') {
+    $columns[] = array(
+        'name' => 'user_id',
+        'value' => '$data->user?$data->pageTrail->getLink():null',
+        'type' => 'raw',
+    );
+}
+if ($this->id != 'pageTrail') {
+    $columns[] = array(
+        'name' => 'page_trail_id',
+        'value' => '$data->pageTrail?$data->pageTrail->getLink():null',
+        'type' => 'raw',
+    );
+}
 $columns[] = array(
     'name' => 'action',
 );

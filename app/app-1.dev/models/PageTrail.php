@@ -59,6 +59,21 @@ class PageTrail extends ActiveRecord
     public $model_id;
 
     /**
+     * @var
+     */
+    public $get;
+
+    /**
+     * @var
+     */
+    public $post;
+
+    /**
+     * @var
+     */
+    public $server;
+
+    /**
      * @var bool
      */
     public $ignoreClearCache = true;
@@ -152,78 +167,67 @@ class PageTrail extends ActiveRecord
      */
     public function recordPageTrail()
     {
-        //saving is done in updatePageTrail() pageTrail->save() function kind of thing
-        //$this->created_gmtime = gmdate('Y-m-d h:i:s');
+        // get info
         $this->created = date('Y-m-d H:i:s');
-        //$this->user_id = user()->id;
-//        $this->session = $this->getShrinkedSession();
-//        if (Yii::app() instanceof CWebApplication) {
-//            $this->link = app()->getRequest()->getHostInfo() . app()->getRequest()->getUrl();
-//            if (isset($_SERVER['REMOTE_ADDR'])) {
-//                $this->ip = $_SERVER['REMOTE_ADDR'];
-//            }
-//            if (isset($_SERVER['HTTP_REFERER'])) {
-//                $this->referrer = $_SERVER['HTTP_REFERER'];
-//            }
-//        }
-//        else {
-//            $this->link = 'yiic ';
-//            if (isset($_SERVER['argv'])) {
-//                $argv = $_SERVER['argv'];
-//                array_shift($argv);
-//                $this->link = implode(' ', $argv);
-//            }
-//        }
-//        $this->app_version = Setting::item('core', 'app_version');
-//        $this->yii_version = Setting::item('core', 'yii_version');
-        Setting::item('core', 'xxx');
+        $this->user_id = user()->id;
+        $this->link = $this->getCurrentLink();
+        $this->app_version = Setting::item('core', 'app_version');
+        $this->yii_version = Setting::item('core', 'yii_version');
         $this->start_time = $_ENV['_start'];
+        $this->post = $_POST;
+        $this->get = $_GET;
+        $this->files = $_FILES;
+        $this->cookie = $_COOKIE;
+        $this->session = $this->getShrinkedSession();
+        $this->server = $_SERVER;
+        $this->ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $this->referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
-        $this->removePasswords();
-        //serialize , compress and base64encode
+        // remove passwords
+        $passwordRemovedFromGet = self::removedValuesWithPasswordKeys($this->get);
+        $passwordRemovedFromPost = self::removedValuesWithPasswordKeys($this->post);
+        self::removedValuesWithPasswordKeys($this->server);
+        if ($passwordRemovedFromGet || $passwordRemovedFromPost) {
+            $this->server = null;
+        }
+        if ($passwordRemovedFromGet) {
+            $this->link = null;
+        }
+
+        // pack all
         $this->post = $this->pack('post');
         $this->get = $this->pack('get');
         $this->cookie = $this->pack('cookie');
         $this->server = $this->pack('server');
         $this->session = $this->pack('session');
         $this->files = $this->pack('files');
-        $this->save();
-        static_id('page_trail_id', $this->id); // used for AuditTrail tracking
 
-        // update the user id after the first save
-        $this->user_id = user()->id;
-        $this->save();
+        // save
+        return $this->save();
     }
 
     /**
-     *
+     * @return string
      */
-    function removePasswords()
+    public function getCurrentLink()
     {
-        $post = $_POST;
-        $get = $_GET;
-        $server = $_SERVER;
-        $passwordRemovedFromGet = self::removedValuesWithPasswordKeys($get);
-        $passwordRemovedFromPost = self::removedValuesWithPasswordKeys($post);
-        self::removedValuesWithPasswordKeys($server);
-        $this->get = $get;
-        $this->post = $post;
-        $this->files = $_FILES;
-
-        if (!$passwordRemovedFromGet && !$passwordRemovedFromPost) {
-            $this->server = $server;
+        if (Yii::app() instanceof CWebApplication) {
+            return Yii::app()->getRequest()->getHostInfo() . Yii::app()->getRequest()->getUrl();
         }
-        if ($passwordRemovedFromGet) {
-            $this->link = '';
+        $link = 'yiic ';
+        if (isset($_SERVER['argv'])) {
+            $argv = $_SERVER['argv'];
+            array_shift($argv);
+            $link .= implode(' ', $argv);
         }
-        $this->cookie = $_COOKIE;
+        return trim($link);
     }
 
     /**
      * @param $attribute
      * @return string
      */
-    function pack($attribute)
+    public function pack($attribute)
     {
         $value = $this->$attribute;
         //already packed
@@ -242,7 +246,7 @@ class PageTrail extends ActiveRecord
      * @param $attribute
      * @return mixed
      */
-    function unpack($attribute)
+    public function unpack($attribute)
     {
         @$value = unserialize($this->$attribute);
         if ($value !== false) {
@@ -313,8 +317,8 @@ class PageTrail extends ActiveRecord
         $this->memory_usage = memory_get_usage();
         $this->memory_peak = memory_get_peak_usage();
         $this->end_time = microtime(true);
-        $this->total_time = $this->end_time - $this->start_time;
         $this->audit_trail_count = $this->auditTrailCount;
+        $this->total_time = $this->end_time - $this->start_time;
         $this->save();
     }
 
@@ -337,7 +341,7 @@ class PageTrail extends ActiveRecord
                     $ignoredKeys[$key] = $key;
                 }
             }
-            $sessionCopy['z_ignored_keys_in_page_trail'] = $ignoredKeys;
+            $sessionCopy['__ignored_keys_in_page_trail'] = $ignoredKeys;
             $serialized = serialize($sessionCopy);
         }
         return unserialize($serialized);
@@ -368,14 +372,14 @@ class PageTrail extends ActiveRecord
             $criteria->compare('t.user_id', '<> ""');
 
             // ignore system users
-            $lcdUserCriteria = new CDbCriteria();
-            $lcdUserCriteria->compare('u2r.role_id', Role::ROLE_LCD, true);
-            $lcdUserCriteria->join .= ' LEFT JOIN user_to_role u2r ON u2r.user_id=t.id AND u2r.role_id=:role_id';
-            $lcdUserCriteria->params[':role_id'] = Role::ROLE_LCD;
-            $lcdUsers = User::model()->findAll($lcdUserCriteria);
-            foreach ($lcdUsers as $lcdUser) {
-                $criteria->addCondition('t.user_id != ' . $lcdUser->id);
-            }
+            //$lcdUserCriteria = new CDbCriteria();
+            //$lcdUserCriteria->compare('u2r.role_id', Role::ROLE_LCD, true);
+            //$lcdUserCriteria->join .= ' LEFT JOIN user_to_role u2r ON u2r.user_id=t.id AND u2r.role_id=:role_id';
+            //$lcdUserCriteria->params[':role_id'] = Role::ROLE_LCD;
+            //$lcdUsers = User::model()->findAll($lcdUserCriteria);
+            //foreach ($lcdUsers as $lcdUser) {
+            //    $criteria->addCondition('t.user_id != ' . $lcdUser->id);
+            //}
         }
         $criteria->compare('t.created', $this->created);
         $criteria->compare('t.link', $this->link, true);
@@ -440,8 +444,10 @@ class PageTrail extends ActiveRecord
         // create new page trail
         else {
             $pageTrail = new PageTrail();
-            $pageTrail->recordPageTrail();
-            app()->onEndRequest = array($pageTrail, 'updatePageTrail');
+            if ($pageTrail->recordPageTrail()) {
+                static_id('page_trail_id', $pageTrail->id);
+                Yii::app()->onEndRequest = array($pageTrail, 'updatePageTrail');
+            }
         }
 
         return $pageTrail;

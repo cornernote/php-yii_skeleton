@@ -28,22 +28,6 @@ class Role extends ActiveRecord
      * Admin - super user
      */
     const ROLE_ADMIN = 1;
-    /**
-     * Reseller - manager of locksmith accounts
-     */
-    const ROLE_RESELLER = 2;
-    /**
-     * Locksmith - manager of customer and key holder accounts
-     */
-    const ROLE_LOCKSMITH = 3;
-    /**
-     * Customer - manager of key holder accounts
-     */
-    const ROLE_CUSTOMER = 4;
-    /**
-     * KeyHolder
-     */
-    const ROLE_KEY_HOLDER = 5;
 
     /**
      * Returns the static model of the specified AR class.

@@ -9,7 +9,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function mainMenu()
+    static public function mainMenu()
     {
         $menu = array();
         $menu[] = self::topMenu();
@@ -24,7 +24,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function userMenu()
+    static public function userMenu()
     {
         $items = array();
         if (!user()->isGuest) {
@@ -40,17 +40,6 @@ class NavbarItems
                 'label' => t('Password'),
                 'url' => array('/account/password'),
             );
-            if (user()->checkAccess('locksmith')) {
-                $items[] = '---';
-                $items[] = array(
-                    'label' => t('Locksmith Plan'),
-                    'url' => array('/checkout/plan'),
-                );
-                $items[] = array(
-                    'label' => t('Transactions'),
-                    'url' => array('/transaction/index'),
-                );
-            }
             $items[] = '---';
             $items[] = array(
                 'label' => t('Logout'),
@@ -82,7 +71,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function topMenu()
+    static public function topMenu()
     {
         $controller = app()->controller->id;
         $menu = array(
@@ -111,7 +100,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function helpMenu()
+    static public function helpMenu()
     {
         return array(
             'class' => 'bootstrap.widgets.TbMenu',
@@ -132,7 +121,7 @@ class NavbarItems
      * @static
      * @return array
      */
-    static function systemMenu()
+    static public function systemMenu()
     {
         $controller = app()->controller->id;
         return array(
@@ -144,44 +133,53 @@ class NavbarItems
                 array(
                     'label' => t('System'),
                     'active' => in_array($controller, array('tool', 'setting', 'emailTemplate', 'pageTrail', 'auditTrail', 'log')),
-                    'items' => array(
-                        array(
-                            'label' => t('Clear Cache'),
-                            'url' => array('/tool/clearCache', 'returnUrl' => ReturnUrl::getLinkValue(true)),
-                        ),
-                        '---',
-                        array(
-                            'label' => t('Settings'),
-                            'url' => array('/setting/index'),
-                        ),
-                        array(
-                            'label' => t('Tools'),
-                            'url' => array('/tool/index'),
-                            'active' => ($controller == 'tool'),
-                        ),
-                        array(
-                            'label' => t('Email Templates'),
-                            'url' => array('/emailTemplate/index'),
-                            'active' => ($controller == 'emailTemplate'),
-                        ),
-                        '---',
-                        array(
-                            'label' => t('Page Trails'),
-                            'url' => array('/pageTrail/index'),
-                            'active' => ($controller == 'pageTrail'),
-                        ),
-                        array(
-                            'label' => t('Audit Trails'),
-                            'url' => array('/auditTrail/index'),
-                            'active' => ($controller == 'auditTrail'),
-                        ),
-                        array(
-                            'label' => t('Logs'),
-                            'url' => array('/log/index'),
-                            'active' => ($controller == 'log'),
-                        ),
-                    ),
+                    'items' => self::systemMenuItems(),
                 ),
+            ),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    static public function systemMenuItems()
+    {
+        $controller = app()->controller->id;
+        return array(
+            array(
+                'label' => t('Clear Cache'),
+                'url' => array('/tool/clearCache', 'returnUrl' => ReturnUrl::getLinkValue(true)),
+            ),
+            '---',
+            array(
+                'label' => t('Settings'),
+                'url' => array('/setting/index'),
+            ),
+            array(
+                'label' => t('Tools'),
+                'url' => array('/tool/index'),
+                'active' => ($controller == 'tool'),
+            ),
+            array(
+                'label' => t('Email Templates'),
+                'url' => array('/emailTemplate/index'),
+                'active' => ($controller == 'emailTemplate'),
+            ),
+            '---',
+            array(
+                'label' => t('Page Trails'),
+                'url' => array('/pageTrail/index'),
+                'active' => ($controller == 'pageTrail'),
+            ),
+            array(
+                'label' => t('Audit Trails'),
+                'url' => array('/auditTrail/index'),
+                'active' => ($controller == 'auditTrail'),
+            ),
+            array(
+                'label' => t('Logs'),
+                'url' => array('/log/index'),
+                'active' => ($controller == 'log'),
             ),
         );
     }

@@ -29,159 +29,25 @@ class EMailManager extends CApplicationComponent
         $this->spool($to, 'user.recover', $viewParams, $modelsForParams, $relation);
 
         // tell someone about it
-        Log::model()->add('sendRecoverPasswordEmail', $relation);
+        Log::model()->add('EMailManager::sendRecoverPasswordEmail', $relation);
     }
 
     /**
-     * @param $locksmith Locksmith
+     * @param $user User
      */
-    public function sendLocksmithWelcomeEmail($locksmith)
+    public function sendWelcomeEmail($user)
     {
         // setup email variables
-        $to = array($locksmith->email => $locksmith->name);
-        $modelsForParams = array('locksmith' => $locksmith);
-        $relation = array('model' => 'LocksmithWelcomeEmail', 'model_id' => $locksmith->id);
+        $to = array($user->email => $user->name);
+        $modelsForParams = array('user' => $user);
+        $relation = array('model' => 'WelcomeEmail', 'model_id' => $user->id);
         $viewParams = array();
 
         // spool the email
-        $this->spool($to, 'locksmith.welcome', $viewParams, $modelsForParams, $relation);
+        $this->spool($to, 'user.welcome', $viewParams, $modelsForParams, $relation);
 
         // tell someone about it
-        Log::model()->add('sendLocksmithWelcomeEmail', $relation);
-    }
-
-    /**
-     * @param $customer Customer
-     */
-    public function sendCustomerWelcomeEmail($customer)
-    {
-        // setup email variables
-        $to = array($customer->email => $customer->name);
-        $modelsForParams = array('customer' => $customer);
-        $relation = array('model' => 'CustomerWelcomeEmail', 'model_id' => $customer->id);
-        $viewParams = array();
-
-        // get recovery temp login link
-        $token = Token::model()->add('+7days', 1, $relation);
-        $viewParams['url'] = url(array('/account/passwordReset', 'id' => $customer->id, 'token' => $token));
-
-        // spool the email
-        $this->spool($to, 'customer.welcome', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendCustomerWelcomeEmail', $relation);
-    }
-
-    /**
-     * @param $keyHolder KeyHolder
-     */
-    public function sendKeyHolderWelcomeEmail($keyHolder)
-    {
-        // setup email variables
-        $to = array($keyHolder->email => $keyHolder->name);
-        $modelsForParams = array('keyHolder' => $keyHolder);
-        $relation = array('model' => 'KeyHolderWelcomeEmail', 'model_id' => $keyHolder->id);
-        $viewParams = array();
-
-        // get recovery temp login link
-        $token = Token::model()->add('+7days', 1, $relation);
-        $viewParams['url'] = url(array('/account/passwordReset', 'id' => $keyHolder->id, 'token' => $token));
-
-        // spool the email
-        $this->spool($to, 'keyHolder.welcome', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendKeyHolderWelcomeEmail', $relation);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderCreateEmail($order)
-    {
-        $this->sendOrderCreateCustomerEmail($order);
-        $this->sendOrderCreateLocksmithEmail($order);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderCreateCustomerEmail($order)
-    {
-        // setup email variables
-        $to = array($order->customer->email => $order->customer->name);
-        $modelsForParams = array('order' => $order, 'customer' => $order->customer, 'locksmith' => $order->locksmith);
-        $relation = array('model' => 'OrderCreateCustomerEmail', 'model_id' => $order->id);
-        $viewParams = array();
-
-        // spool the email
-        $this->spool($to, 'order.create.customer', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendOrderCreateCustomerEmail', $relation);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderCreateLocksmithEmail($order)
-    {
-        // setup email variables
-        $to = array($order->locksmith->email => $order->locksmith->name);
-        $modelsForParams = array('order' => $order, 'customer' => $order->customer, 'locksmith' => $order->locksmith);
-        $relation = array('model' => 'OrderCreateLocksmithEmail', 'model_id' => $order->id);
-        $viewParams = array();
-
-        // spool the email
-        $this->spool($to, 'order.create.locksmith', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendOrderCreateLocksmithEmail', $relation);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderUpdateEmail($order)
-    {
-        $this->sendOrderUpdateCustomerEmail($order);
-        $this->sendOrderUpdateLocksmithEmail($order);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderUpdateCustomerEmail($order)
-    {
-        // setup email variables
-        $to = array($order->customer->email => $order->customer->name);
-        $modelsForParams = array('order' => $order, 'customer' => $order->customer, 'locksmith' => $order->locksmith);
-        $relation = array('model' => 'OrderUpdateCustomerEmail', 'model_id' => $order->id);
-        $viewParams = array();
-
-        // spool the email
-        $this->spool($to, 'order.update.customer', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendOrderUpdateCustomerEmail', $relation);
-    }
-
-    /**
-     * @param $order Order
-     */
-    public function sendOrderUpdateLocksmithEmail($order)
-    {
-        // setup email variables
-        $to = array($order->locksmith->email => $order->locksmith->name);
-        $modelsForParams = array('order' => $order, 'customer' => $order->customer, 'locksmith' => $order->locksmith);
-        $relation = array('model' => 'OrderUpdateLocksmithEmail', 'model_id' => $order->id);
-        $viewParams = array();
-
-        // spool the email
-        $this->spool($to, 'order.update.locksmith', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('sendOrderUpdateLocksmithEmail', $relation);
+        Log::model()->add('EMailManager::sendWelcomeEmail', $relation);
     }
 
     /**

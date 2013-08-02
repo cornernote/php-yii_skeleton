@@ -181,12 +181,6 @@ class AccountController extends WebController
         }
         if ($valid) {
             $valid = Token::model()->checkToken('RecoverPasswordEmail', $id, $token);
-            if (!$valid) {
-                $valid = Token::model()->checkToken('CustomerWelcomeEmail', $id, $token);
-            }
-            if (!$valid) {
-                $valid = Token::model()->checkToken('KeyHolderWelcomeEmail', $id, $token);
-            }
         }
         if (!$valid) {
             Log::model()->add('password could not be saved due to an invalid key', array(

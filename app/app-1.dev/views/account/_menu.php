@@ -21,16 +21,3 @@ $this->menu[] = array(
 //    'url' => array('/account/settings'),
 //    'active' => ($this->id == 'account' && $this->action->id == 'settings'),
 //);
-if (user()->checkAccess('locksmith')) {
-    $this->menu[] = array(
-        'label' => t('Locksmith Plan'),
-        'url' => array('/checkout/plan'),
-        'active' => ($this->id == 'checkout' && $this->action->id == 'plan'),
-    );
-    $this->menu[] = array(
-        'label' => t('Transactions'),
-        'url' => array('/transaction/index'),
-        'active' => ($this->id == 'transaction'),
-    );
-}
-

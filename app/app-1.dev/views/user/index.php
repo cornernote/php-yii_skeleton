@@ -4,9 +4,8 @@
  * @var $user User
  */
 user()->setState('index.user', ru());
-$this->pageTitle = t('Users');
-$this->pageHeading = t('Users');
-$this->breadcrumbs = array(t('Users'));
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('List');
+$this->breadcrumbs = array($this->getName() . ' ' . t('List'));
 
 $this->renderPartial('_menu', array(
     'user' => $user,
@@ -14,10 +13,10 @@ $this->renderPartial('_menu', array(
 
 echo '<div class="spacer">';
 $this->widget('bootstrap.widgets.TbButton', array(
-	'label' => t('Create User'),
-	'url' => array('/user/create'),
-	'type' => 'primary',
-	'htmlOptions' => array('data-toggle' => 'modal-remote'),
+    'label' => t('Create User'),
+    'url' => array('/user/create'),
+    'type' => 'primary',
+    'htmlOptions' => array('data-toggle' => 'modal-remote'),
 ));
 echo ' ';
 $this->widget('bootstrap.widgets.TbButton', array(

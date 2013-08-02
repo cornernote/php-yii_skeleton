@@ -39,6 +39,14 @@ class WebController extends Controller
     public $showNavBar = true;
 
     /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return str_replace('Controller', '', get_class($this));
+    }
+
+    /**
      * Initializes the controller.
      * This method is called by the application before the controller starts to execute.
      */
@@ -104,14 +112,14 @@ class WebController extends Controller
      * @param null $url
      * @param bool $useCurrentUrl
      */
-    protected function flashAndRedirect($message, $messageType, $url = null,$useCurrentUrl=false)
+    protected function flashAndRedirect($message, $messageType, $url = null, $useCurrentUrl = false)
     {
         user()->addFlash($message, $messageType);
         if (!isAjax()) {
             if (!$url) {
                 $url = ReturnUrl::getUrl();
-                if ($useCurrentUrl){
-                    $url=app()->request->url;
+                if ($useCurrentUrl) {
+                    $url = app()->request->url;
                 }
             }
             $this->redirect($url);

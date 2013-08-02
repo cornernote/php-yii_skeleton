@@ -3,12 +3,11 @@
  * @var $this UserController
  * @var $user User
  */
-$this->pageTitle = t('User') . ' ' . $user->name . ' ' . t('Log');
-$this->pageHeading = $user->name . ' ' . t('Log');
+$this->pageTitle = $this->pageHeading = $user->getName() . ' - ' . $this->getName() . ' ' . t('Log');
 
 $this->breadcrumbs = array();
-$this->breadcrumbs[t('Users')] = user()->getState('index.user', array('/user/index'));
-$this->breadcrumbs[$user->name] = $user->getLink();
+$this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));
+$this->breadcrumbs[$user->getName()] = $user->getLink();
 $this->breadcrumbs[] = t('Log');
 
 $this->renderPartial('_menu', array(
