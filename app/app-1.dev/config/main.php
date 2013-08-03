@@ -22,7 +22,18 @@ $config = array(
     ),
 
     // modules
-    'modules' => array(),
+    'modules' => array(
+        'gii' => array(
+            'class' => 'system.gii.GiiModule',
+            'password' => '123456',
+            'generatorPaths' => array(
+                'application.modules.gii.generators', // a path alias
+            ),
+            // 'ipFilters'=>array(...a list of IPs...),
+            // 'newFileMode'=>0666,
+            // 'newDirMode'=>0777,
+        ),
+    ),
 
     // components
     'components' => array(
