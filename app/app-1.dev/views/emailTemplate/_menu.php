@@ -6,7 +6,7 @@
 
 // index
 if ($this->action->id == 'index') {
-    $this->menu = NavbarItems::systemMenuItems();
+    $this->menu = Menu::getItemsFromMenu('System');
     return; // no more links
 }
 
@@ -26,18 +26,6 @@ $this->menu[] = array(
 );
 
 // others
-foreach ($emailTemplate->getDropdownLinkItems() as $linkItem) {
+foreach ($emailTemplate->getDropdownLinkItems(true) as $linkItem) {
     $this->menu[] = $linkItem;
-}
-
-// more
-$more = array();
-foreach ($emailTemplate->getMoreDropdownLinkItems() as $linkItem) {
-    $more[] = $linkItem;
-}
-if ($more) {
-    $this->menu[] = array(
-        'label' => t('More'),
-        'items' => $more,
-    );
 }

@@ -586,17 +586,11 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Retrieves a list of links to be used in grid and menus.
+     * @param bool $extra
      * @return array
      */
-    public function getDropdownLinkItems()
-    {
-        return array();
-    }
-
-    /**
-     * @return array
-     */
-    public function getMoreDropdownLinkItems()
+    public function getDropdownLinkItems($extra = false)
     {
         return array();
     }

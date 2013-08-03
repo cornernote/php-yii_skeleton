@@ -12,11 +12,16 @@ class Lookup extends ActiveRecord
 {
 
     /**
+     * @var array
+     */
+    private static $_items = array();
+
+    /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
      * @return Lookup the static model class
      */
-    public static function model($className=__CLASS__)
+    public static function model($className = __CLASS__)
     {
         return parent::model($className);
     }
@@ -36,8 +41,8 @@ class Lookup extends ActiveRecord
     {
         $rules = array();
         $rules[] = array('name, type, position, created', 'required');
-        $rules[] = array('position', 'numerical', 'integerOnly'=>true);
-        $rules[] = array('name, type', 'length', 'max'=>128);
+        $rules[] = array('position', 'numerical', 'integerOnly' => true);
+        $rules[] = array('name, type', 'length', 'max' => 128);
         $rules[] = array('deleted', 'safe');
         return $rules;
     }
@@ -63,8 +68,7 @@ class Lookup extends ActiveRecord
      */
     public function relations()
     {
-        return array(
-        );
+        return array();
     }
 
     /**
@@ -92,14 +96,14 @@ class Lookup extends ActiveRecord
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
 
-        $criteria=new CDbCriteria;
+        $criteria = new CDbCriteria;
 
-        $criteria->compare('id',$this->id);
-        $criteria->compare('name',$this->name,true);
-        $criteria->compare('type',$this->type,true);
-        $criteria->compare('position',$this->position);
-        $criteria->compare('created',$this->created,true);
-        $criteria->compare('deleted',$this->deleted,true);
+        $criteria->compare('id', $this->id);
+        $criteria->compare('name', $this->name, true);
+        $criteria->compare('type', $this->type, true);
+        $criteria->compare('position', $this->position);
+        $criteria->compare('created', $this->created, true);
+        $criteria->compare('deleted', $this->deleted, true);
 
         return new ActiveDataProvider($this, CMap::mergeArray(array(
             'criteria' => $criteria,
@@ -108,25 +112,51 @@ class Lookup extends ActiveRecord
 
     /**
      * Retrieves a list of links to be used in grid and menus.
+     * @param bool $extra
      * @return array
      */
-    public function getDropdownLinkItems()
+    public function getDropdownLinkItems($extra = false)
     {
-        return array(
-            array('label' => t('Update'), 'url' => $this->getUrl('update')),
-        );
+        $links = array();
+        $links[] = array('label' => t('Update'), 'url' => $this->getUrl('update'));
+        if ($extra) {
+            $links[] = array(
+                'label' => t('More'),
+                'items' => array(
+                    array('label' => t('Log'), 'url' => $this->getUrl('log')),
+                    array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
+                ),
+            );
+        }
+        return $links;
     }
 
     /**
-     * Retrieves a list of links to be used in menus.
+     * @static
+     * @param $type
      * @return array
      */
-    public function getMoreDropdownLinkItems()
+    public static function items($type)
     {
-        return array(
-            array('label' => t('Log'), 'url' => $this->getUrl('log')),
-            array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
-        );
+        if (!isset(self::$_items[$type]))
+            self::loadItems($type);
+        return self::$_items[$type];
+    }
+
+    /**
+     * @static
+     * @param $type
+     * @param $code
+     * @return mixed
+     */
+    public static function item($type, $code)
+    {
+        if (!isset(self::$_items[$type]))
+            self::loadItems($type);
+        if (!isset(self::$_items[$type][$code])) {
+            self::$_items[$type][$code] = null;
+        }
+        return self::$_items[$type][$code];
     }
 
 }

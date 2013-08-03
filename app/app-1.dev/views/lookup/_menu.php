@@ -27,18 +27,6 @@ $this->menu[] = array(
 );
 
 // others
-foreach ($lookup->getDropdownLinkItems() as $linkItem) {
+foreach ($lookup->getDropdownLinkItems(true) as $linkItem) {
     $this->menu[] = $linkItem;
-}
-
-// more
-$more = array();
-foreach ($lookup->getMoreDropdownLinkItems() as $linkItem) {
-    $more[] = $linkItem;
-}
-if ($more) {
-    $this->menu[] = array(
-        'label' => t('More'),
-        'items' => $more,
-    );
 }

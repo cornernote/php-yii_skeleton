@@ -27,18 +27,6 @@ $this->menu[] = array(
 );
 
 // others
-foreach ($user->getDropdownLinkItems() as $linkItem) {
+foreach ($user->getDropdownLinkItems(true) as $linkItem) {
     $this->menu[] = $linkItem;
-}
-
-// more
-$more = array();
-foreach ($user->getMoreDropdownLinkItems() as $linkItem) {
-    $more[] = $linkItem;
-}
-if ($more) {
-    $this->menu[] = array(
-        'label' => t('More'),
-        'items' => $more,
-    );
 }

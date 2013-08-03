@@ -147,25 +147,23 @@ class Menu extends ActiveRecord
 
     /**
      * Retrieves a list of links to be used in grid and menus.
+     * @param bool $extra
      * @return array
      */
-    public function getDropdownLinkItems()
+    public function getDropdownLinkItems($extra = false)
     {
-        return array(
-            array('label' => t('Update'), 'url' => $this->getUrl('update')),
-        );
-    }
-
-    /**
-     * Retrieves a list of links to be used in menus.
-     * @return array
-     */
-    public function getMoreDropdownLinkItems()
-    {
-        return array(
-            array('label' => t('Log'), 'url' => $this->getUrl('log')),
-            array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
-        );
+        $links = array();
+        $links[] = array('label' => t('Update'), 'url' => $this->getUrl('update'));
+        if ($extra) {
+            $links[] = array(
+                'label' => t('More'),
+                'items' => array(
+                    array('label' => t('Log'), 'url' => $this->getUrl('log')),
+                    array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
+                ),
+            );
+        }
+        return $links;
     }
 
     /**
