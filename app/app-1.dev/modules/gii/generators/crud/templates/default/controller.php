@@ -2,179 +2,199 @@
 /**
  * This is the template for generating a controller class file for CRUD feature.
  * The following variables are available in this template:
- * - $this: the CrudCode object
+ * @var $this CrudCode
  */
-?>
-<?php echo "<?php\n"; ?>
 
-class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseControllerClass."\n"; ?>
-{
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	public $layout='//layouts/column2';
+echo "<?php\n";
+echo "/**\n";
+echo " *\n";
+echo " */\n";
+echo "class " . $this->controllerClass . " extends " . $this->baseControllerClass . "\n";
+echo "{\n";
+echo "\n";
 
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
-		);
-	}
+// access control
+echo "    /**\n";
+echo "     * Access Control\n";
+echo "     * @return array\n";
+echo "     */\n";
+echo "    public function accessRules()\n";
+echo "    {\n";
+echo "        return array(\n";
+echo "            array('allow',\n";
+echo "                'actions' => array('index', 'view', 'log', 'create', 'update', 'delete'),\n";
+echo "                'roles' => array('admin'),\n";
+echo "                //'users' => array('*','@','?'), // all, user, guest\n";
+echo "            ),\n";
+echo "            array('deny', 'users' => array('*')),\n";
+echo "        );\n";
+echo "    }\n";
+echo "\n";
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+// filters
+echo "    /**\n";
+echo "     * Filters\n";
+echo "     */\n";
+echo "    //public function filters()\n";
+echo "    //{\n";
+echo "    //    return array(\n";
+echo "    //        'inlineFilterName',\n";
+echo "    //        array(\n";
+echo "    //            'class'=>'path.to.FilterClass',\n";
+echo "    //            'propertyName'=>'propertyValue',\n";
+echo "    //        ),\n";
+echo "    //    );\n";
+echo "    //}\n";
+echo "\n";
 
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
+// actions
+echo "    /**\n";
+echo "     * Actions\n";
+echo "     */\n";
+echo "    //public function actions()\n";
+echo "    //{\n";
+echo "    //    return array(\n";
+echo "    //        'action1' => 'path.to.ActionClass',\n";
+echo "    //        'action2' => array(\n";
+echo "    //            'class' => 'path.to.AnotherActionClass',\n";
+echo "    //            'propertyName' => 'propertyValue',\n";
+echo "    //        ),\n";
+echo "    //    );\n";
+echo "    //}\n";
+echo "\n";
 
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new <?php echo $this->modelClass; ?>;
+// index
+echo "    /**\n";
+echo "     * Index\n";
+echo "     */\n";
+echo "    public function actionIndex()\n";
+echo "    {\n";
+echo "        \$" . ucfirst($this->modelClass) . " = new " . $this->modelClass . "('search');\n";
+echo "        if (!empty(\$_GET['" . $this->modelClass . "']))\n";
+echo "            \$" . ucfirst($this->modelClass) . "->attributes = \$_GET['" . $this->modelClass . "'];\n";
+echo "\n";
+echo "        \$this->render('index', array(\n";
+echo "            '" . ucfirst($this->modelClass) . "' => \$" . ucfirst($this->modelClass) . ",\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+// view
+echo "    /**\n";
+echo "     * View\n";
+echo "     * @param \$id\n";
+echo "     */\n";
+echo "    public function actionView(\$id)\n";
+echo "    {\n";
+echo "        /** @var \$" . ucfirst($this->modelClass) . " " . $this->modelClass . " */\n";
+echo "        \$" . ucfirst($this->modelClass) . " = \$this->loadModel(\$id);\n";
+echo "\n";
+echo "        // check for deleted " . $this->modelClass . "\n";
+echo "        if (\$" . ucfirst($this->modelClass) . "->deleted) {\n";
+echo "            user()->addFlash('THIS RECORD IS DELETED', 'warning');\n";
+echo "        }\n";
+echo "\n";
+echo "        \$this->render('view', array(\n";
+echo "            '" . ucfirst($this->modelClass) . "' => \$" . ucfirst($this->modelClass) . ",\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-		if(isset($_POST['<?php echo $this->modelClass; ?>']))
-		{
-			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
-		}
+// log
+echo "    /**\n";
+echo "     * Log\n";
+echo "     * @param \$id\n";
+echo "     */\n";
+echo "    public function actionLog(\$id)\n";
+echo "    {\n";
+echo "        /** @var \$" . ucfirst($this->modelClass) . " " . $this->modelClass . " */\n";
+echo "        \$" . ucfirst($this->modelClass) . " = \$this->loadModel(\$id);\n";
+echo "\n";
+echo "        \$this->render('log', array(\n";
+echo "            '" . ucfirst($this->modelClass) . "' => \$" . ucfirst($this->modelClass) . ",\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+// create
+echo "    /**\n";
+echo "     * Create\n";
+echo "     */\n";
+echo "    public function actionCreate()\n";
+echo "    {\n";
+echo "        \$" . ucfirst($this->modelClass) . " = new " . $this->modelClass . "('create');\n";
+echo "\n";
+echo "        \$this->performAjaxValidation(\$" . ucfirst($this->modelClass) . ", '" . ucfirst($this->modelClass) . "-form');\n";
+echo "        if (isset(\$_POST['" . $this->modelClass . "'])) {\n";
+echo "            \$" . ucfirst($this->modelClass) . "->attributes = \$_POST['" . $this->modelClass . "'];\n";
+echo "            if (\$" . ucfirst($this->modelClass) . "->save()) {\n";
+echo "                user()->addFlash('" . $this->modelClass . " has been created.', 'success');\n";
+echo "                \$this->redirect(ReturnUrl::getUrl(\$" . ucfirst($this->modelClass) . "->getUrl()));\n";
+echo "            }\n";
+echo "        }\n";
+echo "        else {\n";
+echo "            if (isset(\$_GET['" . $this->modelClass . "'])) {\n";
+echo "                \$" . ucfirst($this->modelClass) . "->attributes = \$_GET['" . $this->modelClass . "'];\n";
+echo "            }\n";
+echo "        }\n";
+echo "\n";
+echo "        \$this->render('create', array(\n";
+echo "            '" . ucfirst($this->modelClass) . "' => \$" . ucfirst($this->modelClass) . ",\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
+// update
+echo "    /**\n";
+echo "     * Update\n";
+echo "     * @param \$id\n";
+echo "     */\n";
+echo "    public function actionUpdate(\$id)\n";
+echo "    {\n";
+echo "        /** @var \$" . ucfirst($this->modelClass) . " " . $this->modelClass . " */\n";
+echo "        \$" . ucfirst($this->modelClass) . " = \$this->loadModel(\$id);\n";
+echo "\n";
+echo "        \$this->performAjaxValidation(\$" . ucfirst($this->modelClass) . ", '" . ucfirst($this->modelClass) . "-form');\n";
+echo "        if (isset(\$_POST['" . $this->modelClass . "'])) {\n";
+echo "            \$" . ucfirst($this->modelClass) . "->attributes = \$_POST['" . $this->modelClass . "'];\n";
+echo "            if (\$" . ucfirst($this->modelClass) . "->save()) {\n";
+echo "                user()->addFlash(t('" . $this->modelClass . " has been updated'), 'success');\n";
+echo "                \$this->redirect(ReturnUrl::getUrl(\$" . ucfirst($this->modelClass) . "->getUrl()));\n";
+echo "            }\n";
+echo "            user()->addFlash(t('" . $this->modelClass . " could not be updated'), 'warning');\n";
+echo "        }\n";
+echo "\n";
+echo "        \$this->render('update', array(\n";
+echo "            '" . ucfirst($this->modelClass) . "' => \$" . ucfirst($this->modelClass) . ",\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+// delete
+echo "    /**\n";
+echo "     * Delete\n";
+echo "     * @param \$id\n";
+echo "     */\n";
+echo "    public function actionDelete(\$id = null)\n";
+echo "    {\n";
+echo "        if (!empty(\$_POST['confirm'])) {\n";
+echo "            \$ids = sfGrid(\$id);\n";
+echo "            foreach (\$ids as \$id) {\n";
+echo "                \$" . ucfirst($this->modelClass) . " = " . $this->modelClass . "::model()->findByPk(\$id);\n";
+echo "                if (!\$" . ucfirst($this->modelClass) . ") {\n";
+echo "                    continue;\n";
+echo "                }\n";
+echo "                \$" . ucfirst($this->modelClass) . "->delete();\n";
+echo "                user()->addFlash(sprintf('" . $this->modelClass . " %s has been deleted', \$" . ucfirst($this->modelClass) . "->getName()), 'success');\n";
+echo "            }\n";
+echo "            \$this->redirect(ReturnUrl::getUrl(user()->getState('index." . ucfirst($this->modelClass) . "', array('/" . ucfirst($this->modelClass) . "/index'))));\n";
+echo "        }\n";
+echo "\n";
+echo "        \$this->render('delete', array(\n";
+echo "            'id' => \$id,\n";
+echo "        ));\n";
+echo "    }\n";
+echo "\n";
 
-		if(isset($_POST['<?php echo $this->modelClass; ?>']))
-		{
-			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model-><?php echo $this->tableSchema->primaryKey; ?>));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		$this->loadModel($id)->delete();
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-	}
-
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndex()
-	{
-		$dataProvider=new CActiveDataProvider('<?php echo $this->modelClass; ?>');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
-	}
-
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new <?php echo $this->modelClass; ?>('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['<?php echo $this->modelClass; ?>']))
-			$model->attributes=$_GET['<?php echo $this->modelClass; ?>'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return <?php echo $this->modelClass; ?> the loaded model
-	 * @throws CHttpException
-	 */
-	public function loadModel($id)
-	{
-		$model=<?php echo $this->modelClass; ?>::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
-
-	/**
-	 * Performs the AJAX validation.
-	 * @param <?php echo $this->modelClass; ?> $model the model to be validated
-	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='<?php echo $this->class2id($this->modelClass); ?>-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-}
+// end class
+echo "}\n";

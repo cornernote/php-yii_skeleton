@@ -43,7 +43,7 @@ class WebController extends Controller
      */
     public function getName()
     {
-        return str_replace('Controller', '', get_class($this));
+        return ucwords(trim(strtolower(str_replace(array('-', '_', '.'), ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', str_replace('Controller', '', get_class($this)))))));
     }
 
     /**

@@ -2,44 +2,84 @@
 /**
  * This is the template for generating a controller class file.
  * The following variables are available in this template:
- * - $this: the ControllerCode object
+ * @var $this ControllerCode
  */
-?>
-<?php echo "<?php\n"; ?>
 
-class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseClass."\n"; ?>
-{
-<?php foreach($this->getActionIDs() as $action): ?>
-	public function action<?php echo ucfirst($action); ?>()
-	{
-		$this->render('<?php echo $action; ?>');
-	}
+echo "<?php\n";
+echo "/**\n";
+echo " *\n";
+echo " */\n";
+echo "class " . $this->getControllerClass() . " extends " . $this->baseClass . "\n";
+echo "{\n";
+echo "\n";
 
-<?php endforeach; ?>
-	// Uncomment the following methods and override them if needed
-	/*
-	public function filters()
-	{
-		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-
-	public function actions()
-	{
-		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-	*/
+// access control
+$actions = array();
+foreach ($this->getActionIDs() as $action) {
+    $actions[] = "'" . $action . "'";
 }
+echo "    /**\n";
+echo "     * Access Control\n";
+echo "     * @return array\n";
+echo "     */\n";
+echo "    public function accessRules()\n";
+echo "    {\n";
+echo "        return array(\n";
+echo "            array('allow',\n";
+echo "                'actions' => array(" . implode(', ', $actions) . "),\n";
+echo "                'roles' => array('admin'),\n";
+echo "                //'users' => array('*','@','?'), // all, user, guest\n";
+echo "            ),\n";
+echo "            array('deny', 'users' => array('*')),\n";
+echo "        );\n";
+echo "    }\n";
+echo "\n";
+
+// filters
+echo "    /**\n";
+echo "     * Filters\n";
+echo "     */\n";
+echo "    //public function filters()\n";
+echo "    //{\n";
+echo "    //    return array(\n";
+echo "    //        'inlineFilterName',\n";
+echo "    //        array(\n";
+echo "    //            'class'=>'path.to.FilterClass',\n";
+echo "    //            'propertyName'=>'propertyValue',\n";
+echo "    //        ),\n";
+echo "    //    );\n";
+echo "    //}\n";
+echo "\n";
+
+// action classes
+echo "    /**\n";
+echo "     * Actions\n";
+echo "     */\n";
+echo "    //public function actions()\n";
+echo "    //{\n";
+echo "    //    return array(\n";
+echo "    //        'action1' => 'path.to.ActionClass',\n";
+echo "    //        'action2' => array(\n";
+echo "    //            'class' => 'path.to.AnotherActionClass',\n";
+echo "    //            'propertyName' => 'propertyValue',\n";
+echo "    //        ),\n";
+echo "    //    );\n";
+echo "    //}\n";
+echo "\n";
+
+// action methods
+foreach ($this->getActionIDs() as $action) {
+    if (in_array($action, array('index', 'view', 'log', 'create', 'update', 'delete')))
+        continue;
+    echo "    /**\n";
+    echo "     * " . ucfirst($action) . "\n";
+    echo "     */\n";
+    echo "    public function action" . ucfirst($action) . "()\n";
+    echo "    {\n";
+    echo "        \$this->render('" . $action . "');\n";
+    echo "    }\n";
+    echo "\n";
+}
+
+echo "\n";
+echo "}\n";

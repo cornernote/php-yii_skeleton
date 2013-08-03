@@ -52,7 +52,7 @@ class UserController extends WebController
      */
     public function actionView($id)
     {
-        /** @var $user User **/
+        /** @var $user User */
         $user = $this->loadModel($id);
 
         // check for deleted user
@@ -72,7 +72,7 @@ class UserController extends WebController
      */
     public function actionLog($id)
     {
-        /** @var $user User **/
+        /** @var $user User */
         $user = $this->loadModel($id, 'User');
 
         $this->render('log', array(
@@ -83,12 +83,8 @@ class UserController extends WebController
     /**
      * Create
      */
-    public function actionCreate($role_id)
+    public function actionCreate()
     {
-        $role = Role::model()->findByPk($role_id);
-        if (!$role)
-            throw new CHttpException(404, t('The requested page does not exist.'));
-
         $user = new User('create');
 
         $this->performAjaxValidation($user, 'user-form');
@@ -121,7 +117,7 @@ class UserController extends WebController
      */
     public function actionUpdate($id)
     {
-        /** @var $user User **/
+        /** @var $user User */
         $user = $this->loadModel($id);
 
         $this->performAjaxValidation($user, 'user-form');
@@ -155,12 +151,12 @@ class UserController extends WebController
                 $user = User::model()->findByPk($id);
 
                 // check access
-                if (!$user->checkUserAccess(user()->id)){
+                if (!$user->checkUserAccess(user()->id)) {
                     continue;
                 }
 
                 $user->delete();
-                user()->addFlash(sprintf('User %s has been deleted', $user->name), 'success');
+                user()->addFlash(sprintf('User %s has been deleted', $user->getName()), 'success');
             }
             $this->redirect(ReturnUrl::getUrl(user()->getState('index.user', array('/user/index'))));
         }

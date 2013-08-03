@@ -1,45 +1,38 @@
 <?php
 /**
  * The following variables are available in this template:
- * - $this: the CrudCode object
+ * @var $this CrudCode
  */
-?>
-<?php echo "<?php\n"; ?>
-/* @var $this <?php echo $this->getControllerClass(); ?> */
-/* @var $model <?php echo $this->getModelClass(); ?> */
-/* @var $form CActiveForm */
-?>
 
-<div class="form">
-
-<?php echo "<?php \$form=\$this->beginWidget('CActiveForm', array(
-	'id'=>'".$this->class2id($this->modelClass)."-form',
-	'enableAjaxValidation'=>false,
-)); ?>\n"; ?>
-
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
-	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
-
-<?php
-foreach($this->tableSchema->columns as $column)
-{
-	if($column->autoIncrement)
-		continue;
-?>
-	<div class="row">
-		<?php echo "<?php echo ".$this->generateActiveLabel($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo ".$this->generateActiveField($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo \$form->error(\$model,'{$column->name}'); ?>\n"; ?>
-	</div>
-
-<?php
+echo "<?php\n";
+echo "/**\n";
+echo " * @var \$this " . $this->controllerClass . "\n";
+echo " * @var \$" . lcfirst($this->modelClass) . " " . $this->modelClass . "\n";
+echo " */\n";
+echo "\n";
+echo "/** @var \$form ActiveForm */\n";
+echo "\$form = \$this->beginWidget('ActiveForm', array(\n";
+echo "    'id' => '" . lcfirst($this->modelClass) . "-form',\n";
+echo "    'type' => 'horizontal',\n";
+echo "    //'enableAjaxValidation' => true,\n";
+echo "));\n";
+echo "echo \$form->beginModalWrap();\n";
+echo "echo \$form->errorSummary(\$" . lcfirst($this->modelClass) . ");\n";
+echo "\n";
+foreach ($this->tableSchema->columns as $column) {
+    if ($column->autoIncrement)
+        continue;
+    echo "echo \$form->textFieldRow(\$" . lcfirst($this->modelClass) . ", '" . $column->name . "');\n";
 }
-?>
-	<div class="row buttons">
-		<?php echo "<?php echo CHtml::submitButton(\$model->isNewRecord ? 'Create' : 'Save'); ?>\n"; ?>
-	</div>
-
-<?php echo "<?php \$this->endWidget(); ?>\n"; ?>
-
-</div><!-- form -->
+echo "\n";
+echo "echo \$form->endModalWrap();\n";
+echo "echo '<div class=\"' . \$form->getSubmitRowClass() . '\">';\n";
+echo "\$this->widget('bootstrap.widgets.TbButton', array(\n";
+echo "    'buttonType' => 'submit',\n";
+echo "    'type' => 'primary',\n";
+echo "    'icon' => 'ok white',\n";
+echo "    'label' => \$" . lcfirst($this->modelClass) . "->isNewRecord ? t('Create') : t('Save'),\n";
+echo "    'htmlOptions' => array('class' => 'pull-right'),\n";
+echo "));\n";
+echo "echo '</div>';\n";
+echo "\$this->endWidget();\n";

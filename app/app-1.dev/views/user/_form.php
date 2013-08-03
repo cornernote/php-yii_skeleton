@@ -2,10 +2,9 @@
 /**
  * @var $this UserController
  * @var $user User
- * @var $role Role
  */
 
-/* @var $form ActiveForm */
+/** @var $form ActiveForm */
 $form = $this->beginWidget('ActiveForm', array(
     'id' => 'user-form',
     //'enableAjaxValidation' => true,
