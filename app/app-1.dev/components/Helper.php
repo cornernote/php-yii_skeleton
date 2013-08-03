@@ -43,4 +43,26 @@ class Helper
         return false;
     }
 
+    /**
+     * @param $dir
+     * @param $removeSelf
+     */
+    public static function removeDirectory($dir, $removeSelf)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir . "/" . $object) == "dir")
+                        self::removeDirectory($dir . "/" . $object, true);
+                    else unlink($dir . "/" . $object);
+                }
+            }
+            reset($objects);
+            if ($removeSelf) {
+                rmdir($dir);
+            }
+        }
+    }
+
 }

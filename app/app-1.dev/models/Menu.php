@@ -155,12 +155,15 @@ class Menu extends ActiveRecord
         $links = array();
         $links[] = array('label' => t('Update'), 'url' => $this->getUrl('update'));
         if ($extra) {
+            $more = array();
+            $more[] = array('label' => t('Log'), 'url' => $this->getUrl('log'));
+            if (!$this->deleted)
+                $more[] = array('label' => t('Delete'), 'url' => $this->getUrl('delete', array('returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));
+            else
+                $more[] = array('label' => t('Undelete'), 'url' => $this->getUrl('delete', array('task' => 'undelete', 'returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));
             $links[] = array(
                 'label' => t('More'),
-                'items' => array(
-                    array('label' => t('Log'), 'url' => $this->getUrl('log')),
-                    array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
-                ),
+                'items' => $more,
             );
         }
         return $links;

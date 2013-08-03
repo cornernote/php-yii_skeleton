@@ -10,10 +10,8 @@ $_settings = Setting::model()->findAll();
 foreach ($_settings as $setting) {
     $settings[$setting->id] = $setting;
 }
-$this->pageTitle = t('Settings');
-$this->pageHeading = t('Settings');
-$menu = NavbarItems::systemMenu();
-$this->menu = $menu['items'][0]['items'];
+$this->pageTitle = $this->pageHeading = t('Settings');
+$this->menu = Menu::getItemsFromMenu('System');
 ?>
 
 

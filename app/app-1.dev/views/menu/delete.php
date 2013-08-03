@@ -2,22 +2,22 @@
 /**
  * @var $this MenuController
  * @var $id int
+ * @var $task string
  */
 
-$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('Delete');
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t(ucfirst($task));
 $this->breadcrumbs = array();
 $this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.menu', array('/menu/index'));
-$this->breadcrumbs[] = t('Delete');
+$this->breadcrumbs[] = t(ucfirst($task));
 
 $menu = $id ? Menu::model()->findByPk($id) : new Menu('search');
 /** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(
-    'id' => 'menu-delete-form',
+    'id' => 'menu-' . $task . '-form',
     'type' => 'horizontal',
-    'action' => array('/menu/delete', 'id' => $id),
+    'action' => array('/menu/delete', 'id' => $id, 'task' => $task, 'confirm' => 1),
 ));
 echo sfGridHidden($id);
-echo CHtml::hiddenField('confirm', 1);
 echo $form->beginModalWrap();
 echo $form->errorSummary($menu);
 
@@ -25,13 +25,13 @@ echo '<fieldset>';
 echo '<legend>' . t('Selected Records') . '</legend>';
 $menus = Menu::model()->findAll('t.id IN (' . implode(',', sfGrid($id)) . ')');
 if ($menus) {
-	echo '<ul>';
-	foreach ($menus as $menu) {
-		echo '<li>';
-		echo $menu->getName();
-		echo '</li>';
-	}
-	echo '</ul>';
+    echo '<ul>';
+    foreach ($menus as $menu) {
+        echo '<li>';
+        echo $menu->getName();
+        echo '</li>';
+    }
+    echo '</ul>';
 }
 echo '</fieldset>';
 
@@ -40,7 +40,7 @@ echo '<div class="' . $form->getSubmitRowClass() . '">';
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'submit',
     'type' => 'primary',
-    'label' => t('Confirm Delete'),
+    'label' => t('Confirm ' . ucfirst($task)),
     'htmlOptions' => array('class' => 'pull-right'),
 ));
 echo '</div>';

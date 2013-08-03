@@ -150,12 +150,19 @@ echo "    {\n";
 echo "        \$links = array();\n";
 echo "        \$links[] = array('label' => t('Update'), 'url' => \$this->getUrl('update'));\n";
 echo "        if (\$extra) {\n";
+echo "            \$more = array();\n";
+echo "            \$more[] = array('label' => t('Clear Cache'), 'url' => array('/tool/clearCacheModel', 'model' => get_class(\$this), 'id' => \$this->getPrimaryKeyString()));\n";
+echo "            \$more[] = array('label' => t('View Log'), 'url' => \$this->getUrl('log'));\n";
+if (in_array('deleted', CHtml::listData($columns, 'name', 'name')))
+    echo "            if (!\$this->deleted)\n    ";
+echo "            \$more[] = array('label' => t('Delete'), 'url' => \$this->getUrl('delete', array('returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));\n";
+if (in_array('deleted', CHtml::listData($columns, 'name', 'name'))) {
+    echo "            else\n";
+    echo "                \$more[] = array('label' => t('Undelete'), 'url' => \$this->getUrl('delete', array('task' => 'undelete', 'returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));\n";
+}
 echo "            \$links[] = array(\n";
 echo "                'label' => t('More'),\n";
-echo "                'items' => array(\n";
-echo "                    array('label' => t('Log'), 'url' => \$this->getUrl('log')),\n";
-echo "                    array('label' => t('Delete'), 'url' => \$this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),\n";
-echo "                ),\n";
+echo "                'items' => \$more,\n";
 echo "            );\n";
 echo "        }\n";
 echo "        return \$links;\n";

@@ -6,8 +6,7 @@
 
 // index
 if ($this->action->id == 'index') {
-    $menu = NavbarItems::topMenu();
-    $this->menu = $menu['items'];
+    $this->menu = Menu::getItemsFromMenu('System');
     return; // no more links
 }
 

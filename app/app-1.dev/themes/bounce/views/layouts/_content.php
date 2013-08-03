@@ -77,14 +77,14 @@ $this->widget('Navbar', array(
                 <div class="span3">
                     <h3>Quick Links</h3>
                     <?php
-                    $menu = NavbarItems::topMenu();
+                    $menu = Menu::getItemsFromMenu('Main');
                     $this->widget('zii.widgets.CMenu', array(
                         'items' => $menu['items'],
                         'htmlOptions' => array(
                             'id' => 'menu',
                         ),
                     ));
-                    $menu = NavbarItems::helpMenu();
+                    $menu = Menu::getItemsFromMenu('Help');
                     $this->widget('zii.widgets.CMenu', array(
                         'items' => $menu['items'],
                         'htmlOptions' => array(

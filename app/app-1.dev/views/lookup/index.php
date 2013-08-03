@@ -8,7 +8,7 @@ user()->setState('index.lookup', ru());
 $this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('List');
 $this->breadcrumbs = array($this->getName() . ' ' . t('List'));
 
-$this->menu = Menu::getItemsFromMenu('Main');
+$this->menu = Menu::getItemsFromMenu('System');
 
 echo '<div class="spacer">';
 $this->widget('bootstrap.widgets.TbButton', array(

@@ -13,41 +13,12 @@ class LookupController extends WebController
     {
         return array(
             array('allow',
-                'actions' => array('index', 'view', 'log', 'create', 'update', 'delete'),
+                'actions' => array('index', 'view', 'log', 'create', 'update', 'delete', 'order', 'type'),
                 'roles' => array('admin'),
-                //'users' => array('*','@','?'), // all, user, guest
             ),
             array('deny', 'users' => array('*')),
         );
     }
-
-    /**
-     * Filters
-     */
-    //public function filters()
-    //{
-    //    return array(
-    //        'inlineFilterName',
-    //        array(
-    //            'class'=>'path.to.FilterClass',
-    //            'propertyName'=>'propertyValue',
-    //        ),
-    //    );
-    //}
-
-    /**
-     * Actions
-     */
-    //public function actions()
-    //{
-    //    return array(
-    //        'action1' => 'path.to.ActionClass',
-    //        'action2' => array(
-    //            'class' => 'path.to.AnotherActionClass',
-    //            'propertyName' => 'propertyValue',
-    //        ),
-    //    );
-    //}
 
     /**
      * Index
@@ -152,21 +123,87 @@ class LookupController extends WebController
      */
     public function actionDelete($id = null)
     {
-        if (!empty($_POST['confirm'])) {
+        $task = sf('task', 'Lookup') == 'undelete' ? 'undelete' : 'delete';
+        if (sf('confirm', 'Lookup')) {
             $ids = sfGrid($id);
             foreach ($ids as $id) {
                 $lookup = Lookup::model()->findByPk($id);
                 if (!$lookup) {
                     continue;
                 }
-                $lookup->delete();
-                user()->addFlash(sprintf('Lookup %s has been deleted', $lookup->getName()), 'success');
+                call_user_func(array($lookup, $task));
+                user()->addFlash(strtr('Lookup :name has been :tasked.', array(
+                    ':name' => $lookup->getName(),
+                    ':tasked' => $task . 'd',
+                )), 'success');
             }
             $this->redirect(ReturnUrl::getUrl(user()->getState('index.lookup', array('/lookup/index'))));
         }
 
         $this->render('delete', array(
             'id' => $id,
+            'task' => $task,
+        ));
+    }
+
+    /**
+     * Handles the ordering of lookups.
+     */
+    public function actionOrder()
+    {
+        if (isset($_POST['Order'])) {
+            $lookups = explode(',', $_POST['Order']);
+            foreach ($lookups as $k => $lookup_id) {
+                if ($lookup = Lookup::model()->findbyPk($lookup_id)) {
+                    $lookup->position = $k;
+                    $lookup->save(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * Displays a particular group of lookups.
+     * @param $type
+     * @param integer $id the ID of the lookup to be displayed
+     */
+    public function actionType($type, $id = null)
+    {
+        // get types
+        $types = Lookup::model()->types;
+
+        // get lookups for sortable
+        $lookups = Lookup::model()->findAll(array(
+            'condition' => 'type=:type AND deleted IS NULL',
+            'params' => array(
+                ':type' => $type,
+            ),
+            'order' => 't.position',
+        ));
+
+        // get lookup for form
+        $lookup = $id ? $this->loadModel($id) : new Lookup;
+        $this->performAjaxValidation($lookup, 'lookup-form');
+        if (isset($_POST['Lookup'])) {
+            if (!$id) {
+                $lookup->type = $type;
+            }
+            $lookup->attributes = $_POST['Lookup'];
+            if ($lookup->save()) {
+                user()->addFlash(t('Lookup has been saved.'), 'success');
+                $this->redirect(array('lookup/view', 'type' => $type));
+            }
+            else {
+                user()->addFlash(t('Lookup could not be saved.'), 'error');
+            }
+        }
+
+        // render view
+        $this->render('view', array(
+            'types' => $types,
+            'type' => $type,
+            'lookups' => $lookups,
+            'lookup' => $lookup,
         ));
     }
 

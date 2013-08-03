@@ -145,7 +145,8 @@ class UserController extends WebController
      */
     public function actionDelete($id = null)
     {
-        if (!empty($_POST['confirm'])) {
+        $task = sf('task', 'User') == 'undelete' ? 'undelete' : 'delete';
+        if (sf('confirm', 'User')) {
             $ids = sfGrid($id);
             foreach ($ids as $id) {
                 $user = User::model()->findByPk($id);
@@ -154,15 +155,18 @@ class UserController extends WebController
                 if (!$user->checkUserAccess(user()->id)) {
                     continue;
                 }
-
-                $user->delete();
-                user()->addFlash(sprintf('User %s has been deleted', $user->getName()), 'success');
+                call_user_func(array($user, $task));
+                user()->addFlash(strtr('User :name has been :tasked.', array(
+                    ':name' => $user->getName(),
+                    ':tasked' => $task . 'd',
+                )), 'success');
             }
             $this->redirect(ReturnUrl::getUrl(user()->getState('index.user', array('/user/index'))));
         }
 
         $this->render('delete', array(
             'id' => $id,
+            'task' => $task,
         ));
     }
 

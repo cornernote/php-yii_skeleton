@@ -17,12 +17,10 @@ class ToolController extends WebController
     {
         return array(
             array('allow',
-                'actions' => array('index', 'page', 'clearCache', 'generateProperties', 'generateRules'),
-                'roles' => array('dev', 'admin'),
+                'actions' => array('index', 'page', 'clearCache', 'clearCacheModel', 'clearAsset', 'generateProperties', 'generateRules'),
+                'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 
@@ -38,6 +36,9 @@ class ToolController extends WebController
         );
     }
 
+    /**
+     *
+     */
     public function actionIndex()
     {
         $this->render('index');
@@ -48,8 +49,50 @@ class ToolController extends WebController
      */
     public function actionClearCache()
     {
+        // yii cache
         cache()->flush();
-        user()->addFlash('Server cache has been cleared.', 'success');
+        // model cache
+        ModelCache::model()->flush();
+        // assets
+        Helper::removeDirectory(app()->getAssetManager()->basePath, false);
+        // all done
+        user()->addFlash(t('Server cache has been cleared.'), 'success');
+        $this->redirect(ReturnUrl::getUrl());
+    }
+
+    /**
+     * Clears cache for a single model
+     *
+     * @param $model
+     * @param $id
+     */
+    public function actionClearCacheModel($model, $id)
+    {
+        /* @var $modelInstance ActiveRecord */
+        $modelInstance = ActiveRecord::model($model)->findByPk($id);
+        if ($modelInstance) {
+            $modelInstance->clearCache();
+            user()->addFlash(strtr(t('Cache cleared for :model :id.'), array(
+                ':model' => $model,
+                ':id' => $id,
+            )), 'success');
+        }
+        else {
+            user()->addFlash(strtr(t('Could not find :model with ID :id.'), array(
+                ':model' => $model,
+                ':id' => $id,
+            )), 'success');
+        }
+        $this->redirect(ReturnUrl::getUrl());
+    }
+
+    /**
+     *
+     */
+    public function actionClearAsset()
+    {
+        Helper::removeDirectory(Yii::app()->getAssetManager()->getBasePath(), false);
+        user()->addFlash(t('Assets have been cleared'), 'success');
         $this->redirect(ReturnUrl::getUrl());
     }
 

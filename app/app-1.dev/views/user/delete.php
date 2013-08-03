@@ -2,22 +2,21 @@
 /**
  * @var $this UserController
  * @var $id int
- * @var $form ActiveForm
+ * @var $task string
  */
-$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('Delete');
+$this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t(ucfirst($task));
 $this->breadcrumbs = array();
 $this->breadcrumbs[$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));
-$this->breadcrumbs[] = t('Delete');
+$this->breadcrumbs[] = t(ucfirst($task));
 
 $user = $id ? User::model()->findByPk($id) : new User('search');
 /** @var ActiveForm $form */
 $form = $this->beginWidget('ActiveForm', array(
-    'id' => 'user-delete-form',
+    'id' => 'user-' . $task . '-form',
     'type' => 'horizontal',
-    'action' => array('/user/delete', 'id' => $id),
+    'action' => array('/user/delete', 'id' => $id, 'task' => $task, 'confirm' => 1),
 ));
 echo sfGridHidden($id);
-echo CHtml::hiddenField('confirm', 1);
 echo $form->beginModalWrap();
 echo $form->errorSummary($user);
 ?>
@@ -44,7 +43,7 @@ echo '<div class="' . $form->getSubmitRowClass() . '">';
 $this->widget('bootstrap.widgets.TbButton', array(
     'buttonType' => 'submit',
     'type' => 'primary',
-    'label' => t('Confirm Delete'),
+    'label' => t('Confirm ' . ucfirst($task)),
     'htmlOptions' => array('class' => 'pull-right'),
 ));
 echo '</div>';

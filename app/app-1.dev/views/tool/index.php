@@ -10,8 +10,7 @@ $this->breadcrumbs = array(
 );
 
 // menu
-$menu = NavbarItems::systemMenu();
-$this->menu = $menu['items'][0]['items'];
+$this->menu = Menu::getItemsFromMenu('System');
 
 
 $this->widget('bootstrap.widgets.TbMenu', array(

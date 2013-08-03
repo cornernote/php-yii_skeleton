@@ -123,21 +123,26 @@ class MenuController extends WebController
      */
     public function actionDelete($id = null)
     {
-        if (!empty($_POST['confirm'])) {
+        $task = sf('task', 'Menu') == 'undelete' ? 'undelete' : 'delete';
+        if (sf('confirm', 'Menu')) {
             $ids = sfGrid($id);
             foreach ($ids as $id) {
                 $menu = Menu::model()->findByPk($id);
                 if (!$menu) {
                     continue;
                 }
-                $menu->delete();
-                user()->addFlash(sprintf('Menu %s has been deleted', $menu->getName()), 'success');
+                call_user_func(array($menu, $task));
+                user()->addFlash(strtr('Lookup :name has been :tasked.', array(
+                    ':name' => $menu->getName(),
+                    ':tasked' => $task . 'd',
+                )), 'success');
             }
             $this->redirect(ReturnUrl::getUrl(user()->getState('index.menu', array('/menu/index'))));
         }
 
         $this->render('delete', array(
             'id' => $id,
+            'task' => $task,
         ));
     }
 

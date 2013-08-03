@@ -390,7 +390,7 @@ class ActiveRecord extends CActiveRecord
      */
     public function getCacheKeyPrefix($removeOldKey = false)
     {
-        $key = 'getCacheKeyPrefix.' . get_class($this) . '.' . $this->getPrimaryKey();
+        $key = 'getCacheKeyPrefix.' . get_class($this) . '.' . $this->getPrimaryKeyString();
         $prefix = false;
         if (!$removeOldKey) {
             $prefix = Yii::app()->cache->get($key);

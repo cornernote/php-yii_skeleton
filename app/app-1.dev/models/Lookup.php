@@ -120,12 +120,15 @@ class Lookup extends ActiveRecord
         $links = array();
         $links[] = array('label' => t('Update'), 'url' => $this->getUrl('update'));
         if ($extra) {
+            $more = array();
+            $more[] = array('label' => t('Log'), 'url' => $this->getUrl('log'));
+            if (!$this->deleted)
+                $more[] = array('label' => t('Delete'), 'url' => $this->getUrl('delete', array('returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));
+            else
+                $more[] = array('label' => t('Undelete'), 'url' => $this->getUrl('delete', array('task' => 'undelete', 'returnUrl' => ReturnUrl::getLinkValue(true))), 'linkOptions' => array('data-toggle' => 'modal-remote'));
             $links[] = array(
                 'label' => t('More'),
-                'items' => array(
-                    array('label' => t('Log'), 'url' => $this->getUrl('log')),
-                    array('label' => t('Delete'), 'url' => $this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),
-                ),
+                'items' => $more,
             );
         }
         return $links;
@@ -157,6 +160,42 @@ class Lookup extends ActiveRecord
             self::$_items[$type][$code] = null;
         }
         return self::$_items[$type][$code];
+    }
+
+    /**
+     * @static
+     * @param $type
+     * @return mixed
+     */
+    private static function loadItems($type)
+    {
+        $cacheItems = Yii::app()->cache->get('Lookup.loadItems.' . $type);
+        if ($cacheItems !== false) {
+            self::$_items[$type] = $cacheItems;
+            return;
+        }
+        self::$_items[$type] = array();
+        $models = self::model()->findAll(array(
+            'condition' => 'type=:type AND deleted IS NULL',
+            'params' => array(':type' => $type),
+            'order' => 'position, name',
+        ));
+        foreach ($models as $model) {
+            self::$_items[$type][$model->code] = $model->name;
+        }
+        Yii::app()->cache->set('Lookup.loadItems.' . $type, self::$_items[$type]);
+
+    }
+
+    /**
+     *
+     */
+    public function clearCache()
+    {
+        if ($this->type) {
+            Yii::app()->cache->set('Lookup.loadItems.' . $this->type, false);
+        }
+        parent::clearCache();
     }
 
 }
