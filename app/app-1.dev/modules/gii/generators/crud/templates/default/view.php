@@ -10,14 +10,14 @@ echo " * @var \$this " . $this->controllerClass . "\n";
 echo " * @var \$" . lcfirst($this->modelClass) . " " . $this->modelClass . "\n";
 echo " */\n";
 echo "\n";
-echo "\$this->pageTitle = \$this->pageHeading = \$user->getName() . ' - ' . \$this->getName() . ' ' . t('View');\n";
+echo "\$this->pageTitle = \$this->pageHeading = \$" . lcfirst($this->modelClass) . "->getName() . ' - ' . \$this->getName() . ' ' . t('View');\n";
 echo "\n";
 echo "\$this->breadcrumbs = array();\n";
-echo "\$this->breadcrumbs[\$this->getName() . ' ' . t('List')] = user()->getState('index.user', array('/user/index'));\n";
-echo "\$this->breadcrumbs[] = \$user->getName();\n";
+echo "\$this->breadcrumbs[\$this->getName() . ' ' . t('List')] = user()->getState('index." . lcfirst($this->modelClass) . "', array('/" . lcfirst($this->modelClass) . "/index'));\n";
+echo "\$this->breadcrumbs[] = \$" . lcfirst($this->modelClass) . "->getName();\n";
 echo "\n";
 echo "\$this->renderPartial('_menu', array(\n";
-echo "    'user' => \$user,\n";
+echo "    '" . lcfirst($this->modelClass) . "' => \$" . lcfirst($this->modelClass) . ",\n";
 echo "));\n";
 echo "\n";
 echo "\$attributes = array();\n";
@@ -26,6 +26,6 @@ foreach ($this->tableSchema->columns as $column) {
 }
 echo "\n";
 echo "\$this->widget('DetailView', array(\n";
-echo "    'data' => \$user,\n";
+echo "    'data' => \$" . lcfirst($this->modelClass) . ",\n";
 echo "    'attributes' => \$attributes,\n";
 echo "));\n";

@@ -25,9 +25,6 @@ echo "echo '<legend>' . \$this->getName() . ' ' .t('Search') . '</legend>';\n";
 foreach ($this->tableSchema->columns as $column) {
     echo "echo \$form->textFieldRow(\$" . lcfirst($this->modelClass) . ", '" . $column->name . "');\n";
 }
-echo "echo \$form->textFieldRow(\$" . lcfirst($this->modelClass) . ", 'name');\n";
-echo "echo \$form->textFieldRow(\$" . lcfirst($this->modelClass) . ", 'email', array('size' => 60, 'maxlength' => 255));\n";
-echo "echo \$form->dropDownListRow(\$" . lcfirst($this->modelClass) . ", 'role', CHtml::listData(Role::model()->findAll(), 'id', 'name'), array('empty' => ''));\n";
 echo "echo '</fieldset>';\n";
 echo "\n";
 echo "echo '<div class=\"form-actions\">';\n";

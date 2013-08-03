@@ -226,7 +226,7 @@ class User extends ActiveRecord
             $criteria->addCondition('t.deleted IS NULL');
         }
 
-        return new ActiveDataProvider(get_class($this), CMap::mergeArray(array(
+        return new ActiveDataProvider($this, CMap::mergeArray(array(
             'criteria' => $criteria,
         ), $options));
     }

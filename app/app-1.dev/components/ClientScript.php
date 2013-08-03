@@ -54,6 +54,7 @@ class ClientScript extends CClientScript
     {
         // do not load these scripts on ajax
         $ignoreAjax = array(
+            'yii.css',
             'bootstrap-yii.css',
             'bootstrap-responsive.css',
             'bootstrap-responsive.min.css',
