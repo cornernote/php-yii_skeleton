@@ -552,9 +552,10 @@ class ActiveRecord extends CActiveRecord
      */
     public function getUrl($action = 'view', $params = array())
     {
-        return url('/' . $this->controllerName . '/' . $action, array_merge(array(
+        return array_merge(array(
+            '/' . $this->controllerName . '/' . $action,
             $this->getPrimaryKeySchemaString() => $this->getPrimaryKeyString(),
-        ), (array)$params));
+        ), (array)$params);
     }
 
     /**

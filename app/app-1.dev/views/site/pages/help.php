@@ -5,7 +5,7 @@
 $this->pageTitle = $this->pageHeading = t('Help');
 
 // menu
-$this->menu = NavbarItems::helpMenuItems();
+$this->menu = Menu::getItemsFromMenu('Help');
 
 // breadcrumbs
 $this->breadcrumbs = array(

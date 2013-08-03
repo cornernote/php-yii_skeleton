@@ -158,7 +158,6 @@ echo "     */\n";
 echo "    public function getMoreDropdownLinkItems()\n";
 echo "    {\n";
 echo "        return array(\n";
-echo "            array('label' => t('Password'), 'url' => \$this->getUrl('password')),\n";
 echo "            array('label' => t('Log'), 'url' => \$this->getUrl('log')),\n";
 echo "            array('label' => t('Delete'), 'url' => \$this->getUrl('delete'), 'linkOptions' => array('data-toggle' => 'modal-remote')),\n";
 echo "        );\n";

@@ -11,7 +11,7 @@ $this->widget('Navbar', array(
     'fixed' => 'top',
     //'fluid' => true,
     'collapse' => true,
-    'items' => NavbarItems::mainMenu(),
+    'items' => NavbarItems::navMenu(),
     'constantItems' => array(
         NavbarItems::userMenu(),
     ),

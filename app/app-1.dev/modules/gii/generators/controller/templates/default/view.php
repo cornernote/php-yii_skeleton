@@ -13,6 +13,8 @@ echo " */\n";
 echo "\n";
 
 if ($action === 'index') {
+    echo "user()->setState('index." . $this->getUniqueControllerID() . "', ru());\n";
+    echo "\n";
     echo "\$this->pageTitle = \$this->pageHeading = \$this->getName() . ' ' . t('List');\n";
     echo "\n";
     echo "\$this->breadcrumbs = array(\$this->getName() . ' ' . t('List'));\n";
@@ -27,4 +29,4 @@ else {
 }
 echo "\n";
 
-echo "echo '<p>You may change the content of this page by modifying the file <tt><?php echo __FILE__; ?></tt>.</p>';";
+echo "echo '<p>You may change the content of this page by modifying the file <code>' . __FILE__ . '</code>.</p>';";
