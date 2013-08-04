@@ -12,6 +12,11 @@ class ActiveForm extends TbActiveForm
     public $model;
 
     /**
+     * @var
+     */
+    public $askToSaveWork;
+
+    /**
      * Initializes the widget.
      * This renders the form open tag.
      */
@@ -33,6 +38,10 @@ class ActiveForm extends TbActiveForm
 
         // output the return url
         echo CHtml::hiddenField('returnUrl', ReturnUrl::getFormValue());
+
+        // ask to save work
+        if ($this->askToSaveWork)
+            Yii::app()->controller->widget('widgets.AskToSaveWork', array('watchElement' => '#setting-form :input', 'message' => t('Please save before leaving the page')));
 
     }
 

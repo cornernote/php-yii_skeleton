@@ -13,7 +13,7 @@ $config = array(
     // preload classes
     'preload' => array(
         'log',
-        'fatalErrorCatch',
+        //'fatalErrorCatch',
         'globalInit',
     ),
 
@@ -48,9 +48,6 @@ $config = array(
         'urlManager' => array(
             'urlFormat' => isset($_GET['r']) ? 'get' : 'path', // allow filters in audit/index work
             'showScriptName' => false,
-        ),
-        'themeManager' => array(
-            'basePath' => dirname(dirname(__FILE__)) . '/themes',
         ),
         'db' => array(
             'connectionString' => "mysql:host={$_ENV['_core']['db']['host']};dbname={$_ENV['_core']['db']['name']}",
@@ -106,8 +103,8 @@ $config = array(
         ),
     ),
 
-    // application-level parameters - accessed using
-    // Yii::app()->params['paramName'] or param('paramName')
+    // default settings, access using: Setting::item('paramName')
+    // add field to views.setting.index to allow override
     'params' => array(
         'dateFormat' => 'Y-m-d',
         'dateFormatLong' => 'Y-m-d',

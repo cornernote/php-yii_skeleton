@@ -28,22 +28,14 @@ class SettingController extends WebController
      */
     public function actionIndex()
     {
-        if (isset($_POST['Setting'])) {
-            foreach ($_POST['Setting'] as $k => $v) {
-                $v = isset($v['value']) ? $v['value'] : 0;
-                $setting = Setting::model()->findByPk($k);
-                $setting->value = $v;
-                $setting->save();
-            }
-            user()->addFlash('Settings have been saved.', 'success');
-            $this->redirect(array('/setting/index'));
-        }
+        // load settings
         /** @var Setting[] $settings */
         $settings = array();
         $_settings = Setting::model()->findAll();
         foreach ($_settings as $setting) {
             $settings[$setting->key] = $setting;
         }
+        // load from items
         foreach (Setting::items() as $key => $value) {
             if (!isset($settings[$key])) {
                 $settings[$key] = new Setting();
@@ -52,6 +44,7 @@ class SettingController extends WebController
                 $settings[$key]->save(false);
             }
         }
+        // load from params
         foreach (Yii::app()->params as $key => $value) {
             if (is_scalar($value) && !isset($settings[$key])) {
                 $settings[$key] = new Setting();
@@ -60,6 +53,28 @@ class SettingController extends WebController
                 $settings[$key]->save(false);
             }
         }
+
+        // handle posted data
+        if (isset($_POST['Setting'])) {
+
+            // save settings
+            foreach ($_POST['Setting'] as $key => $value) {
+                $value = isset($value['value']) ? $value['value'] : 0;
+                $setting = $settings[$key];
+                $setting->value = $value;
+                $setting->save();
+            }
+
+            // clear cache
+            cache()->flush();
+            ModelCache::model()->flush();
+            Helper::removeDirectory(app()->getAssetManager()->basePath, false);
+
+            // flash and redirect
+            user()->addFlash(t('Settings have been saved.'), 'success');
+            $this->redirect(array('/setting/index'));
+        }
+
         $this->render('index', array(
             'settings' => $settings,
         ));

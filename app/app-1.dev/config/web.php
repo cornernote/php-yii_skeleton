@@ -50,8 +50,13 @@ $web['components']['assetManager'] = array(
     'baseUrl' => $scriptName . '/assets',
 );
 
-// default theme
-$web['theme'] = $_ENV['_core']['setting']['theme'];
+// themes
+if (!empty($_ENV['_core']['setting']['theme'])) {
+    $web['theme'] = $_ENV['_core']['setting']['theme'];
+    $web['components']['themeManager'] = array(
+        'basePath' => dirname(dirname(__FILE__)) . '/themes',
+    );
+}
 $web['params']['themes'] = array(
     '' => 'Bootstrap',
     'lite' => 'Lite',
