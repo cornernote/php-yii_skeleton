@@ -18,14 +18,8 @@ require_once($core);
 // load core settings
 $_ENV['_core'] = _core();
 
-// set default php settings
-date_default_timezone_set($_ENV['_core']['setting']['timezone']);
-set_time_limit(0);
-ini_set('memory_limit', $_ENV['_core']['setting']['memory_limit']);
-ini_set('xdebug.max_nesting_level', 200);
-
 // set debug levels
-if ($_ENV['_core']['setting']['debug']) {
+if (!empty($_ENV['_core']['setting']['debug'])) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
     ini_set('log_errors', 1);

@@ -79,7 +79,7 @@ class Setting extends CActiveRecord
         if (isset($setting[$name])) {
             return $setting[$name];
         }
-        return false;
+        return param($name);
     }
 
     /**

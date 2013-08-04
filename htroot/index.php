@@ -13,12 +13,6 @@ require_once($core);
 // load core settings
 $_ENV['_core'] = _core();
 
-// set default php settings
-date_default_timezone_set($_ENV['_core']['setting']['timezone']);
-set_time_limit($_ENV['_core']['setting']['time_limit']);
-ini_set('memory_limit', $_ENV['_core']['setting']['memory_limit']);
-ini_set('xdebug.max_nesting_level', 200);
-
 // set debug levels
 if ($_ENV['_core']['setting']['debug']) {
     error_reporting(E_ALL);
@@ -47,7 +41,7 @@ if (!file_exists($config)) {
 	trigger_error('cannot find config file at "' . $config . '"', E_USER_ERROR);
 }
 
-// include Yii, or custom Yii
+// include Yii, or YiiLite
 if ($_ENV['_core']['setting']['yii_lite']) {
     $yii = dirname(__FILE__) . '/../vendors/yii/' . $_ENV['_core']['setting']['yii_version'] . '/framework/yiilite.php';
 }

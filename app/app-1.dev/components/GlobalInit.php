@@ -18,6 +18,12 @@ class GlobalInit extends CApplicationComponent
     {
         parent::init();
 
+        // set default php settings
+        date_default_timezone_set(Setting::item('timezone'));
+        set_time_limit((substr(php_sapi_name(), 0, 3) == 'cgi') ? 0 : Setting::item('time_limit'));
+        ini_set('memory_limit', Setting::item('memory_limit'));
+        ini_set('xdebug.max_nesting_level', 200);
+
         // set an alias to components
         Yii::setPathOfAlias('actions', Yii::app()->getBasePath() . '/components/actions');
         Yii::setPathOfAlias('behaviors', Yii::app()->getBasePath() . '/components/behaviors');

@@ -2,8 +2,8 @@
 $config = require(dirname(__FILE__) . '/main.php');
 $web = array();
 
-// cannot be in main.php  due to issue in commands
-$web['preload'][] = 'kint';
+// web only preloads
+//$web['preload'][] = 'kint'; // cannot be in main.php  due to issue in commands
 $web['preload'][] = 'bootstrap';
 
 // -- LOG ROUTES --
@@ -16,27 +16,16 @@ $web['preload'][] = 'bootstrap';
 $web['components']['log']['routes'] = array();
 if ($_ENV['_core']['setting']['debug']) {
 
-    // enable the debug toolbar
-    if ($_ENV['_core']['setting']['debug_toolbar']) {
+    $web['components']['log']['routes'][] = array(
+        'class' => 'CWebLogRoute',
+        'levels' => $_ENV['_core']['setting']['debug_levels'],
+        //'levels' => 'trace, info, error, warning, profile',
+    );
+    if ($_ENV['_core']['setting']['debug_db']) {
         $web['components']['log']['routes'][] = array(
-            'class' => 'XWebDebugRouter',
-            'config' => 'alignLeft, opaque, runInDebug, fixedPos, collapsed, yamlStyle',
-            'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
-            'allowedIPs' => array('.*'),
+            'class' => 'ProfileLogRoute',
+            'levels' => 'profile',
         );
-    } // web log route
-    else {
-        $web['components']['log']['routes'][] = array(
-            'class' => 'CWebLogRoute',
-            'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
-            //'levels' => 'trace, info, error, warning, profile',
-        );
-        if ($_ENV['_core']['setting']['debug_db']) {
-            $web['components']['log']['routes'][] = array(
-                'class' => 'ProfileLogRoute',
-                'levels' => 'profile',
-            );
-        }
     }
 
 }
@@ -45,7 +34,7 @@ else {
     // no debug, file log route
     $web['components']['log']['routes'][] = array(
         'class' => 'CFileLogRoute',
-        'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
+        'levels' => $_ENV['_core']['setting']['debug_levels'],
     );
 
 }
@@ -62,11 +51,13 @@ $web['components']['assetManager'] = array(
 );
 
 // default theme
-$web['theme'] = $_ENV['_core']['setting']['theme'];
+$web['theme'] = $_ENV['_core']['setting']['theme'] ? $_ENV['_core']['setting']['theme'] : 'lite';
 $web['params']['themes'] = array(
     '' => 'Bootstrap',
+    'lite' => 'Lite',
     'admingrey' => 'Admin Grey',
     'bounce' => 'Bounce',
+    'reboot' => 'Reboot',
 );
 
 // local web config overrides

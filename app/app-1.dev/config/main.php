@@ -5,7 +5,6 @@ $config = array(
     'id' => $_ENV['_core']['setting']['id'],
     'name' => $_ENV['_core']['setting']['name'],
     'language' => $_ENV['_core']['setting']['language'],
-    'params' => $_ENV['_core']['setting'],
 
     // paths
     'basePath' => dirname(dirname(__FILE__)),
@@ -93,13 +92,30 @@ $config = array(
         'eMailManager' => array(
             'class' => 'EMailManager',
         ),
-        'kint' => array(
-            'class' => 'ext.kint.Kint',
-        ),
+        //'kint' => array(
+        //    'class' => 'ext.kint.Kint',
+        //),
         'bootstrap' => array(
             'class' => 'ext.bootstrap.components.Bootstrap',
-            //'responsiveCss' => true,
         ),
+    ),
+
+    // application-level parameters - accessed using
+    // Yii::app()->params['paramName'] or param('paramName')
+    'params' => array(
+        'dateFormat' => 'Y-m-d',
+        'dateTimeFormat' => 'Y-m-d H:i:s',
+
+        'allowAutoLogin' => true,
+        'rememberMe' => true,
+        'defaultPageSize' => '10',
+        'domain' => 'localhost',
+        'email' => 'webmaster@localhost',
+        'error_email' => 'webmaster@localhost',
+
+        'recaptcha' => false,
+        'recaptchaPrivate' => '6LeBItQSAAAAALA4_G05e_-fG5yH_-xqQIN8AfTD',
+        'recaptchaPublic' => '6LeBItQSAAAAAG_umhiD0vyxXbDFbVMPA0kxZUF6',
     ),
 
 );
