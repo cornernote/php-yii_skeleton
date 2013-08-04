@@ -51,7 +51,7 @@ $web['components']['assetManager'] = array(
 );
 
 // default theme
-$web['theme'] = $_ENV['_core']['setting']['theme'] ? $_ENV['_core']['setting']['theme'] : 'lite';
+$web['theme'] = $_ENV['_core']['setting']['theme'];
 $web['params']['themes'] = array(
     '' => 'Bootstrap',
     'lite' => 'Lite',

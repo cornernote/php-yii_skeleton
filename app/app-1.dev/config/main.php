@@ -10,8 +10,14 @@ $config = array(
     'basePath' => dirname(dirname(__FILE__)),
     'runtimePath' => dirname(dirname(dirname(dirname(__FILE__)))) . '/runtime',
 
-    // preload classes and autoload paths
-    'preload' => array('log', 'fatalErrorCatch', 'globalInit'),
+    // preload classes
+    'preload' => array(
+        'log',
+        'fatalErrorCatch',
+        'globalInit',
+    ),
+
+    // import paths
     'import' => array(
         'application.commands.*',
         'application.models.*',
@@ -104,12 +110,16 @@ $config = array(
     // Yii::app()->params['paramName'] or param('paramName')
     'params' => array(
         'dateFormat' => 'Y-m-d',
+        'dateFormatLong' => 'Y-m-d',
+        'timeFormat' => 'H:i:s',
+        'timeFormatLong' => 'H:i:s',
         'dateTimeFormat' => 'Y-m-d H:i:s',
+        'dateTimeFormatLong' => 'Y-m-d H:i:s',
 
         'allowAutoLogin' => true,
         'rememberMe' => true,
         'defaultPageSize' => '10',
-        'domain' => 'localhost',
+        'website' => 'localhost',
         'email' => 'webmaster@localhost',
         'error_email' => 'webmaster@localhost',
 

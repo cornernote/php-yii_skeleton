@@ -176,7 +176,7 @@ function au()
  */
 function ap()
 {
-    return bp() . DS . 'themes' . DS . 'assets' . DS;
+    return bp() . DS . 'components' . DS . 'assets' . DS;
 }
 
 /**
@@ -185,7 +185,7 @@ function ap()
  */
 function vp()
 {
-    return dirname(dirname(dirname(__FILE__))) . DS . 'vendors';
+    return dirname(dirname(bp())) . DS . 'vendors';
 }
 
 /**

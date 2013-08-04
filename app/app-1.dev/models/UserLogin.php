@@ -56,7 +56,7 @@ class UserLogin extends FormModel
         );
         // recaptcha
         if (Setting::item('recaptcha')) {
-            $rules[] = array('recaptcha', 'ReCaptchaValidator', 'privateKey' => Setting::item('recaptchaPrivate'), 'on' => 'recaptcha');
+            $rules[] = array('recaptcha', 'validators.ReCaptchaValidator', 'privateKey' => Setting::item('recaptchaPrivate'), 'on' => 'recaptcha');
         }
         return $rules;
     }

@@ -32,9 +32,12 @@
  *
  * --- END GenerateProperties ---
  */
-class Setting extends CActiveRecord
+class Setting extends ActiveRecord
 {
 
+    /**
+     * @var array
+     */
     static private $_items = array();
 
     /**
@@ -75,9 +78,9 @@ class Setting extends CActiveRecord
         if (isset(self::$_items[$name])) {
             return self::$_items[$name];
         }
-        $setting = self::items();
-        if (isset($setting[$name])) {
-            return $setting[$name];
+        $items = self::items();
+        if (isset($items[$name])) {
+            return $items[$name];
         }
         return param($name);
     }
@@ -88,10 +91,68 @@ class Setting extends CActiveRecord
      */
     public static function items()
     {
-        if (isset(self::$_items)) {
+        if (self::$_items) {
             return self::$_items;
         }
-        return self::$_items = CHtml::listData(self::model()->findAll(), 'key', 'value');
+        self::$_items = $_ENV['_core']['setting'];
+        foreach (CHtml::listData(self::model()->findAll(), 'key', 'value') as $k => $v) {
+            self::$_items[$k] = $v;
+        }
+        return self::$_items;
     }
+
+
+    /**
+     * @return array
+     */
+    static public function appVersions()
+    {
+        $_versions = array();
+        $p = dirname(bp());
+        $d = dir($p);
+        while (false !== ($entry = $d->read())) {
+            if (substr($entry, 0, 4) == 'app-') {
+                $time = filemtime($p . DS . $entry);
+                $_versions[$time] = array(
+                    'entry' => $entry,
+                    'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                );
+            }
+        }
+        $d->close();
+        krsort($_versions);
+        $versions = array();
+        foreach ($_versions as $version) {
+            $versions[$version['entry']] = $version['display'];
+        }
+        return $versions;
+    }
+
+    /**
+     * @return array
+     */
+    static public function yiiVersions()
+    {
+        $_versions = array();
+        $p = dirname(dirname(bp())) . DS . 'vendors' . DS . 'yii';
+        $d = dir($p);
+        while (false !== ($entry = $d->read())) {
+            if (substr($entry, 0, 4) == 'yii-') {
+                $time = filemtime($p . DS . $entry);
+                $_versions[$time] = array(
+                    'entry' => $entry,
+                    'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                );
+            }
+        }
+        $d->close();
+        krsort($_versions);
+        $versions = array();
+        foreach ($_versions as $version) {
+            $versions[$version['entry']] = $version['display'];
+        }
+        return $versions;
+    }
+
 
 }

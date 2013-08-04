@@ -36,7 +36,31 @@ class SettingController extends WebController
             user()->addFlash('Settings have been saved.', 'success');
             $this->redirect(array('/setting/index'));
         }
-        $this->render('index');
+        /** @var Setting[] $settings */
+        $settings = array();
+        $_settings = Setting::model()->findAll();
+        foreach ($_settings as $setting) {
+            $settings[$setting->key] = $setting;
+        }
+        foreach (Setting::items() as $key => $value) {
+            if (!isset($settings[$key])) {
+                $settings[$key] = new Setting();
+                $settings[$key]->key = $key;
+                $settings[$key]->value = $value;
+                $settings[$key]->save(false);
+            }
+        }
+        foreach (Yii::app()->params as $key => $value) {
+            if (is_scalar($value) && !isset($settings[$key])) {
+                $settings[$key] = new Setting();
+                $settings[$key]->key = $key;
+                $settings[$key]->value = $value;
+                $settings[$key]->save(false);
+            }
+        }
+        $this->render('index', array(
+            'settings' => $settings,
+        ));
     }
 
 }
