@@ -104,6 +104,16 @@ $this->widget('bootstrap.widgets.TbButton', array(
             </div>
         </div>
 
+        <div class="control-group">
+            <?php echo CHtml::label(t('Yii Lite'), 'SettingEav_core_yii_lite', array('class' => 'control-label')); ?>
+            <div class="controls">
+                <?php
+                echo CHtml::hiddenField('SettingEav[core][yii_lite]', 0);
+                echo CHtml::checkBox('SettingEav[core][yii_lite]', $settings['core']->getEavAttribute('yii_lite'));
+                ?>
+            </div>
+        </div>
+
     </fieldset>
 
     <fieldset>
