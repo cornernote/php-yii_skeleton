@@ -266,59 +266,79 @@ class Menu extends ActiveRecord
     {
         $items = array();
         foreach ($this->child as $menu) {
-            $itemOptions = isset($options['itemOptions']) ? $options['itemOptions'] : array();
-            $linkOptions = isset($options['linkOptions']) ? $options['linkOptions'] : array();
-            if ($menu->target) {
-                $linkOptions['target'] = $menu->target;
-            }
-            $submenuOptions = isset($options['submenuOptions']) ? $options['submenuOptions'] : array();
-            if (isset($options['submenuOptions'])) {
-                unset($options['submenuOptions']);
-            }
-            $childItems = $menu->getItems($options);
-
-            $item = array();
-            if ($menu->access_role) {
-                if ($menu->access_role == '?' && !user()->isGuest) {
-                    continue;
-                }
-                if ($menu->access_role == '@' && user()->isGuest) {
-                    continue;
-                }
-                if (!user()->checkAccess($menu->access_role)) {
-                    continue;
-                }
-            }
-            if ($menu->label == '---') {
-                $item = '---';
-            }
-            else {
-                $item['label'] = $menu->label;
-                if ($menu->url) {
-                    $item['url'] = $menu->getMenuUrl();
-                }
-                if ($menu->icon) {
-                    $item['icon'] = $menu->icon;
-                }
-                if ($menu->isActive()) {
-                    $item['active'] = true;
-                }
-                if ($itemOptions) {
-                    $item['itemOptions'] = $itemOptions;
-                }
-                if ($linkOptions) {
-                    $item['linkOptions'] = $linkOptions;
-                }
-                if ($submenuOptions) {
-                    $item['submenuOptions'] = $submenuOptions;
-                }
-                if ($childItems) {
-                    $item['items'] = $childItems;
-                }
-            }
-            $items[] = $item;
+            if (!$menu->checkAccess())
+                continue;
+            $items[] = $menu->getItem($options);
         }
         return $items;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkAccess()
+    {
+        if (!$this->access_role) {
+            return true;
+        }
+        if ($this->access_role == '?') {
+            return user()->isGuest;
+        }
+        if ($this->access_role == '@') {
+            return !user()->isGuest;
+        }
+        if (user()->checkAccess($this->access_role)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param array $options
+     * @return array|string
+     */
+    public function getItem($options = array())
+    {
+        $itemOptions = isset($options['itemOptions']) ? $options['itemOptions'] : array();
+        $linkOptions = isset($options['linkOptions']) ? $options['linkOptions'] : array();
+        if ($this->target) {
+            $linkOptions['target'] = $this->target;
+        }
+        $submenuOptions = isset($options['submenuOptions']) ? $options['submenuOptions'] : array();
+        if (isset($options['submenuOptions'])) {
+            unset($options['submenuOptions']);
+        }
+
+        $childItems = $this->getItems($options);
+        if ($this->label == '---') {
+            $item = '---';
+        }
+        else {
+            $item = array();
+            $item['label'] = $this->label;
+            if ($this->url) {
+                $item['url'] = $this->getMenuUrl();
+            }
+            if ($this->icon) {
+                $item['icon'] = $this->icon;
+            }
+            if ($this->isActive()) {
+                $item['active'] = true;
+            }
+            if ($itemOptions) {
+                $item['itemOptions'] = $itemOptions;
+            }
+            if ($linkOptions) {
+                $item['linkOptions'] = $linkOptions;
+            }
+            if ($submenuOptions) {
+                $item['submenuOptions'] = $submenuOptions;
+            }
+            if ($childItems) {
+                $item['items'] = $childItems;
+            }
+        }
+        return $item;
     }
 
     /**
