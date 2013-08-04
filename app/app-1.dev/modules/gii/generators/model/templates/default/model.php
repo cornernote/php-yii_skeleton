@@ -65,27 +65,17 @@ echo "        return \$rules;\n";
 echo "    }\n";
 echo "\n";
 echo "    /**\n";
-echo "     * @return array containing model behaviours\n";
+echo "     * @return array containing model behaviors\n";
 echo "     */\n";
 echo "    public function behaviors()\n";
 echo "    {\n";
 echo "        return array(\n";
-echo "            'AuditBehavior' => 'AuditBehavior',\n";
+echo "            'AuditBehavior' => 'behaviors.AuditBehavior',\n";
 if (in_array('created', CHtml::listData($columns, 'name', 'name')) || in_array('updated', CHtml::listData($columns, 'name', 'name'))) {
-    echo "            'CTimestampBehavior' => array(\n";
-    echo "                'class' => 'zii.behaviors.CTimestampBehavior',\n";
-    if (in_array('created', CHtml::listData($columns, 'name', 'name')))
-        echo "                'createAttribute' => 'created',\n";
-    else
-        echo "                'createAttribute' => null,\n";
-    if (in_array('updated', CHtml::listData($columns, 'name', 'name')))
-        echo "                'updateAttribute' => 'updated',\n";
-    else
-        echo "                'updateAttribute' => null,\n";
-    echo "            ),\n";
+    echo "            'TimestampBehavior' => 'behaviors.TimestampBehavior',\n";
 }
 if (in_array('deleted', CHtml::listData($columns, 'name', 'name'))) {
-    echo "            'SoftDeleteBehavior' => 'SoftDeleteBehavior',\n";
+    echo "            'SoftDeleteBehavior' => 'behaviors.SoftDeleteBehavior',\n";
 }
 echo "        );\n";
 echo "    }\n";

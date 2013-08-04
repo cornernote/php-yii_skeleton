@@ -2,7 +2,7 @@
 /**
  * SoftDeleteBehavior
  *
- * @package app.model.behavior
+ * @package components.behaviors
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class SoftDeleteBehavior extends CActiveRecordBehavior
@@ -17,7 +17,7 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
     public $deletedBy = 'deleted_by';
 
     /**
-     * @param $event
+     * @param CModelEvent $event
      */
     public function beforeDelete($event)
     {

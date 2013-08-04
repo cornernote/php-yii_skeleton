@@ -91,10 +91,10 @@ class UserController extends WebController
         if (isset($_POST['User'])) {
             $user->attributes = $_POST['User'];
             if ($user->save()) {
-                $userToRole = new UserToRole();
-                $userToRole->user_id = $user->id;
-                $userToRole->role_id = $role->id;
-                $userToRole->save(false);
+                //$userToRole = new UserToRole();
+                //$userToRole->user_id = $user->id;
+                //$userToRole->role_id = $role->id;
+                //$userToRole->save(false);
                 user()->addFlash('User has been created.', 'success');
                 $this->redirect(ReturnUrl::getUrl($user->getUrl()));
             }

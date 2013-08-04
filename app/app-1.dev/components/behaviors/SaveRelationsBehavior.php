@@ -52,7 +52,7 @@
  */
 
 /**
- *
+ * @package components.behaviors
  */
 class SaveRelationsBehavior extends CActiveRecordBehavior
 {

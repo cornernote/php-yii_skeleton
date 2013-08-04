@@ -4,7 +4,7 @@
  *
  * @property ActiveRecord $owner
  *
- * @package app.model.behavior
+ * @package components.behaviors
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class AuditBehavior extends CActiveRecordBehavior
@@ -33,7 +33,7 @@ class AuditBehavior extends CActiveRecordBehavior
     );
 
     /**
-     * @param $event
+     * @param CModelEvent $event
      */
     public function afterSave($event)
     {
@@ -103,7 +103,7 @@ class AuditBehavior extends CActiveRecordBehavior
     }
 
     /**
-     * @param $event
+     * @param CModelEvent $event
      */
     public function afterDelete($event)
     {

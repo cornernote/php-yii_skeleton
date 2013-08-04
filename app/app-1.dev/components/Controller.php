@@ -31,21 +31,4 @@ class Controller extends CController
         return parent::beforeAction($action);
     }
 
-    /**
-     * @param $string
-     * @param bool $return
-     * @return mixed
-     */
-    public function renderString($string, $return = false)
-    {
-        //if $this->getLayoutFile($this->layout) not false use layout file
-        if (($layoutFile = $this->getLayoutFile($this->layout)) !== false)
-            $string = $this->renderFile($layoutFile, array('content' => $string), true);
-        $string = $this->processOutput($string);
-        if ($return)
-            return $string;
-        else
-            echo $string;
-    }
-
 }

@@ -17,19 +17,21 @@
  *
  *
  * Methods from behavior SoftDeleteBehavior
- * @method beforeDelete() beforeDelete($event)
+ * @method beforeDelete() beforeDelete(CModelEvent $event)
  * @method undelete() undelete()
  * @method deleteds() deleteds()
  * @method notdeleteds() notdeleteds()
  *
  * Methods from behavior AuditBehavior
- * @method afterSave() afterSave($event)
- * @method afterDelete() afterDelete($event)
+ * @method afterSave() afterSave(CModelEvent $event)
+ * @method afterDelete() afterDelete(CModelEvent $event)
  *
  * Methods from behavior EavBehavior
  * @method CActiveRecord loadEavAttributes() loadEavAttributes(array $attributes)
  * @method setModelTableFk() setModelTableFk($modelTableFk)
  * @method setSafeAttributes() setSafeAttributes($safeAttributes)
+ * @method afterSave() afterSave($event)
+ * @method afterDelete() afterDelete($event)
  * @method afterFind() afterFind($event)
  * @method CActiveRecord saveEavAttributes() saveEavAttributes($attributes)
  * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array(), $save = false)
@@ -122,20 +124,16 @@ class User extends ActiveRecord
     }
 
     /**
-     * @return array containing model behaviours
+     * @return array containing model behaviors
      */
     public function behaviors()
     {
         return array(
-            'CTimestampBehavior' => array(
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => null,
-            ),
-            'SoftDeleteBehavior' => 'SoftDeleteBehavior',
-            'AuditBehavior' => 'AuditBehavior',
+            'AuditBehavior' => 'behaviors.AuditBehavior',
+            'SoftDeleteBehavior' => 'behaviors.SoftDeleteBehavior',
+            'TimestampBehavior' => 'behaviors.TimestampBehavior',
             'EavBehavior' => array(
-                'class' => 'EavBehavior',
+                'class' => 'behaviors.EavBehavior',
                 'tableName' => 'user_eav',
             ),
         );

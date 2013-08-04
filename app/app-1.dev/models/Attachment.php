@@ -16,7 +16,7 @@
  * @method Attachment[] findAllBySql() findAllBySql($sql, array $params = array())
  *
  * Methods from behavior AuditBehavior
- * @method afterDelete() afterDelete($event)
+ * @method afterDelete() afterDelete(CModelEvent $event)
  *
  * Properties from table fields
  * @property integer $id
@@ -75,12 +75,12 @@ class Attachment extends ActiveRecord
     }
 
     /**
-     * @return array containing model behaviours
+     * @return array containing model behaviors
      */
     public function behaviors()
     {
         return array(
-            'AuditBehavior' => 'AuditBehavior',
+            'AuditBehavior' => 'behaviors.AuditBehavior',
         );
     }
 

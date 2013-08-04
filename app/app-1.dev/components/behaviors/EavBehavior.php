@@ -1,6 +1,7 @@
 <?php
 Yii::import('ext.yiiext.behaviors.model.eav.EEavBehavior');
 /**
+ * @package components.behaviors
  * @property ActiveRecord $owner
  * @method ActiveRecord getOwner() getOwner()
  */

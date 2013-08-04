@@ -11,14 +11,11 @@ $config = array(
     'runtimePath' => dirname(dirname(dirname(dirname(__FILE__)))) . '/runtime',
 
     // preload classes and autoload paths
-    'preload' => array('log', 'fatalErrorCatch'),
+    'preload' => array('log', 'fatalErrorCatch', 'globalInit'),
     'import' => array(
-        'application.extensions.*',
         'application.commands.*',
         'application.models.*',
         'application.components.*',
-        'application.components.behaviors.*',
-        'application.components.validators.*',
     ),
 
     // modules
@@ -65,6 +62,9 @@ $config = array(
         ),
         'fatalErrorCatch' => array(
             'class' => 'FatalErrorCatch',
+        ),
+        'globalInit' => array(
+            'class' => 'GlobalInit',
         ),
         'cacheFile' => array(
             'class' => 'CFileCache',

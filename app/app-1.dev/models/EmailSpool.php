@@ -19,14 +19,14 @@
  * @method beforeSave() beforeSave(CModelEvent $event)
  *
  * Methods from behavior SoftDeleteBehavior
- * @method beforeDelete() beforeDelete($event)
+ * @method beforeDelete() beforeDelete(CModelEvent $event)
  * @method undelete() undelete()
  * @method deleteds() deleteds()
  * @method notdeleteds() notdeleteds()
  *
  * Methods from behavior AuditBehavior
- * @method afterSave() afterSave($event)
- * @method afterDelete() afterDelete($event)
+ * @method afterSave() afterSave(CModelEvent $event)
+ * @method afterDelete() afterDelete(CModelEvent $event)
  *
  * Properties from relation
  * @property Attachment[] $attachment
@@ -104,13 +104,9 @@ class EmailSpool extends ActiveRecord
     public function behaviors()
     {
         return array(
-            'CTimestampBehavior' => array(
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => null,
-            ),
-            'SoftDeleteBehavior' => 'SoftDeleteBehavior',
-            'AuditBehavior' => 'AuditBehavior',
+            'AuditBehavior' => 'behaviors.AuditBehavior',
+            'SoftDeleteBehavior' => 'behaviors.SoftDeleteBehavior',
+            'TimestampBehavior' => 'behaviors.TimestampBehavior',
         );
     }
 

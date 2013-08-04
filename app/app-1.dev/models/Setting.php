@@ -16,8 +16,8 @@
  * @method Setting[] findAllBySql() findAllBySql($sql, array $params = array())
  *
  * Methods from behavior AuditBehavior
- * @method afterSave() afterSave($event)
- * @method afterDelete() afterDelete($event)
+ * @method afterSave() afterSave(CModelEvent $event)
+ * @method afterDelete() afterDelete(CModelEvent $event)
  *
  * Methods from behavior EavBehavior
  * @method CActiveRecord loadEavAttributes() loadEavAttributes(array $attributes)
@@ -25,12 +25,12 @@
  * @method setSafeAttributes() setSafeAttributes($safeAttributes)
  * @method afterFind() afterFind($event)
  * @method CActiveRecord saveEavAttributes() saveEavAttributes($attributes)
- * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = array (), $save = false)
- * @method CActiveRecord setEavAttributes() setEavAttributes($attributes, $save = false)
- * @method CActiveRecord setEavAttribute() setEavAttribute($attribute, $value, $save = false)
- * @method array getEavAttributes() getEavAttributes($attributes = array ())
+ * @method CActiveRecord deleteEavAttributes() deleteEavAttributes($attributes = , $save = )
+ * @method CActiveRecord setEavAttributes() setEavAttributes($attributes, $save = )
+ * @method CActiveRecord setEavAttribute() setEavAttribute($attribute, $value, $save = )
+ * @method array getEavAttributes() getEavAttributes($attributes = )
  * @method getEavAttribute() getEavAttribute($attribute)
- * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array ())
+ * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = )
  *
  * Properties from table fields
  * @property string $id
@@ -59,15 +59,15 @@ class Setting extends ActiveRecord
     }
 
     /**
-     * @return array containing model behaviours
+     * @return array containing model behaviors
      */
     public function behaviors()
     {
         global $settings;
         return array(
-            'AuditBehavior' => 'AuditBehavior',
+            'AuditBehavior' => 'behaviors.AuditBehavior',
             'EavBehavior' => array(
-                'class' => 'EavBehavior',
+                'class' => 'behaviors.EavBehavior',
                 'tableName' => $_ENV['_settings']['db']['table'],
             ),
         );

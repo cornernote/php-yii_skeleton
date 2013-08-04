@@ -229,7 +229,7 @@ class StringHelper
         foreach ($types as $k => $type) {
             $filteredType = self::filterDocType($type);
             if ($filteredType) {
-                $returnTypes[$k] = $filteredType;
+                $returnTypes[$k] = trim($filteredType);
             }
         }
         return $returnTypes;
