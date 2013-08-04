@@ -19,11 +19,9 @@ class SortOrderController extends WebController
         return array(
             array('allow',
                 'actions' => array('order', 'orderReset', 'moveTop', 'moveBottom'),
-                'roles' => array('staff'),
-            ),
-            array('deny',
                 'users' => array('*'),
             ),
+            array('deny', 'users' => array('*')),
         );
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * ErrorController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
@@ -20,9 +21,7 @@ class ErrorController extends WebController
                 'actions' => array('index', 'view', 'clear'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

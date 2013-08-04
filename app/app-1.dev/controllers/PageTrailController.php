@@ -1,9 +1,9 @@
 <?php
 
 /**
+ * PageTrailController
  *
  * @package app.controller
- * @method PageTrail loadModel() loadModel($id, $model = null)
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class PageTrailController extends WebController
@@ -21,9 +21,7 @@ class PageTrailController extends WebController
                 'actions' => array('index', 'view', 'preserve', 'unPreserve'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

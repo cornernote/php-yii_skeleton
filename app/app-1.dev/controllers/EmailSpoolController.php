@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * EmailSpoolController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
@@ -20,9 +21,7 @@ class EmailSpoolController extends WebController
                 'actions' => array('index', 'view'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

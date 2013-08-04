@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * EmailTemplateController
  *
  * @package app.controller
+ * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class EmailTemplateController extends WebController
 {
@@ -19,9 +21,7 @@ class EmailTemplateController extends WebController
                 'actions' => array('index', 'view', 'update'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * SiteController
+ *
+ * @package app.controller
+ * @author Brett O'Donnell <brett@mrphp.com.au>
+ */
 class SiteController extends WebController
 {
 
@@ -12,16 +18,10 @@ class SiteController extends WebController
     {
         return array(
             array('allow',
-                'actions' => array('overview'),
-                'users' => array('@'),
-            ),
-            array('allow',
                 'actions' => array('index', 'error', 'page'),
                 'users' => array('*'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

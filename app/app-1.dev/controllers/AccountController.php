@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * AccountController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
@@ -24,9 +25,7 @@ class AccountController extends WebController
                 'actions' => array('logout', 'index', 'update', 'password', 'settings'),
                 'users' => array('@'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

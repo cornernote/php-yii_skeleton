@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * SettingController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
@@ -18,9 +19,7 @@ class SettingController extends WebController
                 'actions' => array('index'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 

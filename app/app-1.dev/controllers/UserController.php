@@ -1,17 +1,13 @@
 <?php
 
 /**
+ * UserController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class UserController extends WebController
 {
-
-    /**
-     * @var string
-     */
-    public $pageIcon = 'icon-user';
 
     /**
      * Specifies the access control rules.
@@ -25,9 +21,7 @@ class UserController extends WebController
                 'actions' => array('index', 'view', 'create', 'update', 'delete', 'log'),
                 'roles' => array('admin'),
             ),
-            array('deny',
-                'users' => array('*'),
-            ),
+            array('deny', 'users' => array('*')),
         );
     }
 
