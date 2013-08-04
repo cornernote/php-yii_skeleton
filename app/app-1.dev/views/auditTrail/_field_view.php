@@ -26,7 +26,7 @@ echo '</td>';
 
 if (user()->checkAccess('admin')) {
     echo '<td>';
-    echo $data->pageTrail ? $data->pageTrail->getLink() : '';
+    echo $data->audit ? $data->audit->getLink() : '';
     echo '</td>';
 }
 

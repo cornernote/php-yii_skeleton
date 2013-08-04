@@ -3,21 +3,21 @@ $columns = array();
 if ($this->id != 'user') {
     $columns[] = array(
         'name' => 'user_id',
-        'value' => '$data->user?$data->pageTrail->getLink():null',
+        'value' => '$data->user?$data->audit->getLink():null',
         'type' => 'raw',
     );
 }
-if ($this->id != 'pageTrail') {
+if ($this->id != 'audit') {
     $columns[] = array(
-        'name' => 'page_trail_id',
-        'value' => '$data->pageTrail?$data->pageTrail->getLink():null',
+        'name' => 'audit_id',
+        'value' => '$data->audit?$data->audit->getLink():null',
         'type' => 'raw',
     );
 }
 $columns[] = array(
     'name' => 'action',
 );
-if (in_array($this->id, array('auditTrail', 'pageTrail'))) {
+if (in_array($this->id, array('auditTrail', 'audit'))) {
     $columns[] = array(
         'name' => 'model',
     );
@@ -53,4 +53,3 @@ $this->widget('widgets.GridView', array(
     'filter' => $auditTrail,
     'columns' => $columns,
 ));
-?>

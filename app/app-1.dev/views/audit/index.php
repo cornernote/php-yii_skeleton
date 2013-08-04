@@ -1,10 +1,10 @@
 <?php
 /**
- * @var $this PageTrailController
- * @var $pageTrail PageTrail
+ * @var $this AuditController
+ * @var $audit Audit
  */
-user()->setState('search.pageTrail', ru());
+user()->setState('search.audit', ru());
 $this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('List');
 $this->breadcrumbs = array($this->getName() . ' ' . t('List'));
 $this->renderPartial('_menu');
-$this->renderPartial('/pageTrail/_grid', array('pageTrail' => $pageTrail));
+$this->renderPartial('/audit/_grid', array('audit' => $audit));

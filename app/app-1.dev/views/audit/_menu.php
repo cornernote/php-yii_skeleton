@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $this PageTrailController
- * @var $pageTrail PageTrail
+ * @var $this AuditController
+ * @var $audit Audit
  */
 
 // index
@@ -11,10 +11,10 @@ if ($this->action->id == 'index') {
 }
 
 // create
-//if ($pageTrail->isNewRecord) {
+//if ($audit->isNewRecord) {
 //    $this->menu[] = array(
 //        'label' => t('Create'),
-//        'url' => array('/pageTrail/create'),
+//        'url' => array('/audit/create'),
 //    );
 //    return; // no more links
 //}
@@ -22,10 +22,10 @@ if ($this->action->id == 'index') {
 // view
 $this->menu[] = array(
     'label' => t('View'),
-    'url' => $pageTrail->getUrl(),
+    'url' => $audit->getUrl(),
 );
 
 // others
-foreach ($pageTrail->getDropdownLinkItems(true) as $linkItem) {
+foreach ($audit->getDropdownLinkItems(true) as $linkItem) {
     $this->menu[] = $linkItem;
 }

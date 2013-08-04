@@ -41,6 +41,7 @@ class AuditBehavior extends CActiveRecordBehavior
         $newAttributes = $this->owner->attributes;
         $oldAttributes = $this->owner->dbAttributes;
         $logModels = $this->getLogModels();
+        $auditId = Audit::model()->findCurrentId();
 
         // insert
         if ($this->owner->isNewRecord) {
@@ -63,7 +64,7 @@ class AuditBehavior extends CActiveRecordBehavior
                     $log->field = $logModel['prefix'] . $name;
                     $log->created = $date;
                     $log->user_id = user() ? user()->id : 0;
-                    $log->page_trail_id = static_id('page_trail_id');
+                    $log->audit_id = $auditId;
                     $log->save();
                 }
             }
@@ -94,7 +95,7 @@ class AuditBehavior extends CActiveRecordBehavior
                     $log->field = $logModel['prefix'] . $name;
                     $log->created = $date;
                     $log->user_id = user() ? user()->id : 0;
-                    $log->page_trail_id = static_id('page_trail_id');
+                    $log->audit_id = $auditId;
                     $log->save();
                 }
             }
@@ -109,6 +110,7 @@ class AuditBehavior extends CActiveRecordBehavior
     {
         $date = date('Y-m-d H:i:s');
         $logModels = $this->getLogModels();
+        $auditId = Audit::model()->findCurrentId();
 
         // delete
         $pk = $this->getPkString($this->owner->getPrimaryKey());
@@ -123,7 +125,7 @@ class AuditBehavior extends CActiveRecordBehavior
             $log->field = $prefix . '*';
             $log->created = $date;
             $log->user_id = user() ? user()->id : 0;
-            $log->page_trail_id = static_id('page_trail_id');
+            $log->audit_id = $auditId;
             $log->save();
         }
         parent::afterDelete($event);

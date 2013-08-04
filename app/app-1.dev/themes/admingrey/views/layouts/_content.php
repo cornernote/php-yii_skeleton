@@ -56,7 +56,7 @@ echo '</div>';
 
 echo '<footer class="footer">';
 echo '<div class="container-fluid">';
-$this->renderPartial('/pageTrail/_footer');
+$this->renderPartial('/audit/_footer');
 echo '<p class="pull-right">' . l(t('Back to Top') . ' &uarr;', '#') . '</p>';
 echo '</div>';
 echo '</footer>';

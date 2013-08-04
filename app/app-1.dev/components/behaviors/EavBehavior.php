@@ -40,7 +40,7 @@ class EavBehavior extends EEavBehavior
     protected function getSaveEavAttributeCommand($attribute, $value)
     {
         if ($this->getOwner()->asa('AuditBehavior')) {
-            $pageTrailId = static_id('page_trail_id');
+            $auditId = Audit::model()->findCurrentId();
             try {
                 $userid = user()->id;
             } catch (Exception $e) { //If we have no user object, this must be a command line program
@@ -60,7 +60,7 @@ class EavBehavior extends EEavBehavior
                 $log->field = $this->tableName . '.' . $attribute;
                 $log->created = date('Y-m-d H:i:s');
                 $log->user_id = $userid;
-                $log->page_trail_id = $pageTrailId;
+                $log->audit_id = $auditId;
                 $log->save();
             }
         }

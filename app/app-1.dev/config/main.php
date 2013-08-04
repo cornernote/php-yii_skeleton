@@ -40,7 +40,7 @@ $config = array(
             'loginUrl' => array('/account/login'),
         ),
         'urlManager' => array(
-            'urlFormat' => isset($_GET['r']) ? 'get' : 'path', // allow filters in pageTrail/index work
+            'urlFormat' => isset($_GET['r']) ? 'get' : 'path', // allow filters in audit/index work
             'showScriptName' => false,
         ),
         'themeManager' => array(

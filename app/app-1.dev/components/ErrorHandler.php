@@ -9,7 +9,7 @@ class ErrorHandler extends CErrorHandler
      */
     public function handle($event)
     {
-        PageTrail::model()->findCurrent();
+        Audit::model()->findCurrent();
         if ($event instanceof CExceptionEvent)
             $this->logException($event);
         else
@@ -26,7 +26,10 @@ class ErrorHandler extends CErrorHandler
         $dir = app()->getRuntimePath() . '/errors';
         if (!file_exists($dir))
             mkdir($dir, 0777, true);
-        $path = $dir . '/pt-' . static_id('page_trail_id') . '.html';
+        $auditId = Audit::model()->findCurrentId();
+        if (!$auditId)
+            $auditId = uniqid();
+        $path = $dir . '/audit-' . $auditId . '.html';
         file_put_contents($path, $errorMessage);
     }
 
@@ -39,7 +42,10 @@ class ErrorHandler extends CErrorHandler
         $dir = app()->getRuntimePath() . '/errors';
         if (!file_exists($dir))
             mkdir($dir, 0777, true);
-        $path = $dir . '/pt-' . static_id('page_trail_id') . '.html';
+        $auditId = Audit::model()->findCurrentId();
+        if (!$auditId)
+            $auditId = uniqid();
+        $path = $dir . '/audit-' . $auditId . '.html';
         file_put_contents($path, $errorMessage);
     }
 

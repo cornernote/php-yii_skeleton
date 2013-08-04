@@ -2,8 +2,32 @@
 /**
  * --- BEGIN GenerateProperties ---
  *
- * you need to goto the following page in a browser:
- * /tool/generateProperties/modelName/Note
+ * This is the model class for table 'note'
+ *
+ * @method Note with() with()
+ * @method Note find() find($condition, array $params = array())
+ * @method Note[] findAll() findAll($condition = '', array $params = array())
+ * @method Note findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method Note[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method Note findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Note[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Note findBySql() findBySql($sql, array $params = array())
+ * @method Note[] findAllBySql() findAllBySql($sql, array $params = array())
+ *
+ * Methods from behavior SoftDeleteBehavior
+ * @method undelete() undelete()
+ * @method deleteds() deleteds()
+ * @method notdeleteds() notdeleteds()
+ *
+ * Properties from table fields
+ * @property integer $id
+ * @property string $notes
+ * @property string $model
+ * @property integer $model_id
+ * @property integer $sort_order
+ * @property integer $important
+ * @property datetime $created
+ * @property datetime $deleted
  *
  * --- END GenerateProperties ---
  */

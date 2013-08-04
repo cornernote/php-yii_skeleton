@@ -2,8 +2,31 @@
 /**
  * --- BEGIN GenerateProperties ---
  *
- * you need to goto the following page in a browser:
- * /tool/generateProperties/modelName/Signature
+ * This is the model class for table 'signature'
+ *
+ * @method Signature with() with()
+ * @method Signature find() find($condition, array $params = array())
+ * @method Signature[] findAll() findAll($condition = '', array $params = array())
+ * @method Signature findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method Signature[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method Signature findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Signature[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Signature findBySql() findBySql($sql, array $params = array())
+ * @method Signature[] findAllBySql() findAllBySql($sql, array $params = array())
+ *
+ * Methods from behavior SoftDeleteBehavior
+ * @method undelete() undelete()
+ * @method deleteds() deleteds()
+ * @method notdeleteds() notdeleteds()
+ *
+ * Properties from table fields
+ * @property string $id
+ * @property string $model
+ * @property string $model_id
+ * @property string $name
+ * @property string $signature
+ * @property datetime $created
+ * @property datetime $deleted
  *
  * --- END GenerateProperties ---
  */

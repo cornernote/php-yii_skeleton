@@ -3,17 +3,17 @@
 /**
  * --- BEGIN GenerateProperties ---
  *
- * This is the model class for table 'page_trail'
+ * This is the model class for table 'audit'
  *
- * @method PageTrail with() with()
- * @method PageTrail find() find($condition, array $params = array())
- * @method PageTrail[] findAll() findAll($condition = '', array $params = array())
- * @method PageTrail findByPk() findByPk($pk, $condition = '', array $params = array())
- * @method PageTrail[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
- * @method PageTrail findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
- * @method PageTrail[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
- * @method PageTrail findBySql() findBySql($sql, array $params = array())
- * @method PageTrail[] findAllBySql() findAllBySql($sql, array $params = array())
+ * @method Audit with() with()
+ * @method Audit find() find($condition, array $params = array())
+ * @method Audit[] findAll() findAll($condition = '', array $params = array())
+ * @method Audit findByPk() findByPk($pk, $condition = '', array $params = array())
+ * @method Audit[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
+ * @method Audit findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Audit[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
+ * @method Audit findBySql() findBySql($sql, array $params = array())
+ * @method Audit[] findAllBySql() findAllBySql($sql, array $params = array())
  *
  * Properties from relation
  * @property User $user
@@ -46,7 +46,7 @@
  *
  * --- END GenerateProperties ---
  */
-class PageTrail extends CActiveRecord
+class Audit extends ActiveRecord
 {
     /**
      * @var
@@ -79,9 +79,14 @@ class PageTrail extends CActiveRecord
     public $ignoreClearCache = true;
 
     /**
+     * @var
+     */
+    private $_current;
+
+    /**
      * Returns the static model of the specified AR class.
      * @param string $className
-     * @return PageTrail the static model class
+     * @return Audit the static model class
      */
     public static function model($className = __CLASS__)
     {
@@ -93,7 +98,7 @@ class PageTrail extends CActiveRecord
      */
     public function tableName()
     {
-        return 'page_trail';
+        return 'audit';
     }
 
     /**
@@ -120,12 +125,12 @@ class PageTrail extends CActiveRecord
             'auditTrail' => array(
                 self::HAS_MANY,
                 'AuditTrail',
-                'page_trail_id',
+                'audit_id',
             ),
             'auditTrailCount' => array(
                 self::STAT,
                 'AuditTrail',
-                'page_trail_id',
+                'audit_id',
             ),
         );
     }
@@ -165,7 +170,7 @@ class PageTrail extends CActiveRecord
     /**
      *
      */
-    public function recordPageTrail()
+    public function recordAudit()
     {
         // get info
         $this->created = date('Y-m-d H:i:s');
@@ -306,7 +311,7 @@ class PageTrail extends CActiveRecord
     /**
      *
      */
-    protected function updatePageTrail()
+    protected function updateAudit()
     {
         $headers = headers_list();
         foreach ($headers as $header) {
@@ -341,7 +346,7 @@ class PageTrail extends CActiveRecord
                     $ignoredKeys[$key] = $key;
                 }
             }
-            $sessionCopy['__ignored_keys_in_page_trail'] = $ignoredKeys;
+            $sessionCopy['__ignored_keys_in_audit'] = $ignoredKeys;
             $serialized = serialize($sessionCopy);
         }
         return unserialize($serialized);
@@ -396,7 +401,7 @@ class PageTrail extends CActiveRecord
             $criteria->distinct = true;
             $criteria->compare('t.audit_trail_count', '>0');
             //$criteria->group = 't.id';
-            $criteria->join .= ' INNER JOIN audit_trail ON audit_trail.page_trail_id=t.id ';
+            $criteria->join .= ' INNER JOIN audit_trail ON audit_trail.audit_id=t.id ';
             $criteria->compare('audit_trail.model', $this->model);
             if ($this->model_id) {
                 $criteria->compare('audit_trail.model_id', $this->model_id);
@@ -432,25 +437,36 @@ class PageTrail extends CActiveRecord
     }
 
     /**
-     * @return PageTrail
+     * @return Audit
      */
     public function findCurrent()
     {
-        // get existing pagetrail
-        if (static_id('page_trail_id')) {
-            $pageTrail = PageTrail::model()->findByPk(static_id('page_trail_id'));
+        // get existing Audit
+        if ($this->_current) {
+            return $this->_current;
         }
 
-        // create new page trail
-        else {
-            $pageTrail = new PageTrail();
-            if ($pageTrail->recordPageTrail()) {
-                static_id('page_trail_id', $pageTrail->id);
-                Yii::app()->onEndRequest = array($pageTrail, 'updatePageTrail');
-            }
+        // create new Audit
+        $this->_current = new Audit();
+        if ($this->_current->recordAudit()) {
+            Yii::app()->onEndRequest = array($this->_current, 'updateAudit');
         }
+        return $this->_current;
+    }
 
-        return $pageTrail;
+    /**
+     * @return int|bool
+     */
+    public function findCurrentId()
+    {
+        if ($this->_current) {
+            return $this->_current->id;
+        }
+        $audit = $this->findCurrent();
+        if ($audit) {
+            return $audit->id;
+        }
+        return false;
     }
 
 }

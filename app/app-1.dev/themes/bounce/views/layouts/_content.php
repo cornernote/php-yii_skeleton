@@ -130,15 +130,7 @@ $this->widget('widgets.Navbar', array(
                         <p><?php echo '&copy; ' . date('Y') . ' ' . app()->name; ?>
 
                             <span <?php echo YII_DEBUG ? '' : 'style="color: #394755;"'; ?>>
-                            <?php
-                                //html comment needed for extracting page_trail_id
-                                $pageTrail = PageTrail::model()->findCurrent();
-                                echo ' | <!-- pt start -->pt-' . $pageTrail->id . '<!-- pt end -->';
-                                echo ' | ' . Setting::item('core', 'app_version');
-                                echo ' | ' . number_format(microtime(true) - $pageTrail->start_time, 2) . 'sec';
-                                //echo ' | ' . round(memory_get_usage() / 1024 / 1024, 2) . 'memuse';
-                                echo ' | ' . round(memory_get_peak_usage() / 1024 / 1024, 2) . 'mb';
-                                ?>
+                            <?php $this->renderPartial('/audit/_footer'); ?>
                         </span>
                         <span id="totop" class="pull-right"><a href="#">Back to Top
                                 <i class="icon-arrow-up"></i></a></span>

@@ -1,13 +1,11 @@
 <?php
 /**
- * @var $pageTrail PageTrail
+ * @var $audit Audit
  */
 $columns = array();
 $columns[] = array(
     'name' => 'id',
-    'type' => 'raw',
-    'value' => 'l(h("pageTrail-".$data->id),$data->url)',
-    'htmlOptions' => array('style' => 'width:110px'),
+    'class' => 'widgets.TbDropdownColumn',
 );
 $columns[] = array(
     'name' => 'user_id',
@@ -77,8 +75,8 @@ $columns[] = array(
 
 // grid
 $this->widget('widgets.GridView', array(
-    'id' => 'pageTrail-grid',
-    'dataProvider' => $pageTrail->search(),
-    'filter' => $pageTrail,
+    'id' => 'audit-grid',
+    'dataProvider' => $audit->search(),
+    'filter' => $audit,
     'columns' => $columns,
 ));

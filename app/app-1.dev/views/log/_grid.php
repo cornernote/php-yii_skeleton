@@ -9,9 +9,7 @@ $columns = array();
 
 $columns[] = array(
     'name' => 'id',
-    'type' => 'raw',
-    'value' => 'l(h("pageTrail-".$data->id),$data->url)',
-    'htmlOptions' => array('style' => 'width:110px'),
+    'class' => 'widgets.TbDropdownColumn',
 );
 $columns[] = array(
     'name' => 'message',

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * PageTrailController
+ * AuditController
  *
  * @package app.controller
  * @author Brett O'Donnell <brett@mrphp.com.au>
  */
-class PageTrailController extends WebController
+class AuditController extends WebController
 {
 
     /**
@@ -26,34 +26,34 @@ class PageTrailController extends WebController
     }
 
     /**
-     * Lists all PageTrails.
+     * Lists all Audits.
      */
     public function actionIndex()
     {
-        $pageTrail = new PageTrail('search');
+        $audit = new Audit('search');
         $urlManager = app()->getUrlManager();
         $urlManager->setUrlFormat('get');
         $this->render('index', array(
-            'pageTrail' => $pageTrail,
+            'audit' => $audit,
         ));
     }
 
 
     /**
-     * Displays a particular PageTrail.
-     * @param integer $id the ID of the PageTrail to be displayed
+     * Displays a particular Audit.
+     * @param integer $id the ID of the Audit to be displayed
      */
     public function actionView($id)
     {
-        $pageTrail = $this->loadModel($id);
+        $audit = $this->loadModel($id);
         $this->render('view', array(
-            'pageTrail' => $pageTrail,
+            'audit' => $audit,
         ));
     }
 
     /**
-     * Preserves a particular PageTrail.
-     * @param integer $id the ID of the PageTrail to be displayed
+     * Preserves a particular Audit.
+     * @param integer $id the ID of the Audit to be displayed
      * @param int $status
      * @return void
      */
@@ -61,10 +61,12 @@ class PageTrailController extends WebController
     {
         $id = (int)$id;
         $status = (int)$status;
-        $pageTrail = $this->loadModel($id);
-        $sql = "UPDATE " . PageTrail::model()->tableName() . " SET preserve = $status WHERE id = $id";
-        app()->db->createCommand($sql)->execute();
-        $this->redirect($pageTrail->getUrl(), true);
+        $audit = $this->loadModel($id);
+        //$sql = "UPDATE " . Audit::model()->tableName() . " SET preserve = $status WHERE id = $id";
+        //app()->db->createCommand($sql)->execute();
+        $audit->preserve = $status;
+        $audit->save(false);
+        $this->redirect($audit->getUrl(), true);
     }
 
 }

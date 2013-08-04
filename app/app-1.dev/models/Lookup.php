@@ -23,7 +23,7 @@
  * @property integer $id
  * @property string $name
  * @property string $type
- * @property integer $position
+ * @property integer $sort_order
  * @property datetime $created
  * @property datetime $deleted
  *

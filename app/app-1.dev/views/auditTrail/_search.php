@@ -9,15 +9,15 @@ echo '<div class="search-form hide">';
 
 /** @var ActiveForm $form */
 $form = $this->beginWidget('widgets.ActiveForm', array(
-	'action' => url($this->route),
-	'type' => 'horizontal',
-	'method' => 'get',
+    'action' => url($this->route),
+    'type' => 'horizontal',
+    'method' => 'get',
 ));
 
 echo '<fieldset>';
-echo '<legend>' . $this->getName() . ' ' .t('Search') . '</legend>';
+echo '<legend>' . $this->getName() . ' ' . t('Search') . '</legend>';
 echo $form->textFieldRow($auditTrail, 'id');
-echo $form->textFieldRow($auditTrail, 'page_trail_id');
+echo $form->textFieldRow($auditTrail, 'audit_id');
 echo $form->textFieldRow($auditTrail, 'old_value');
 echo $form->textFieldRow($auditTrail, 'new_value');
 echo $form->textFieldRow($auditTrail, 'action');

@@ -25,11 +25,11 @@
             // TODO ask Zain what this is... ?  do we need it ?
             // commented it out for now
             //array(
-            //    'label' => 'Page Trail',
-            //    'value' => l('Related Page Trails ',
-            //        url('pageTrail/index', array(
-            //            'PageTrail[model]' => 'team',
-            //            'PageTrail[model_id]' => $model->id,
+            //    'label' => 'Audit',
+            //    'value' => l(t('Related Audits'),
+            //        url('/audit/index', array(
+            //            'Audit[model]' => 'team',
+            //            'Audit[model_id]' => $model->id,
             //        ))
             //    ),
             //    'type' => 'raw',

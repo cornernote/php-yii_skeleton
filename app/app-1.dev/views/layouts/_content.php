@@ -45,7 +45,7 @@ $this->widget('widgets.Navbar', array(
     <footer class="footer">
         <div class="container-fluid">
             <?php
-            $this->renderPartial('/pageTrail/_footer');
+            $this->renderPartial('/audit/_footer');
             echo '<p class="pull-right">' . l(t('Back to Top') . ' &uarr;', '#') . '</p>';
             ?>
         </div>

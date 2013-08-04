@@ -13,11 +13,10 @@ $('.search-button').click(function(){
 	return false;
 });
 $('.search-form form').submit(function(){
-	$.fn.yiiGridView.update('pageTrail-grid', {
+	$.fn.yiiGridView.update('audit-grid', {
         url: $(this).attr('action'),
 		data: $(this).serialize()
 	});
 	return false;
 });
 ");
-?>

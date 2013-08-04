@@ -24,7 +24,7 @@ class GlobalInit extends CApplicationComponent
         Yii::setPathOfAlias('validators', Yii::app()->getBasePath() . '/components/validators');
         Yii::setPathOfAlias('widgets', Yii::app()->getBasePath() . '/components/widgets');
 
-        // start the page trail
-        PageTrail::model()->findCurrent();
+        // start the audit
+        Audit::model()->findCurrent();
     }
 }
