@@ -35,6 +35,8 @@
 class Setting extends CActiveRecord
 {
 
+    static private $_items = array();
+
     /**
      * Returns the static model of the specified AR class.
      * @param string $className
@@ -50,7 +52,7 @@ class Setting extends CActiveRecord
      */
     public function tableName()
     {
-        return 'setting';
+        return $_ENV['_core']['db']['setting'];
     }
 
     /**
@@ -60,54 +62,36 @@ class Setting extends CActiveRecord
     {
         return array(
             'AuditBehavior' => 'behaviors.AuditBehavior',
-            'EavBehavior' => array(
-                'class' => 'behaviors.EavBehavior',
-                'tableName' => $_ENV['_settings']['db']['table'],
-            ),
         );
     }
 
     /**
      * @static
-     * @param string $group
      * @param string $name
      * @return string
      */
-    public static function item($group, $name)
+    public static function item($name)
     {
-        static $items;
-        if (isset($items[$group][$name])) {
-            return $items[$group][$name];
+        if (isset(self::$_items[$name])) {
+            return self::$_items[$name];
         }
-        $setting = self::items($group, array());
-        if (!isset($setting[$name])) {
-            return false;
+        $setting = self::items();
+        if (isset($setting[$name])) {
+            return $setting[$name];
         }
-        return $item[$group][$name] = $setting[$name];
+        return false;
     }
 
     /**
      * @static
-     * @param string $group
-     * @param array $names
-     * @return mixed
+     * @return array
      */
-    public static function items($group, $names = array())
+    public static function items()
     {
-        static $items;
-        $_names = md5(serialize($names));
-        if (isset($items[$group][$_names])) {
-            return $items[$group][$_names];
+        if (isset(self::$_items)) {
+            return self::$_items;
         }
-        /* @var $settings Setting[] */
-        static $settings;
-        if (!isset($settings[$group])) {
-            $settings[$group] = self::model()->findByPk($group);
-            if (!$settings[$group]) {
-                return array();
-            }
-        }
-        return $item[$group][$_names] = $settings[$group]->getEavAttributes($names);
+        return self::$_items = CHtml::listData(self::model()->findAll(), 'key', 'value');
     }
 
 }

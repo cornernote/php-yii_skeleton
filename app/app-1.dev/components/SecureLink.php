@@ -16,7 +16,7 @@ class SecureLink
     {
         $params['ttl'] = $ttl;
         $params['rnd'] = md5(microtime(true));
-        $params['key'] = md5(implode('', $params) . Setting::item('app', 'hashKey'));
+        $params['key'] = md5(implode('', $params) . Setting::item('hashKey'));
         return 'http://' . param('host') . url($action, $params);
     }
 
@@ -42,7 +42,7 @@ class SecureLink
         }
         $params['ttl'] = $data['ttl'];
         $params['rnd'] = $data['rnd'];
-        $key = md5(implode('', $params) . Setting::item('app', 'hashKey'));
+        $key = md5(implode('', $params) . Setting::item('hashKey'));
         return ($data['key'] == $key);
     }
 

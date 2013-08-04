@@ -10,7 +10,7 @@ echo $data->user ? $data->user->username : t('unknown');
 echo '</td>';
 
 echo '<td>';
-echo Time::agoIcon($data->created, Setting::item('app', 'dateTimeFormat'));
+echo Time::agoIcon($data->created, Setting::item('dateTimeFormat'));
 echo '</td>';
 
 echo '</tr>';

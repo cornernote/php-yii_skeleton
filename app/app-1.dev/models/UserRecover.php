@@ -41,8 +41,8 @@ class UserRecover extends FormModel
             array('username_or_email', 'checkExists'),
         );
         // recaptcha
-        if (Setting::item('app', 'recaptcha')) {
-            $rules[] = array('recaptcha', 'ReCaptchaValidator', 'privateKey' => Setting::item('app', 'recaptchaPrivate'), 'on' => 'recaptcha');
+        if (Setting::item('recaptcha')) {
+            $rules[] = array('recaptcha', 'ReCaptchaValidator', 'privateKey' => Setting::item('recaptchaPrivate'), 'on' => 'recaptcha');
         }
         return $rules;
     }

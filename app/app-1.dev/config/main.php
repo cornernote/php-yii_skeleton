@@ -2,9 +2,10 @@
 $config = array(
 
     // yii settings
-    'id' => $_ENV['_settings']['core']['id'],
-    'name' => $_ENV['_settings']['app']['name'],
-    'language' => $_ENV['_settings']['app']['language'],
+    'id' => $_ENV['_core']['setting']['id'],
+    'name' => $_ENV['_core']['setting']['name'],
+    'language' => $_ENV['_core']['setting']['language'],
+    'params' => $_ENV['_core']['setting'],
 
     // paths
     'basePath' => dirname(dirname(__FILE__)),
@@ -47,14 +48,14 @@ $config = array(
             'basePath' => dirname(dirname(__FILE__)) . '/themes',
         ),
         'db' => array(
-            'connectionString' => "mysql:host={$_ENV['_settings']['db']['host']};dbname={$_ENV['_settings']['db']['name']}",
+            'connectionString' => "mysql:host={$_ENV['_core']['db']['host']};dbname={$_ENV['_core']['db']['name']}",
             'emulatePrepare' => true,
-            'username' => $_ENV['_settings']['db']['user'],
-            'password' => $_ENV['_settings']['db']['pass'],
+            'username' => $_ENV['_core']['db']['user'],
+            'password' => $_ENV['_core']['db']['pass'],
             'charset' => 'utf8',
             'schemaCachingDuration' => 3600,
-            'enableProfiling' => $_ENV['_settings']['core']['debug_db'],
-            'enableParamLogging' => $_ENV['_settings']['core']['debug_db'],
+            'enableProfiling' => $_ENV['_core']['setting']['debug_db'],
+            'enableParamLogging' => $_ENV['_core']['setting']['debug_db'],
         ),
         'errorHandler' => array(
             'class' => 'ErrorHandler',
@@ -101,13 +102,6 @@ $config = array(
         ),
     ),
 
-    // application-level parameters - accessed using
-    // Yii::app()->params['paramName'] or param('paramName')
-    'params' => array(
-        // this is used in contact page
-        'adminEmail' => 'webmaster@brett.local',
-        'defaultPageSize' => 10,
-    ),
 );
 // local main config overrides
 $local = array();

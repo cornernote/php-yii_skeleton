@@ -288,7 +288,7 @@ class User extends ActiveRecord
         if (!$password) {
             return '';
         }
-        return md5($password . Setting::item('app', 'hashKey'));
+        return md5($password . Setting::item('hashKey'));
     }
 
     /**

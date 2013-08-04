@@ -46,9 +46,8 @@ class FatalErrorCatch extends CApplicationComponent
     {
         $e = error_get_last();
         if ($e !== null && in_array($e['type'], $this->errorTypes)) {
-            $msg = 'Fatal error: ' . $e['message'];
             Yii::app()->errorHandler->errorAction = $this->errorAction;
-            Yii::app()->handleError($e['type'], $msg, $e['file'], $e['line']);
+            Yii::app()->handleError($e['type'], 'Fatal error: ' . $e['message'], $e['file'], $e['line']);
         }
     }
 }

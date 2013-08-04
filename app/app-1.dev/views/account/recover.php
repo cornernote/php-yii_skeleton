@@ -27,7 +27,7 @@ if ($recaptcha) {
         'attribute' => 'recaptcha',
         'theme' => 'red',
         'language' => 'en_EN',
-        'publicKey' => Setting::item('app', 'recaptchaPublic'),
+        'publicKey' => Setting::item('recaptchaPublic'),
     ));
     echo CHtml::error($user, 'recaptcha');
 }

@@ -62,7 +62,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                         $time = filemtime($p . DS . $entry);
                         $_versions[$time] = array(
                             'entry' => $entry,
-                            'display' => $entry . ' -- ' . date(Setting::item('app', 'dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                            'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
                         );
                     }
                 }
@@ -89,7 +89,7 @@ $this->widget('bootstrap.widgets.TbButton', array(
                         $time = filemtime($p . DS . $entry);
                         $_versions[$time] = array(
                             'entry' => $entry,
-                            'display' => $entry . ' -- ' . date(Setting::item('app', 'dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                            'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
                         );
                     }
                 }
@@ -181,22 +181,6 @@ $this->widget('bootstrap.widgets.TbButton', array(
         </div>
 
     </fieldset>
-
-
-    <fieldset>
-        <legend><?php echo t('Path Settings') ?></legend>
-
-        <div class="control-group">
-            <?php echo CHtml::label(t('htroot'), 'SettingEav_core_htroot', array('class' => 'control-label')); ?>
-            <div class="controls">
-                <?php
-                echo CHtml::textField('SettingEav[core][htroot]', $settings['core']->getEavAttribute('htroot'));
-                ?>
-            </div>
-        </div>
-
-    </fieldset>
-
 
     <h2><?php echo t('App Settings'); ?></h2>
 

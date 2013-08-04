@@ -14,24 +14,24 @@ $web['preload'][] = 'bootstrap';
 // CProfileLogRoute: displays profiling messages at the end of the current Web page.
 
 $web['components']['log']['routes'] = array();
-if ($_ENV['_settings']['core']['debug']) {
+if ($_ENV['_core']['setting']['debug']) {
 
     // enable the debug toolbar
-    if ($_ENV['_settings']['core']['debug_toolbar']) {
+    if ($_ENV['_core']['setting']['debug_toolbar']) {
         $web['components']['log']['routes'][] = array(
             'class' => 'XWebDebugRouter',
             'config' => 'alignLeft, opaque, runInDebug, fixedPos, collapsed, yamlStyle',
-            'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
+            'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
             'allowedIPs' => array('.*'),
         );
     } // web log route
     else {
         $web['components']['log']['routes'][] = array(
             'class' => 'CWebLogRoute',
-            'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
+            'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
             //'levels' => 'trace, info, error, warning, profile',
         );
-        if ($_ENV['_settings']['core']['debug_db']) {
+        if ($_ENV['_core']['setting']['debug_db']) {
             $web['components']['log']['routes'][] = array(
                 'class' => 'ProfileLogRoute',
                 'levels' => 'profile',
@@ -45,7 +45,7 @@ else {
     // no debug, file log route
     $web['components']['log']['routes'][] = array(
         'class' => 'CFileLogRoute',
-        'levels' => $_ENV['_settings']['core']['debug_levels'] ? $_ENV['_settings']['core']['debug_levels'] : 'none',
+        'levels' => $_ENV['_core']['setting']['debug_levels'] ? $_ENV['_core']['setting']['debug_levels'] : 'none',
     );
 
 }
@@ -62,7 +62,7 @@ $web['components']['assetManager'] = array(
 );
 
 // default theme
-$web['theme'] = $_ENV['_settings']['app']['theme'];
+$web['theme'] = $_ENV['_core']['setting']['theme'];
 $web['params']['themes'] = array(
     '' => 'Bootstrap',
     'admingrey' => 'Admin Grey',

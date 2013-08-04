@@ -9,8 +9,8 @@ $this->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript
 <script type="text/javascript">
 
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '<?php echo Setting::item('app', 'google_analytics_id'); ?>']);
-    _gaq.push(['_setDomainName', '<?php echo Setting::item('app', 'google_analytics_domain'); ?>']);
+    _gaq.push(['_setAccount', '<?php echo Setting::item('google_analytics_id'); ?>']);
+    _gaq.push(['_setDomainName', '<?php echo Setting::item('google_analytics_domain'); ?>']);
     _gaq.push(['_setAllowLinker', true]);
     _gaq.push(['_trackPageview']);
 

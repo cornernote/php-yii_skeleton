@@ -63,7 +63,7 @@ class EMailHelper
         );
 
         // email the given user
-        $tos = explode(',', Setting::item('core', 'error_email'));
+        $tos = explode(',', Setting::item('error_email'));
         foreach ($tos as $to) {
             $to = trim($to);
             EmailSpool::model()->spool($to, $message, $relation);
@@ -100,7 +100,7 @@ class EMailHelper
         // save the email
         $emailSpool = new EmailSpool;
         $emailSpool->status = 'pending';
-        $emailSpool->from_email = Setting::item('app', 'email');
+        $emailSpool->from_email = Setting::item('email');
         $emailSpool->from_name = app()->name;
         $emailSpool->to_email = $to_email;
         $emailSpool->to_name = $to_name;
@@ -116,7 +116,7 @@ class EMailHelper
 
         // set flash message
         $flash = true;
-        if (Setting::item('core', 'debug_email'))
+        if (Setting::item('debug_email'))
             $flash = true;
         elseif (!user()->checkAccess('admin'))
             $flash = false;
@@ -179,14 +179,14 @@ class EMailHelper
         $params = array();
 
         // links
-        $params['app__domain'] = Setting::item('app', 'domain');
+        $params['app__domain'] = Setting::item('domain');
         $params['app__au'] = au();
 
         // company
         $params['app__name'] = app()->name;
-        $params['app__phone'] = Setting::item('app', 'phone');
-        $params['app__email'] = Setting::item('app', 'email');
-        $params['app__website'] = Setting::item('app', 'website');
+        $params['app__phone'] = Setting::item('phone');
+        $params['app__email'] = Setting::item('email');
+        $params['app__website'] = Setting::item('website');
 
         // model params
         foreach ($modelsForParams as $model) {

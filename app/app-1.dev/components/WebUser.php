@@ -132,7 +132,7 @@ class WebUser extends CWebUser
         }
         $setting = $this->user->getEavAttribute($name);
         if (!$setting) {
-            $setting = Setting::item('app', $name);
+            $setting = Setting::item($name);
         }
         return $setting;
     }

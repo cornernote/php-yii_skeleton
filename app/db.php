@@ -4,5 +4,5 @@ return array(
     'user' => 'root',
     'pass' => '',
     'name' => 'test',
-    'table' => 'setting_eav',
+    'setting' => 'setting',
 );
