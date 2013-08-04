@@ -34,7 +34,6 @@ class ConsoleCommand extends CConsoleCommand
     public function init()
     {
         $this->timer = microtime(true);
-        PageTrail::model()->findCurrent();
         parent::init();
     }
 
