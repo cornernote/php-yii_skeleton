@@ -1,19 +1,14 @@
 <?php
 /**
- * EMailManager
+ * EMailHelper
  */
-class EMailManager extends CApplicationComponent
+class EMailHelper
 {
-
-    /**
-     * @var string
-     */
-    public $layout = 'layout.default';
 
     /**
      * @param $user User
      */
-    public function sendRecoverPasswordEmail($user)
+    static public function sendRecoverPasswordEmail($user)
     {
         // setup email variables
         $to = array($user->email => $user->name);
@@ -26,7 +21,7 @@ class EMailManager extends CApplicationComponent
         $viewParams['url'] = url(array('/account/passwordReset', 'id' => $user->id, 'token' => $token));
 
         // spool the email
-        $this->spool($to, 'user.recover', $viewParams, $modelsForParams, $relation);
+        self::spool($to, 'user.recover', $viewParams, $modelsForParams, $relation);
 
         // tell someone about it
         Log::model()->add('EMailManager::sendRecoverPasswordEmail', $relation);
@@ -35,7 +30,7 @@ class EMailManager extends CApplicationComponent
     /**
      * @param $user User
      */
-    public function sendWelcomeEmail($user)
+    static public function sendWelcomeEmail($user)
     {
         // setup email variables
         $to = array($user->email => $user->name);
@@ -44,7 +39,7 @@ class EMailManager extends CApplicationComponent
         $viewParams = array();
 
         // spool the email
-        $this->spool($to, 'user.welcome', $viewParams, $modelsForParams, $relation);
+        self::spool($to, 'user.welcome', $viewParams, $modelsForParams, $relation);
 
         // tell someone about it
         Log::model()->add('EMailManager::sendWelcomeEmail', $relation);
@@ -53,7 +48,7 @@ class EMailManager extends CApplicationComponent
     /**
      * @param $count int
      */
-    public function sendError($count)
+    static public function sendError($count)
     {
         $relation = array('model' => 'Error', 'model_id' => 0);
 
@@ -85,10 +80,10 @@ class EMailManager extends CApplicationComponent
      * @throws CException
      * @return bool|integer
      */
-    private function spool($to, $template, $viewParams = array(), $modelsForParams = array(), $relation = array())
+    static private function spool($to, $template, $viewParams = array(), $modelsForParams = array(), $relation = array())
     {
         // generate the message
-        $message = $this->renderEmailTemplate($template, $viewParams, $modelsForParams);
+        $message = self::renderEmailTemplate($template, $viewParams, $modelsForParams);
 
         // format the to_name/to_email
         $to_email = $to_name = '';
@@ -147,12 +142,12 @@ class EMailManager extends CApplicationComponent
      * @throws CException
      * @return array
      */
-    private function renderEmailTemplate($template, $viewParams = array(), $modelsForParams = array())
+    static private function renderEmailTemplate($template, $viewParams = array(), $modelsForParams = array())
     {
         // load layout
-        $emailLayout = EmailTemplate::model()->findByAttributes(array('name' => $this->layout));
+        $emailLayout = EmailTemplate::model()->findByAttributes(array('name' => 'layout.default'));
         if (!$emailLayout)
-            throw new CException('missing EmailTemplate - ' . $this->layout);
+            throw new CException('missing EmailTemplate - layout.default');
 
         // load template
         $emailTemplate = EmailTemplate::model()->findByAttributes(array('name' => $template));
@@ -160,7 +155,7 @@ class EMailManager extends CApplicationComponent
             throw new CException('missing EmailTemplate - ' . $template);
 
         // load params
-        $params = CMap::mergeArray($this->getParams($modelsForParams), $viewParams);
+        $params = CMap::mergeArray(self::getParams($modelsForParams), $viewParams);
 
         $mustache = new Mustache;
         $templates = array();
@@ -178,7 +173,7 @@ class EMailManager extends CApplicationComponent
      * @param $modelsForParams
      * @return array|mixed
      */
-    private function getParams($modelsForParams)
+    static private function getParams($modelsForParams)
     {
         // app params
         $params = array();
@@ -196,7 +191,7 @@ class EMailManager extends CApplicationComponent
         // model params
         foreach ($modelsForParams as $model) {
             if (method_exists($model, 'getEmailTemplateParams')) {
-                $params = CMap::mergeArray($params, $model->getEmailTemplateParams());
+                $params = CMap::mergeArray($params, call_user_func(array($model, 'getEmailTemplateParams')));
             }
         }
         return $params;

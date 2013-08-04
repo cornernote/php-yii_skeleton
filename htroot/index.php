@@ -12,7 +12,7 @@ if (!file_exists($core)) {
 require_once($core);
 
 // load core settings
-$_ENV['_settings'] = _core_settings();
+$_ENV['_settings'] = _core();
 
 // set default php settings
 date_default_timezone_set($_ENV['_settings']['core']['timezone']);

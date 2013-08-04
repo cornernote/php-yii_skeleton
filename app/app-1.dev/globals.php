@@ -3,9 +3,6 @@
 /**
  * This is the shortcut to DIRECTORY_SEPARATOR
  */
-/**
- *
- */
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 /**
@@ -19,6 +16,7 @@ function app()
 
 /**
  * This is the shortcut to Yii::app()->clientScript
+ * @return ClientScript
  */
 function cs()
 {
@@ -40,10 +38,13 @@ function user()
 }
 
 /**
- * This is the shortcut to Yii::app()->createUrl()
-url('package/view', array(
-'id'=>$this->id,
-);
+ * URL
+ * eg:
+ * url('/example/view', array('id'=>$this->id);
+ * @param $route
+ * @param array $params
+ * @param string $ampersand
+ * @return string
  */
 function url($route, $params = array(), $ampersand = '&')
 {
@@ -56,15 +57,8 @@ function url($route, $params = array(), $ampersand = '&')
 }
 
 /**
- * This is the shortcut to Yii::app()->urlManager->parseUrl(Yii::app()->getRequest())
- */
-function route()
-{
-    return parseUrl(request());
-}
-
-/**
- * This is the shortcut to Yii::app()->getRequest()
+ * HTTP Request
+ * @return CHttpRequest
  */
 function request()
 {
@@ -72,7 +66,8 @@ function request()
 }
 
 /**
- * This is the shortcut to Yii::app()->getRequest()->getRequestUri()
+ * Request Uri
+ * @return string
  */
 function ru()
 {
@@ -80,7 +75,9 @@ function ru()
 }
 
 /**
- * This is the shortcut to Yii::app()->urlManager->parseUrl()
+ * Parse Url
+ * @param $url
+ * @return string
  */
 function parseUrl($url)
 {
@@ -88,7 +85,9 @@ function parseUrl($url)
 }
 
 /**
- * This is the shortcut to CHtml::encode
+ * HTML Encode
+ * @param $text
+ * @return string
  */
 function h($text)
 {
@@ -96,8 +95,14 @@ function h($text)
 }
 
 /**
- * This is the shortcut to CHtml::link()
- * echo l('click here',array('package/view', 'id' => $this->id));
+ * Link
+ * eg:
+ * echo l(t('click here'), array('/example/view', 'id' => $this->id));
+ *
+ * @param $text
+ * @param string $url
+ * @param array $htmlOptions
+ * @return string
  */
 function l($text, $url = '#', $htmlOptions = array())
 {
@@ -105,15 +110,11 @@ function l($text, $url = '#', $htmlOptions = array())
 }
 
 /**
- * This is the shortcut to CHtml::linkButton()
- */
-function lb($image, $htmlOptions = array())
-{
-    return CHtml::linkButton($image, $htmlOptions);
-}
-
-/**
- * This is the shortcut to CHtml::image()
+ * Image
+ * @param $image
+ * @param string $alt
+ * @param array $htmlOptions
+ * @return string
  */
 function i($image, $alt = '', $htmlOptions = array())
 {
@@ -121,7 +122,13 @@ function i($image, $alt = '', $htmlOptions = array())
 }
 
 /**
- * This is the shortcut to Yii::t()
+ * Translate
+ * @param $message
+ * @param string $category
+ * @param array $params
+ * @param null $source
+ * @param null $language
+ * @return string
  */
 function t($message, $category = 'app', $params = array(), $source = null, $language = null)
 {
@@ -129,8 +136,10 @@ function t($message, $category = 'app', $params = array(), $source = null, $lang
 }
 
 /**
- * This is the shortcut to Yii::app()->request->baseUrl
+ * Base Url
  * If the parameter is given, it will be returned and prefixed with the app baseUrl.
+ * @param null $url
+ * @return string
  */
 function bu($url = null)
 {
@@ -141,7 +150,8 @@ function bu($url = null)
 }
 
 /**
- * This is the shortcut to Yii::app()->request->basePath
+ * Base Path
+ * @return string
  */
 function bp()
 {
@@ -149,7 +159,7 @@ function bp()
 }
 
 /**
- * Asset Url
+ * Assets Url
  * @return string
  */
 function au()
@@ -161,7 +171,7 @@ function au()
 }
 
 /**
- * Asset Path
+ * Assets Path
  * @return string
  */
 function ap()
@@ -218,15 +228,6 @@ function format()
 }
 
 /**
- * This is the shortcut to Yii::app()->mailManager.
- * @return EmailManager
- */
-function email()
-{
-    return Yii::app()->mailManager;
-}
-
-/**
  * Dumps the target with syntax highlighting on by default.
  */
 function dump($target)
@@ -240,8 +241,8 @@ function dump($target)
 function debug($var = null, $name = null)
 {
     $bt = debug_backtrace();
+    $file = str_replace(bp(), '', $bt[0]['file']);
     if ($name !== false) {
-        $file = str_replace(bp(), '', $bt[0]['file']);
         print '<div style="font-family: arial; background: #FFFBD6; margin: 10px 0;  padding: 5px; border:1px solid #666;">';
         if ($name) $name = '<b>' . $name . '</b><br/>';
         print '<span style="font-size:14px;">' . $name . '</span>';
@@ -310,21 +311,6 @@ function sf($field, $model = null)
 }
 
 /**
- * @param null $key
- * @param null $id
- * @return bool
- */
-function static_id($key = null, $id = null)
-{
-    static $ids = array();
-    if (!$key) return false;
-    if ($id !== null) {
-        $ids[$key] = $id;
-    }
-    return isset($ids[$key]) ? $ids[$key] : false;
-}
-
-/**
  * @param $id
  * @return array
  */
@@ -374,7 +360,15 @@ function sfGridHidden($id = null)
  */
 function isAjax()
 {
-    return Yii::app()->request->isAjaxRequest;
+    return Yii::app()->getRequest()->getIsAjaxRequest();
+}
+
+/**
+ * @return bool
+ */
+function isPost()
+{
+    return Yii::app()->getRequest()->getIsPostRequest();
 }
 
 /**

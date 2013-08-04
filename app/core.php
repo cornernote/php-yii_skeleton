@@ -3,7 +3,7 @@
 /**
  * @return array
  */
-function _core_settings()
+function _core()
 {
     // load config file
     $file = dirname(__FILE__) . '/db.php';
@@ -26,13 +26,6 @@ function _core_settings()
     $app = array();
     while ($row = mysql_fetch_assoc($q)) {
         $app[$row['attribute']] = $row['value'];
-    }
-
-    // get user default settings
-    $q = mysql_query("SELECT * FROM {$config['table']} WHERE entity='user'", $db) or die('no core data');
-    $user = array();
-    while ($row = mysql_fetch_assoc($q)) {
-        $user[$row['attribute']] = $row['value'];
     }
 
     // disconnect from mysql

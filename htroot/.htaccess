@@ -4,6 +4,9 @@ Options +FollowSymLinks
     order deny,allow
     allow from all
 </Limit>
+<FilesMatch "(yiic|yiic\.bat|yiic\.php)$">
+    deny from all
+</FilesMatch>
 
 <IfModule mod_autoindex.c>
     IndexIgnore */*

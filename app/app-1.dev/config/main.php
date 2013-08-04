@@ -89,7 +89,7 @@ $config = array(
         'swiftMailer' => array(
             'class' => 'application.extensions.swiftMailer.SwiftMailer',
         ),
-        'mailManager' => array(
+        'eMailManager' => array(
             'class' => 'EMailManager',
         ),
         'kint' => array(
