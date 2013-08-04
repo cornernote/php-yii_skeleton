@@ -15,10 +15,6 @@
  * @method UserToRole findBySql() findBySql($sql, array $params = array())
  * @method UserToRole[] findAllBySql() findAllBySql($sql, array $params = array())
  *
- * Methods from behavior AuditBehavior
- * @method afterSave() afterSave(CModelEvent $event)
- * @method afterDelete() afterDelete(CModelEvent $event)
- *
  * Properties from table fields
  * @property string $id
  * @property string $user_id

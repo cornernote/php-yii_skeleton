@@ -114,10 +114,12 @@ class GeneratePropertiesAction extends CAction
     {
         $properties = array();
 
-        // table
+        // intro
         $properties[] = " *";
         $properties[] = " * This is the model class for table '" . $this->model->tableName() . "'";
         $properties[] = " *";
+
+        // table
         $properties[] = " * @method {$this->modelName} with() with()";
         $properties[] = " * @method {$this->modelName} find() find(\$condition, array \$params = array())";
         $properties[] = " * @method {$this->modelName}[] findAll() findAll(\$condition = '', array \$params = array())";
@@ -135,10 +137,8 @@ class GeneratePropertiesAction extends CAction
         foreach (get_class_methods('CActiveRecordBehavior') as $methodName) {
             $inheritedMethods[$methodName] = $methodName;
         }
-        $selfMethods = array();
-        foreach (get_class_methods($this->modelName) as $methodName) {
-            $selfMethods[$methodName] = $methodName;
-        }
+        $reflection = new ReflectionClass ($this->modelName);
+        $selfMethods = CHtml::listData($reflection->getMethods(), 'name', 'name');
         foreach ($behaviors as $behavior) {
             $className = $behavior;
             if (is_array($behavior)) {
@@ -189,7 +189,9 @@ class GeneratePropertiesAction extends CAction
                 $properties[] = $property;
 
             }
-            $properties[] = ' *';
+            if ($header) {
+                $properties[] = ' *';
+            }
         }
 
         // relations
@@ -213,10 +215,9 @@ class GeneratePropertiesAction extends CAction
             }
             $properties[] = ' *';
         }
-        $properties[] = ' * Properties from table fields';
 
         // table fields
-        //$table = $this->model->getDbConnection()->getSchema()->getTable($this->model->tableName(), true);
+        $properties[] = ' * Properties from table fields';
         foreach ($this->model->tableSchema->columns as $column) {
             $type = $column->type;
             if (($column->dbType == 'datetime') || ($column->dbType == 'date')) {
@@ -229,6 +230,8 @@ class GeneratePropertiesAction extends CAction
         }
 
         $properties[] = ' *';
+
+        // all done...
         return $properties;
     }
 

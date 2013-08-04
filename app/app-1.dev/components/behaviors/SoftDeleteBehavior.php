@@ -21,13 +21,13 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
      */
     public function beforeDelete($event)
     {
-        if (isset($this->Owner->tableSchema->columns[$this->deleted])) {
-            $this->Owner->{$this->deleted} = date('Y-m-d H:i:s');
+        if (isset($this->owner->tableSchema->columns[$this->deleted])) {
+            $this->owner->{$this->deleted} = date('Y-m-d H:i:s');
         }
-        if (isset($this->Owner->tableSchema->columns[$this->deletedBy])) {
-            $this->Owner->{$this->deletedBy} = Yii::app()->user->id;
+        if (isset($this->owner->tableSchema->columns[$this->deletedBy])) {
+            $this->owner->{$this->deletedBy} = Yii::app()->user->id;
         }
-        $this->Owner->save(false);
+        $this->owner->save(false);
 
         //prevent real deletion
         $event->isValid = false;
@@ -39,12 +39,12 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
      */
     public function undelete()
     {
-        if (!$this->Owner->getIsNewRecord()) {
-            //Yii::trace(get_class($this) . '.undelete()', 'system.db.ar.CActiveRecord');
+        if (!$this->owner->isNewRecord) {
+            Yii::trace(get_class($this) . '.undelete()', 'system.db.ar.CActiveRecord');
             $updateFields = array(
                 $this->deleted => null,
             );
-            return $this->Owner->updateByPk($this->Owner->getPrimaryKey(), $updateFields);
+            return $this->owner->updateByPk($this->owner->getPrimaryKey(), $updateFields);
         }
         else
             throw new CDbException(Yii::t('yii', 'The active record cannot be undeleted because it is new.'));
@@ -55,10 +55,10 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
      */
     public function deleteds()
     {
-        $this->Owner->getDbCriteria->mergeWith(array(
+        $this->owner->dbCriteria->mergeWith(array(
             'condition' => $this->deleted . ' IS NOT NULL'
         ));
-        return $this->Owner;
+        return $this->owner;
     }
 
     /**
@@ -66,10 +66,10 @@ class SoftDeleteBehavior extends CActiveRecordBehavior
      */
     public function notdeleteds()
     {
-        $this->Owner->getDbCriteria->mergeWith(array(
+        $this->owner->dbCriteria->mergeWith(array(
             'condition' => $this->deleted . ' IS NULL'
         ));
-        return $this->Owner;
+        return $this->owner;
     }
 
 }
