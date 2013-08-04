@@ -28,10 +28,12 @@ class SettingController extends WebController
      */
     public function actionIndex()
     {
-        if (isset($_POST['SettingEav'])) {
-            foreach ($_POST['SettingEav'] as $setting_id => $settings) {
-                $setting = Setting::model()->findByPk($setting_id);
-                $setting->setEavAttributes($settings, true);
+        if (isset($_POST['Setting'])) {
+            foreach ($_POST['Setting'] as $k => $v) {
+                $v = isset($v['value']) ? $v['value'] : 0;
+                $setting = Setting::model()->findByPk($k);
+                $setting->value = $v;
+                $setting->save();
             }
             user()->addFlash('Settings have been saved.', 'success');
             $this->redirect(array('/setting/index'));

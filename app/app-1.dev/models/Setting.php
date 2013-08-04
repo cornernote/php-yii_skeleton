@@ -154,5 +154,14 @@ class Setting extends ActiveRecord
         return $versions;
     }
 
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'value' => ucwords(trim(strtolower(str_replace(array('-', '_'), ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $this->key))))),
+        );
+    }
 
 }
