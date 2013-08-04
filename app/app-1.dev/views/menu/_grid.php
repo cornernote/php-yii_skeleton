@@ -7,7 +7,7 @@
 $columns = array();
 $columns[] = array(
     'name' => 'id',
-    'class' => 'TbDropdownColumn',
+    'class' => 'widgets.TbDropdownColumn',
 );
 $columns[] = array(
     'name' => 'parent_id',
@@ -53,7 +53,7 @@ $multiActions[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'menu-grid',
     'dataProvider' => $menu->search(),
     'filter' => $menu,

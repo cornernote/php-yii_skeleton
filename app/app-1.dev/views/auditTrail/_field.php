@@ -14,7 +14,7 @@ $dataProvider = new CActiveDataProvider('AuditTrail', array(
 ));
 
 echo '<div class="grid-view">';
-$this->widget('ListView', array(
+$this->widget('widgets.ListView', array(
     'id' => "audit-list-$model-$model_id-$field",
     'dataProvider' => $dataProvider,
     'itemView' => '/auditTrail/_field_view',

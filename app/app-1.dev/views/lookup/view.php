@@ -22,7 +22,7 @@ $attributes[] = 'position';
 $attributes[] = 'created';
 $attributes[] = 'deleted';
 
-$this->widget('DetailView', array(
+$this->widget('widgets.DetailView', array(
     'data' => $lookup,
     'attributes' => $attributes,
 ));

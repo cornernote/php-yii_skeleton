@@ -7,7 +7,7 @@
 $columns = array();
 $columns[] = array(
     'name' => 'id',
-    'class' => 'TbDropdownColumn',
+    'class' => 'widgets.TbDropdownColumn',
 );
 $columns[] = 'model';
 $columns[] = 'model_id';
@@ -35,7 +35,7 @@ $columns[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'emailSpool-grid',
     'dataProvider' => $emailSpool->search(),
     'filter' => $emailSpool,

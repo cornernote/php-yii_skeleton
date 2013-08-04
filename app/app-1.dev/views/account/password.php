@@ -8,10 +8,10 @@ $this->breadcrumbs = array(
     t('My Account') => array('/account/index'),
     t('Change Password'),
 );
-$this->menu = NavbarItems::userMenuItems();
+$this->menu = Menu::getItemsFromMenu('User');
 
 /** @var ActiveForm $form */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'password-form',
     //'enableAjaxValidation' => true,
     'type' => 'horizontal',

@@ -5,14 +5,14 @@
  */
 ?>
 <?php
-$this->widget('Navbar', array(
+$this->widget('widgets.Navbar', array(
     'id' => 'navbar',
     'fixed' => 'top',
     'fluid' => true,
     'collapse' => true,
-    'items' => NavbarItems::navMenu(),
+    'items' => Menu::topMenu(),
     'constantItems' => array(
-        NavbarItems::userMenu(),
+        Menu::userMenu(),
     ),
 ));
 ?>

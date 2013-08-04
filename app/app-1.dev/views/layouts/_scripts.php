@@ -10,20 +10,20 @@ if (!isset($this->showNavBar) || !$this->showNavBar) {
 cs()->registerCSSFile(au() . '/css/style.css', '', array('order' => -6));
 
 // font awesome
-$this->widget('FontAwesome');
+$this->widget('widgets.FontAwesome');
 
 // load here so modals don't have to load it
 cs()->registerCoreScript('yiiactiveform');
 
 // modal for popups
-$this->widget('Modal');
+$this->widget('widgets.Modal');
 
 // dropdown JS doesn't work on iPad
 // https://github.com/twitter/bootstrap/issues/2975#issuecomment-6659992
 cs()->registerScript('bootstrap-dropdown-fix', "$('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });", CClientScript::POS_END);
 
 // qtip for tooltips
-$this->widget('QTip');
+$this->widget('widgets.QTip');
 
 // google analytics
 //$this->renderPartial('/layouts/_google_analytics');

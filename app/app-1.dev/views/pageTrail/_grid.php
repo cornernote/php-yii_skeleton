@@ -76,7 +76,7 @@ $columns[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'pageTrail-grid',
     'dataProvider' => $pageTrail->search(),
     'filter' => $pageTrail,

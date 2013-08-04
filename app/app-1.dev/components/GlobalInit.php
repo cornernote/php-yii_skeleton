@@ -19,9 +19,10 @@ class GlobalInit extends CApplicationComponent
         parent::init();
 
         // set an alias to components
-        Yii::setPathOfAlias('actions', bp() . '/components/actions');
-        Yii::setPathOfAlias('behaviors', bp() . '/components/behaviors');
-        Yii::setPathOfAlias('validators', bp() . '/components/validators');
+        Yii::setPathOfAlias('actions', Yii::app()->getBasePath() . '/components/actions');
+        Yii::setPathOfAlias('behaviors', Yii::app()->getBasePath() . '/components/behaviors');
+        Yii::setPathOfAlias('validators', Yii::app()->getBasePath() . '/components/validators');
+        Yii::setPathOfAlias('widgets', Yii::app()->getBasePath() . '/components/widgets');
 
         // start the page trail
         PageTrail::model()->findCurrent();

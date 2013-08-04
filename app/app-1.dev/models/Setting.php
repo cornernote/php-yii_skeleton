@@ -32,7 +32,7 @@
  *
  * --- END GenerateProperties ---
  */
-class Setting extends ActiveRecord
+class Setting extends CActiveRecord
 {
 
     /**
@@ -58,7 +58,6 @@ class Setting extends ActiveRecord
      */
     public function behaviors()
     {
-        global $settings;
         return array(
             'AuditBehavior' => 'behaviors.AuditBehavior',
             'EavBehavior' => array(

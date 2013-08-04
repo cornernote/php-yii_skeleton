@@ -16,13 +16,13 @@ $this->menu = Menu::getItemsFromMenu('System');
 
 
 <?php
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'setting-form',
     //'enableAjaxValidation' => true,
     'inlineErrors' => false,
     'type' => 'horizontal',
 ));
-$this->widget('AskToSaveWork', array('watchElement' => '#setting-form :input', 'message' => t('Please save before leaving the page')));
+$this->widget('widgets.AskToSaveWork', array('watchElement' => '#setting-form :input', 'message' => t('Please save before leaving the page')));
 echo CHtml::hiddenField('returnUrl', ReturnUrl::getFormValue());
 echo $form->errorSummary($settings);
 ?>

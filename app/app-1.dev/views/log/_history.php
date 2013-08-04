@@ -13,7 +13,7 @@ $dataProvider = new CActiveDataProvider('Log', array(
 ));
 
 echo '<div class="grid-view">';
-$this->widget('ListView', array(
+$this->widget('widgets.ListView', array(
     'id' => "log-list-$model-$model_id",
     'dataProvider' => $dataProvider,
     'itemView' => '/log/_history_view',

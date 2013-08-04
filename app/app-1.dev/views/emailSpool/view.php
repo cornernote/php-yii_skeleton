@@ -53,7 +53,7 @@ $attributes[] = array(
     'type' => 'raw',
 );
 $attributes[] = 'sent';
-$this->widget('DetailView', array(
+$this->widget('widgets.DetailView', array(
     'data' => $emailSpool,
     'attributes' => $attributes,
 ));

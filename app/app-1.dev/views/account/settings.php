@@ -9,10 +9,10 @@ $this->breadcrumbs = array(
     t('My Account') => array('index'),
     t('Account Settings'),
 );
-$this->menu = NavbarItems::userMenuItems();
+$this->menu = Menu::getItemsFromMenu('User');
 
 /** @var ActiveForm $form */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'account-form',
     //'enableAjaxValidation' => true,
     'type' => 'horizontal',

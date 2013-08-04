@@ -28,7 +28,7 @@ $attributes[] = array(
     'value' => implode(', ', CHtml::listData($user->role, 'id', 'name')),
 );
 $attributes[] = 'created';
-$this->widget('DetailView', array(
+$this->widget('widgets.DetailView', array(
     'data' => $user,
     'attributes' => $attributes,
 ));

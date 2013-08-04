@@ -6,7 +6,7 @@
  *
  *
  * USAGE:
- * $this->widget('AskToSaveWork', array('watchElement' => '#my-form :input', 'message' => t('Please save before leaving the page')));
+ * $this->widget('widgets.AskToSaveWork', array('watchElement' => '#my-form :input', 'message' => t('Please save before leaving the page')));
  *
  *
  * @author aleksdj

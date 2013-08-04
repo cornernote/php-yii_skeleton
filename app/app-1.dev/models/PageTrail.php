@@ -46,7 +46,7 @@
  *
  * --- END GenerateProperties ---
  */
-class PageTrail extends ActiveRecord
+class PageTrail extends CActiveRecord
 {
     /**
      * @var

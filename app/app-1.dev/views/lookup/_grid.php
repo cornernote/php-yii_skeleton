@@ -7,7 +7,7 @@
 $columns = array();
 $columns[] = array(
     'name' => 'id',
-    'class' => 'TbDropdownColumn',
+    'class' => 'widgets.TbDropdownColumn',
 );
 $columns[] = array(
     'name' => 'name',
@@ -33,7 +33,7 @@ $multiActions[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'lookup-grid',
     'dataProvider' => $lookup->search(),
     'filter' => $lookup,

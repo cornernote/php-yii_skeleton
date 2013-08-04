@@ -41,7 +41,7 @@
  *
  * --- END GenerateProperties ---
  */
-class EmailSpool extends ActiveRecord
+class EmailSpool extends CActiveRecord
 {
 
     /**

@@ -11,7 +11,7 @@ $this->breadcrumbs = array(
 );
 
 /* @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'recover-form',
     //'enableAjaxValidation' => false,
     'type' => 'horizontal',
@@ -22,7 +22,7 @@ echo $form->errorSummary($user);
 echo $form->textFieldRow($user, 'username_or_email');
 if ($recaptcha) {
     echo CHtml::activeLabel($user, 'recaptcha');
-    $this->widget('EReCaptcha', array(
+    $this->widget('widgets.ReCaptcha', array(
         'model' => $user,
         'attribute' => 'recaptcha',
         'theme' => 'red',

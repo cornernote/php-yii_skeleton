@@ -20,7 +20,7 @@ $attributes[] = 'message_subject';
 $attributes[] = array('name' => 'message_html', 'type' => 'raw');
 $attributes[] = 'message_text';
 $attributes[] = 'created';
-$this->widget('DetailView', array(
+$this->widget('widgets.DetailView', array(
     'data' => $emailTemplate,
     'attributes' => $attributes,
 ));

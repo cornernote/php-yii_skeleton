@@ -12,7 +12,7 @@ $this->breadcrumbs[] = t(ucfirst($task));
 
 $menu = $id ? Menu::model()->findByPk($id) : new Menu('search');
 /** @var ActiveForm $form */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'menu-' . $task . '-form',
     'type' => 'horizontal',
     'action' => array('/menu/delete', 'id' => $id, 'task' => $task, 'confirm' => 1),

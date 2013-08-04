@@ -77,7 +77,7 @@ class SignatureWidget extends CWidget
             'value' => '<canvas class="pad" width="600" height="150"></canvas>',
             'type' => 'raw',
         );
-        $this->widget('DetailView', array(
+        $this->widget('widgets.DetailView', array(
             'data' => $this->signature,
             'attributes' => $attributes,
         ));
@@ -92,7 +92,7 @@ class SignatureWidget extends CWidget
     {
         cs()->registerCssFile(au() . '/signature-pad/jquery.signaturepad.keyterminal.css');
         cs()->registerScriptFile(au() . '/signature-pad/jquery.signaturepad.min.js');
-        $this->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+        $this->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript::POS_END));
         if ($this->action == 'form') {
             ?>
             <script type="text/javascript">

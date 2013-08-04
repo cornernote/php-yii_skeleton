@@ -4,7 +4,7 @@
  */
 
 // google analytics
-$this->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+$this->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript::POS_END));
 ?>
 <script type="text/javascript">
 

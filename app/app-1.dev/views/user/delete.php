@@ -11,7 +11,7 @@ $this->breadcrumbs[] = t(ucfirst($task));
 
 $user = $id ? User::model()->findByPk($id) : new User('search');
 /** @var ActiveForm $form */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'user-' . $task . '-form',
     'type' => 'horizontal',
     'action' => array('/user/delete', 'id' => $id, 'task' => $task, 'confirm' => 1),

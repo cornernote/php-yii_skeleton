@@ -10,7 +10,7 @@ $this->breadcrumbs = array(
 );
 
 /** @var ActiveForm $form */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'password-form',
     //'enableAjaxValidation' => true,
     'type' => 'horizontal',

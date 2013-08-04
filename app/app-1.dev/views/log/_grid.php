@@ -50,7 +50,7 @@ $columns[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'log-grid',
     'dataProvider' => $log->search(),
     'filter' => $log,

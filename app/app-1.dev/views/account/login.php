@@ -11,7 +11,7 @@ $this->breadcrumbs = array(
 );
 
 /* @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'login-form',
     //'enableAjaxValidation' => false,
     'type' => 'horizontal',
@@ -24,7 +24,7 @@ echo $form->checkBoxRow($user, 'remember_me');
 
 if ($recaptcha) {
     echo CHtml::activeLabel($user, 'recaptcha');
-    $this->widget('EReCaptcha', array(
+    $this->widget('widgets.ReCaptcha', array(
         'model' => $user, 'attribute' => 'recaptcha',
         'theme' => 'red', 'language' => 'en_EN',
         'publicKey' => Setting::item('app', 'recaptchaPublic'),

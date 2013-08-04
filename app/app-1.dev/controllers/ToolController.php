@@ -17,7 +17,7 @@ class ToolController extends WebController
     {
         return array(
             array('allow',
-                'actions' => array('index', 'page', 'clearCache', 'clearCacheModel', 'clearAsset', 'generateProperties', 'generateRules'),
+                'actions' => array('clearCache', 'clearCacheModel', 'clearAsset', 'generateProperties'),
                 'roles' => array('admin'),
             ),
             array('deny', 'users' => array('*')),
@@ -30,21 +30,10 @@ class ToolController extends WebController
     public function actions()
     {
         return array(
-            'page' => array(
-                'class' => 'CViewAction',
-            ),
             'generateProperties' => array(
                 'class' => 'actions.GeneratePropertiesAction',
             ),
         );
-    }
-
-    /**
-     *
-     */
-    public function actionIndex()
-    {
-        $this->render('index');
     }
 
     /**
@@ -97,73 +86,6 @@ class ToolController extends WebController
         Helper::removeDirectory(Yii::app()->getAssetManager()->getBasePath(), false);
         user()->addFlash(t('Assets have been cleared'), 'success');
         $this->redirect(ReturnUrl::getUrl());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function actionGenerateRules()
-    {
-        $modelName = sf('modelName');
-        if (!$modelName) {
-            echo "<br> add a get attribute <b>modelName</b>=SomeModel to request url<br>";
-            return;
-        }
-        $model = CActiveRecord::model($modelName);
-        if (!$model) {
-            echo "<br> model not found [$modelName]<br>";
-            return;
-        }
-
-        $rules = array();
-        $required = array();
-        $integers = array();
-        $numerical = array();
-        $length = array();
-        $safe = array();
-        $search = array();
-        $tableName = $model->tableName();
-        $table = $model->getDbConnection()->getSchema()->getTable($tableName, true);
-        foreach ($table->columns as $column) {
-            if ($column->autoIncrement)
-                continue;
-            $search[] = $column->name;
-            $r = !$column->allowNull && $column->defaultValue === null;
-            if ($r)
-                $required[] = $column->name;
-            if ($column->type === 'integer')
-                $integers[] = $column->name;
-            else if ($column->type === 'double')
-                $numerical[] = $column->name;
-            else if ($column->type === 'string' && $column->size > 0)
-                $length[$column->size][] = $column->name;
-            else if (!$column->isPrimaryKey && !$r)
-                $safe[] = $column->name;
-        }
-        if ($required !== array())
-            $rules[] = "array('" . implode(', ', $required) . "', 'required')";
-        if ($integers !== array())
-            $rules[] = "array('" . implode(', ', $integers) . "', 'numerical', 'integerOnly'=>true)";
-        if ($numerical !== array())
-            $rules[] = "array('" . implode(', ', $numerical) . "', 'numerical')";
-        if ($length !== array()) {
-            foreach ($length as $len => $cols)
-                $rules[] = "array('" . implode(', ', $cols) . "', 'length', 'max'=>$len)";
-        }
-        if ($safe !== array())
-            $rules[] = "array('" . implode(', ', $safe) . "', 'safe')";
-
-        echo '$rules = array();<br/>' . "\n";
-        echo 'if ($this->scenario == \'search\') {' . "<br/>\n";
-        echo "\t" . "\$rules[] = array('" . implode(', ', $search) . "', 'safe');" . "<br/>\n";
-        echo '}' . "<br/>\n";
-        echo 'if (in_array($this->scenario, array(\'create\', \'update\'))) {' . "<br/>\n";
-        foreach ($rules as $rule) {
-            echo "\t" . '$rules[] = ' . $rule . ';' . "<br/>\n";
-        }
-        echo '}' . "<br/>\n";
-        echo 'return $rules;' . "<br/>\n";
-
     }
 
 }

@@ -4,7 +4,7 @@
 <fieldset>
     <legend><?php echo t('Time Stamps') ?></legend>
     <?php
-    $this->widget('DetailView', array(
+    $this->widget('widgets.DetailView', array(
         'data' => $model,
         'attributes' => array(
             array(

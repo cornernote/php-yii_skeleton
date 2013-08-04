@@ -74,7 +74,7 @@ $this->renderPartial('_menu', array(
         );
 
 
-        $this->widget('DetailView', array(
+        $this->widget('widgets.DetailView', array(
             'data' => $pageTrail,
             'attributes' => $attributes,
         ));
@@ -98,7 +98,7 @@ $this->renderPartial('_menu', array(
     <fieldset>
         <legend><?php echo t('Version Settings') ?></legend>
         <?php
-        $this->widget('DetailView', array(
+        $this->widget('widgets.DetailView', array(
             'data' => $pageTrail,
             'attributes' => array(
                 array(
@@ -115,7 +115,7 @@ $this->renderPartial('_menu', array(
     <fieldset>
         <legend><?php echo t('Page Variables') ?></legend>
         <?php
-        $this->widget('DetailView', array(
+        $this->widget('widgets.DetailView', array(
             'data' => $pageTrail,
             'attributes' => array(
                 array(
@@ -147,7 +147,7 @@ $this->renderPartial('_menu', array(
             <a href='javascript:void(0)'
                onclick="$('#show_session_detail').hide('hide');$('#show_session').show();">Hide</a>
             <?php
-            $this->widget('DetailView', array(
+            $this->widget('widgets.DetailView', array(
                 'data' => $pageTrail,
                 'attributes' => array(
                     array(
@@ -175,7 +175,7 @@ $this->renderPartial('_menu', array(
             <a href='javascript:void(0)'
                onclick="$('#show_server_detail').hide('hide');$('#show_server').show();">Hide</a>
             <?php
-            $this->widget('DetailView', array(
+            $this->widget('widgets.DetailView', array(
                 'data' => $pageTrail,
                 'attributes' => array(
                     array(

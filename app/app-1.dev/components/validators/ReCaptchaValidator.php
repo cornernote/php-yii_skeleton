@@ -1,6 +1,6 @@
 <?php
 /**
- * EReCaptchaValidator class file.
+ * ReCaptchaValidator class file.
  *
  * @author MetaYii
  * @link http://www.yiiframework.com/
@@ -36,66 +36,62 @@
  */
 
 /**
- * Include the reCAPTCHA PHP wrapper.
- */
-require_once(bp().'/../../vendors/reCAPTCHA/recaptchalib.php');
-
-/**
- * EReCaptchaValidator validates that the attribute value is the same as the verification code displayed in the CAPTCHA.
+ * ReCaptchaValidator validates that the attribute value is the same as the verification code displayed in the CAPTCHA.
  * The CAPTCHA is provided by reCAPTCHA {@link http://recaptcha.net/}. See LICENCE.txt for the terms of use for this service.
  *
- * EReCaptchaValidator should be used together with {@link EReCaptcha}.
+ * ReCaptchaValidator should be used together with {@link ReCaptcha}.
  *
  * @author MetaYii
  * @package application.extensions.recaptcha
  * @since 1.1
  */
-class EReCaptchaValidator extends CValidator
+class ReCaptchaValidator extends CValidator
 {
-   /**
-    * The private key for reCAPTCHA
-    *
-    * @var string
-    */
-   private $privateKey='';
+    /**
+     * The private key for reCAPTCHA
+     *
+     * @var string
+     */
+    private $privateKey = '';
 
-   /**
-    * Sets the private key.
-    *
-    * @param string $value
-    * @throws CException if $value is not valid.
-    */
-   public function setPrivateKey($value)
-   {
-      if (empty($value)||!is_string($value)) throw new CException(Yii::t('yii','EReCaptchaValidator.privateKey must contain your reCAPTCHA private key.'));
-      $this->privateKey = $value;
-   }
+    /**
+     * Sets the private key.
+     *
+     * @param string $value
+     * @throws CException if $value is not valid.
+     */
+    public function setPrivateKey($value)
+    {
+        if (empty($value) || !is_string($value)) throw new CException(Yii::t('yii', 'ReCaptchaValidator.privateKey must contain your reCAPTCHA private key.'));
+        $this->privateKey = $value;
+    }
 
-   /**
-    * Returns the reCAPTCHA private key
-    *
-    * @return string
-    */
-   public function getPrivateKey()
-   {
-      return $this->privateKey;
-   }
+    /**
+     * Returns the reCAPTCHA private key
+     *
+     * @return string
+     */
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
 
-	/**
-	 * Validates the attribute of the object.
-	 * If there is any error, the error message is added to the object.
-	 * @param CModel the object being validated
-	 * @param string the attribute being validated
-	 */
-	protected function validateAttribute($object,$attribute)
-	{
-	   $resp = recaptcha_check_answer($this->privateKey,
-	                                  $_SERVER['REMOTE_ADDR'],
-	                                  $_POST['recaptcha_challenge_field'],
-	                                  $_POST['recaptcha_response_field']);
-		if (!$resp->is_valid) {
-			$message=$this->message!==null?$this->message:Yii::t('yii','The verification code is incorrect.');
-			$this->addError($object,$attribute,$message);
-		}
-	}
+    /**
+     * Validates the attribute of the object.
+     * If there is any error, the error message is added to the object.
+     * @param $object CModel the object being validated
+     * @param $attribute string the attribute being validated
+     */
+    protected function validateAttribute($object, $attribute)
+    {
+        require_once(vp() . '/reCAPTCHA/recaptchalib.php');
+        $resp = recaptcha_check_answer($this->privateKey,
+            $_SERVER['REMOTE_ADDR'],
+            $_POST['recaptcha_challenge_field'],
+            $_POST['recaptcha_response_field']);
+        if (!$resp->is_valid) {
+            $message = $this->message !== null ? $this->message : Yii::t('yii', 'The verification code is incorrect.');
+            $this->addError($object, $attribute, $message);
+        }
+    }
 }

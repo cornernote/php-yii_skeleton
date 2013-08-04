@@ -5,7 +5,7 @@
  */
 
 // list
-$this->widget('ListView', array(
+$this->widget('widgets.ListView', array(
     'id' => 'lookup-list',
     'dataProvider' => $lookup->search(),
     'itemView' => '_list_view',

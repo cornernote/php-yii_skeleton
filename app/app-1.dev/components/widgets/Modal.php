@@ -28,7 +28,7 @@ class Modal extends CWidget
 
 protected function registerScript()
 {
-    $this->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+    $this->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript::POS_END));
     ?>
     <script type="text/javascript">
         $('.modal').modalResponsiveFix();
@@ -37,7 +37,7 @@ protected function registerScript()
     $this->endWidget();
 
     // Support for AJAX loaded modal window.
-    $this->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+    $this->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript::POS_END));
     ?>
     <script type="text/javascript">
         $('[data-toggle="modal-remote"]').click(function (e) {

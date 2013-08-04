@@ -14,7 +14,7 @@ echo "Helper::searchToggle('" . lcfirst($this->modelClass) . "-grid');\n";
 echo "echo '<div class=\"search-form hide\">';\n";
 echo "\n";
 echo "/** @var ActiveForm \$form */\n";
-echo "\$form = \$this->beginWidget('ActiveForm', array(\n";
+echo "\$form = \$this->beginWidget('widgets.ActiveForm', array(\n";
 echo "	'action' => url(\$this->route),\n";
 echo "	'type' => 'horizontal',\n";
 echo "	'method' => 'get',\n";

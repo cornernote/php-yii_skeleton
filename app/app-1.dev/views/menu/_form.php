@@ -5,7 +5,7 @@
  */
 
 /** @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'menu-form',
     'type' => 'horizontal',
     //'enableAjaxValidation' => true,

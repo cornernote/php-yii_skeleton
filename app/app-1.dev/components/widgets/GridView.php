@@ -86,7 +86,7 @@ class GridView extends TbGridView
             Yii::app()->clientScript->registerScriptFile(au() . '/js/jquery.form.js');
             // put the url from the button into the form action
             // handle submit form to capture the response into a modal
-            Yii::app()->controller->beginWidget('JavaScriptWidget', array('position' => CClientScript::POS_END));
+            Yii::app()->controller->beginWidget('widgets.JavaScriptWidget', array('position' => CClientScript::POS_END));
             ?>
             <script type="text/javascript">
                 var modalRemote = $('#modal-remote');

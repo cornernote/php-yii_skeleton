@@ -34,7 +34,7 @@ $this->renderPartial('_menu', array(
         $attributes[] = 'created';
         $attributes[] = 'enabled';
 
-        $this->widget('DetailView', array(
+        $this->widget('widgets.DetailView', array(
             'data' => $menu,
             'attributes' => $attributes,
         ));

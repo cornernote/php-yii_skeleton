@@ -1,6 +1,9 @@
 <?php
 Yii::import('bootstrap.widgets.TbNavbar');
 
+/**
+ * Class Navbar
+ */
 class Navbar extends TbNavbar
 {
     /**

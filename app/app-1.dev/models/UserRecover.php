@@ -42,7 +42,7 @@ class UserRecover extends FormModel
         );
         // recaptcha
         if (Setting::item('app', 'recaptcha')) {
-            $rules[] = array('recaptcha', 'EReCaptchaValidator', 'privateKey' => Setting::item('app', 'recaptchaPrivate'), 'on' => 'recaptcha');
+            $rules[] = array('recaptcha', 'ReCaptchaValidator', 'privateKey' => Setting::item('app', 'recaptchaPrivate'), 'on' => 'recaptcha');
         }
         return $rules;
     }

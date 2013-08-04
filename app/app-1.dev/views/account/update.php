@@ -8,10 +8,10 @@ $this->breadcrumbs = array(
     t('My Account') => array('index'),
     t('Update Account'),
 );
-$this->menu = NavbarItems::userMenuItems();
+$this->menu = Menu::getItemsFromMenu('User');
 
 /* @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'account-form',
     //'enableAjaxValidation' => true,
     'type' => 'horizontal',

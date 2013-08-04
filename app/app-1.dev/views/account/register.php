@@ -9,7 +9,7 @@ $this->breadcrumbs = array(
 );
 
 /* @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'register-form',
     //'enableAjaxValidation' => true,
     'type' => 'horizontal',

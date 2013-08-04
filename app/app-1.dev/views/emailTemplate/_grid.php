@@ -36,7 +36,7 @@ $columns[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'emailTemplate-grid',
     'dataProvider' => $emailTemplate->search(),
     'filter' => $emailTemplate,

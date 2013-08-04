@@ -47,7 +47,7 @@ $columns[] = array(
 );
 
 // grid
-$this->widget('GridView', array(
+$this->widget('widgets.GridView', array(
     'id' => 'auditTrail-grid',
     'dataProvider' => $auditTrail->search(),
     'filter' => $auditTrail,

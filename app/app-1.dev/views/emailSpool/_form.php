@@ -5,7 +5,7 @@
  */
 
 /* @var $form ActiveForm */
-$form = $this->beginWidget('ActiveForm', array(
+$form = $this->beginWidget('widgets.ActiveForm', array(
     'id' => 'emailSpool-form',
     'enableAjaxValidation' => true,
     'type' => 'horizontal',
