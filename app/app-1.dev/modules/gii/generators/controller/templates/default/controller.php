@@ -69,8 +69,6 @@ echo "\n";
 
 // action methods
 foreach ($this->getActionIDs() as $action) {
-    if (in_array($action, array('index', 'view', 'log', 'create', 'update', 'delete')))
-        continue;
     echo "    /**\n";
     echo "     * " . ucfirst($action) . "\n";
     echo "     */\n";
