@@ -134,7 +134,7 @@ class Setting extends ActiveRecord
     static public function yiiVersions()
     {
         $_versions = array();
-        $p = dirname(dirname(bp())) . DS . 'vendors' . DS . 'yii';
+        $p = vp() . DS . 'yii';
         $d = dir($p);
         while (false !== ($entry = $d->read())) {
             if (substr($entry, 0, 4) == 'yii-') {
