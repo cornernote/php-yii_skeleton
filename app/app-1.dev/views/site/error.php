@@ -8,29 +8,9 @@ $this->pageTitle = t('Error');
 //$this->breadcrumbs = array(
 //    t('Error'),
 //);
-?>
 
-<?php
 $this->beginWidget('bootstrap.widgets.TbHeroUnit', array(
-    'heading' => t('Golly gosh!'),
+    'heading' => t('Error'),
 ));
-?>
-
-<p>
-    <?php echo CHtml::encode($message); ?>
-</p>
-
-<p>
-    <?php
-    $this->widget('bootstrap.widgets.TbButton', array(
-        'type' => 'primary',
-        'size' => 'large',
-        'label' => t('OK, whatever! Just take me back home.'),
-        'url' => app()->homeUrl,
-    ));
-    ?>
-</p>
-
-<?php
+echo '<p>' . CHtml::encode($message) . '</p>';
 $this->endWidget();
-?>

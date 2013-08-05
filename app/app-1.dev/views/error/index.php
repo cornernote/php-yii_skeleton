@@ -19,15 +19,15 @@ $this->breadcrumbs = array(t('Errors'));
     </tr>
     <?php
     foreach ($errors as $error) {
-        $auditId = str_replace(array('archive/', 'a-', 'audit-', '.html'), '', $error);
+        $auditCreated = date('Y-m-d H:i:s', filemtime(app()->getRuntimePath() . '/errors/' . $error));
+        $auditId = str_replace(array('archive/', 'audit-', '.html'), '', $error);
         $auditLink = '';
-        $auditCreated = '';
         $auditRoute = '';
         $errorLink = array('/error/view', 'error' => $error);
         if (strpos($error, 'archive/') !== false) {
             $errorLink = array('/error/view', 'error' => str_replace('archive/', '', $error), 'archive' => 1);
         }
-        if ($auditId && is_numeric($auditId)) {
+        if ($auditId && is_numeric($auditId) && Helper::tableExists('audit')) {
             $audit = Audit::model()->findByPk($auditId);
             if ($audit) {
                 $auditLink = $audit->getLink();

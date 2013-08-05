@@ -2,6 +2,8 @@
 
 /**
  * Class GeneratePropertiesAction
+ *
+ * @property WebController $controller
  */
 class GeneratePropertiesAction extends CAction
 {
@@ -104,6 +106,10 @@ class GeneratePropertiesAction extends CAction
                 }
             }
         }
+        $this->controller->breadcrumbs = array(
+            t('Generate Properties') => array('/tool/generateProperties'),
+            t('Model') . ' ' . $this->modelName,
+        );
         $this->controller->renderText($message . '<pre>' . $contents . '</pre>');
     }
 

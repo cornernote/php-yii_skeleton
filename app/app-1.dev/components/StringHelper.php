@@ -13,7 +13,7 @@ class StringHelper
      * @param bool $removeEnd
      * @return string
      */
-    static public function getBetweenString($contents, $start, $end, $removeStart = false, $removeEnd = true)
+    static public function getBetweenString($contents, $start, $end, $removeStart = true, $removeEnd = true)
     {
         if ($start) {
             $startPos = strpos($contents, $start);

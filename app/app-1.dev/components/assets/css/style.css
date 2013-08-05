@@ -646,3 +646,12 @@ ul.ui-sortable, ul.ui-sortable li {
     height: 100px;
     margin: 0 auto;
 }
+
+/*********************
+    Hero Unit
+*********************/
+
+.hero-unit h1 {
+    padding-left: 0;
+}
+

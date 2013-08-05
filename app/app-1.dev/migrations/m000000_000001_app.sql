@@ -254,7 +254,8 @@ INSERT INTO `menu` (`id`, `parent_id`, `label`, `icon`, `url`, `url_params`, `ta
 (274, 2, 'Documentation', '', '/site/page', 'view=documentation', '', NULL, 0, 1, NOW(), NULL),
 (275, 1, 'Attachments', '', '/attachment/index', '', '', 'admin', 7, 1, NOW(), NULL),
 (276, 1, 'Notes', '', '/note/index', '', '', 'admin', 11, 1, NOW(), NULL),
-(277, 1, 'Generate Code', '', '/gii', '', '', 'admin', 13, 1, NOW(), NULL);
+(277, 1, 'Generate Code', '', '/gii', '', '', 'admin', 13, 1, NOW(), NULL),
+(278, 1, 'Errors', '', '/error', '', '', 'admin', 6, 1, NOW(), NULL);
 
 -- --------------------------------------------------------
 

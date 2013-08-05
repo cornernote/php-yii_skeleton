@@ -48,9 +48,19 @@ class ErrorController extends WebController
     public function actionView($error, $archive = null)
     {
         $path = app()->getRuntimePath() . '/errors/';
-        if ($archive) $path .= 'archive/';
+        if ($archive)
+            $path .= 'archive/';
         $path .= $error;
-        echo file_get_contents($path);
+
+        $contents = file_get_contents($path);
+        $contents = str_replace('class="container"', 'class="container-fluid"', $contents);
+        $contents = str_replace('</h1>', ' - ' . $error . ' logged on ' . date('Y-m-d H:i:s', filemtime($path)) . '</h1>', $contents);
+        cs()->registerCss('error', file_get_contents(dirname($this->getViewFile('index')) . '/view.css'));
+        $this->breadcrumbs = array(
+            t('Error List') => array('/error/index'),
+            t('Error') . ' ' . $error,
+        );
+        $this->renderText(StringHelper::getBetweenString($contents, '<body>', '</body>'));
         app()->end();
     }
 
@@ -66,6 +76,9 @@ class ErrorController extends WebController
         $this->redirect(array('error/index'));
     }
 
+    /**
+     * @return array
+     */
     private function getErrors()
     {
         $dir = app()->getRuntimePath() . '/errors';
