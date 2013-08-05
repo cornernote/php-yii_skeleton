@@ -31,6 +31,8 @@ class AuditController extends WebController
     public function actionIndex()
     {
         $audit = new Audit('search');
+        if (!empty($_GET['Audit']))
+            $audit->attributes = $_GET['Audit'];
         $urlManager = app()->getUrlManager();
         $urlManager->setUrlFormat('get');
         $this->render('index', array(

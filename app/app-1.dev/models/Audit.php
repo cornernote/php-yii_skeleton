@@ -107,7 +107,7 @@ class Audit extends ActiveRecord
     public function rules()
     {
         return array(
-            array('id, user_id, link, created, app_version, yii_version, audit_trail_count, total_time, memory_usage, memory_peak, model, model_id', 'safe', 'on' => 'search'),
+            array('id, user_id, link, ip, created, app_version, yii_version, audit_trail_count, total_time, memory_usage, memory_peak, model, model_id', 'safe', 'on' => 'search'),
         );
     }
 

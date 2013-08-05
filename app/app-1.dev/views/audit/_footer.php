@@ -3,7 +3,7 @@ $audit = Audit::model()->findCurrent();
 if (!$audit) return;
 
 $color = isset($color) ? $color : (YII_DEBUG ? 'inherit' : 'transparent');
-echo '<span style="color: ' . $color . ';">';
+echo '<span class="small audit-id" style="color: ' . $color . ';">';
 echo '<!-- audit start -->audit-' . $audit->id . '<!-- audit end -->'; // html comment is used for extracting audit_id
 echo ' | ';
 echo number_format(microtime(true) - $audit->start_time, 2) . 'sec';
