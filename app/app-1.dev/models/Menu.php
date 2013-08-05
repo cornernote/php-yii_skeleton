@@ -400,6 +400,21 @@ class Menu extends ActiveRecord
             'class' => 'bootstrap.widgets.TbMenu',
             'items' => self::getItemsFromMenu('Main'),
         );
+        if (user()->checkAccess('admin')) {
+            $menu[] = array(
+                'class' => 'bootstrap.widgets.TbMenu',
+                'htmlOptions' => array(
+                    'class' => 'pull-right',
+                ),
+                'items' => array(
+                    array(
+                        'label' => t('System'),
+                        'icon' => 'icon-gears',
+                        'items' => self::getItemsFromMenu('System'),
+                    ),
+                ),
+            );
+        }
         $menu[] = array(
             'class' => 'bootstrap.widgets.TbMenu',
             'htmlOptions' => array(
@@ -413,20 +428,6 @@ class Menu extends ActiveRecord
                 ),
             ),
         );
-        if (user()->checkAccess('admin')) {
-            $menu[] = array(
-                'class' => 'bootstrap.widgets.TbMenu',
-                'htmlOptions' => array(
-                    'class' => 'pull-right',
-                ),
-                'items' => array(
-                    array(
-                        'label' => t('System'),
-                        'items' => self::getItemsFromMenu('System'),
-                    ),
-                ),
-            );
-        }
         return $menu;
     }
 
@@ -449,7 +450,7 @@ class Menu extends ActiveRecord
             'buttons' => array(
                 array(
                     'label' => user()->isGuest ? t('Login or Signup') : user()->name,
-                    'icon' => user()->isGuest ? 'icon-user' : 'icon-wrench',
+                    'icon' => 'icon-user',
                     'items' => self::getItemsFromMenu('User'),
                 ),
             ),
