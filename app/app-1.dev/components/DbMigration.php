@@ -33,4 +33,29 @@ class DbMigration extends CDbMigration
         return $rs;
     }
 
+    /**
+     * @param string $file
+     * @throws Exception
+     * @return bool
+     */
+    public function import($file)
+    {
+        $file = bp() . '/migrations/' . $file;
+        $pdo = Yii::app()->db->pdoInstance;
+        if (!file_exists($file)) {
+            throw new Exception('File ' . $file . ' was not found');
+        }
+        $sqlStream = file_get_contents($file);
+        $sqlStream = rtrim($sqlStream);
+        $newStream = preg_replace_callback("/\((.*)\)/", create_function('$matches', 'return str_replace(";"," $$$ ",$matches[0]);'), $sqlStream);
+        $sqlArray = explode(";", $newStream);
+        foreach ($sqlArray as $value) {
+            if (!empty($value)) {
+                $sql = str_replace(" $$$ ", ";", $value) . ";";
+                $pdo->exec($sql);
+            }
+        }
+        return true;
+    }
+
 }

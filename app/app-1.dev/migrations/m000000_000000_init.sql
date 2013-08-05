@@ -46,123 +46,10 @@ CREATE TABLE IF NOT EXISTS `attachment` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `audit_trail`
+-- Table structure for table `audit`
 --
 
-CREATE TABLE IF NOT EXISTS `audit_trail` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `page_trail_id` int(11) NOT NULL,
-  `old_value` text NOT NULL,
-  `new_value` text NOT NULL,
-  `action` varchar(20) NOT NULL,
-  `model` varchar(255) NOT NULL,
-  `model_id` varchar(64) NOT NULL,
-  `field` varchar(64) NOT NULL,
-  `created` datetime DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `model_id` (`model_id`),
-  KEY `model` (`model`),
-  KEY `field` (`field`),
-  KEY `action` (`action`),
-  KEY `page_trail_id` (`page_trail_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `email_spool`
---
-
-CREATE TABLE IF NOT EXISTS `email_spool` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` varchar(32) NOT NULL,
-  `model` varchar(255) NOT NULL,
-  `model_id` int(11) NOT NULL,
-  `to_email` varchar(255) NOT NULL,
-  `to_name` varchar(255) NOT NULL,
-  `from_email` varchar(255) NOT NULL,
-  `from_name` varchar(255) NOT NULL,
-  `message_subject` varchar(255) NOT NULL,
-  `message_html` text NOT NULL,
-  `message_text` text NOT NULL,
-  `sent` datetime DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `deleted` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `model_foreign_key` (`model`,`model_id`),
-  KEY `deleted` (`deleted`),
-  KEY `status` (`status`),
-  KEY `sent` (`sent`) USING BTREE,
-  KEY `created_deleted` (`created`,`deleted`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=110 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `email_template`
---
-
-CREATE TABLE IF NOT EXISTS `email_template` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `message_subject` text NOT NULL,
-  `message_html` text NOT NULL,
-  `message_text` text NOT NULL,
-  `description` text NOT NULL,
-  `created` datetime DEFAULT NULL,
-  `deleted` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `log`
---
-
-CREATE TABLE IF NOT EXISTS `log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `model` varchar(255) NOT NULL,
-  `model_id` int(11) NOT NULL,
-  `message` varchar(255) NOT NULL,
-  `details` text NOT NULL,
-  `created` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `model` (`model`,`model_id`),
-  KEY `created` (`created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `model_cache`
---
-
-CREATE TABLE IF NOT EXISTS `model_cache` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `model` varchar(255) NOT NULL,
-  `model_id` varchar(255) NOT NULL,
-  `key` varchar(255) NOT NULL,
-  `cache` longtext NOT NULL,
-  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `model_name` (`model`),
-  KEY `model_value` (`key`),
-  KEY `created` (`created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `page_trail`
---
-
-CREATE TABLE IF NOT EXISTS `page_trail` (
+CREATE TABLE IF NOT EXISTS `audit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `link` varchar(1000) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -197,7 +84,216 @@ CREATE TABLE IF NOT EXISTS `page_trail` (
   KEY `total_time` (`total_time`),
   KEY `memory_usage` (`memory_usage`),
   KEY `memory_peak` (`memory_peak`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_trail`
+--
+
+CREATE TABLE IF NOT EXISTS `audit_trail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `audit_id` int(11) NOT NULL,
+  `old_value` text NOT NULL,
+  `new_value` text NOT NULL,
+  `action` varchar(20) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` varchar(64) NOT NULL,
+  `field` varchar(64) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `model_id` (`model_id`),
+  KEY `model` (`model`),
+  KEY `field` (`field`),
+  KEY `action` (`action`),
+  KEY `page_trail_id` (`audit_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_spool`
+--
+
+CREATE TABLE IF NOT EXISTS `email_spool` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(32) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `to_email` varchar(255) NOT NULL,
+  `to_name` varchar(255) NOT NULL,
+  `from_email` varchar(255) NOT NULL,
+  `from_name` varchar(255) NOT NULL,
+  `message_subject` varchar(255) NOT NULL,
+  `message_html` text NOT NULL,
+  `message_text` text NOT NULL,
+  `sent` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model_foreign_key` (`model`,`model_id`),
+  KEY `deleted` (`deleted`),
+  KEY `status` (`status`),
+  KEY `sent` (`sent`) USING BTREE,
+  KEY `created_deleted` (`created`,`deleted`) USING BTREE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_template`
+--
+
+CREATE TABLE IF NOT EXISTS `email_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `message_subject` text NOT NULL,
+  `message_html` text NOT NULL,
+  `message_text` text NOT NULL,
+  `description` text NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log`
+--
+
+CREATE TABLE IF NOT EXISTS `log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `details` text NOT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model` (`model`,`model_id`),
+  KEY `created` (`created`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lookup`
+--
+
+CREATE TABLE IF NOT EXISTS `lookup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `type` varchar(128) NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`),
+  KEY `deleted` (`deleted`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu`
+--
+
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL,
+  `label` varchar(255) NOT NULL,
+  `icon` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `url_params` varchar(255) NOT NULL,
+  `target` varchar(255) NOT NULL,
+  `access_role` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL,
+  `enabled` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_menu_item_menu_item1` (`parent_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `menu`
+--
+
+INSERT INTO `menu` (`id`, `parent_id`, `label`, `icon`, `url`, `url_params`, `target`, `access_role`, `sort_order`, `enabled`, `created`, `deleted`) VALUES
+(1, 0, 'System', '', '', '', '', NULL, 0, 0, NOW(), NULL),
+(2, 0, 'Main', '', '', '', '', NULL, 0, 0, NOW(), NULL),
+(3, 0, 'User', '', '', '', '', NULL, 0, 0, NOW(), NULL),
+(4, 0, 'Help', '', '', '', '', NULL, 0, 0, NOW(), NULL),
+(5, 1, 'Logs', '', '/log/index', '', '', 'admin', 5, 1, NOW(), NULL),
+(6, 1, 'Users', '', '/user/index', '', '', 'admin', 12, 1, NOW(), NULL),
+(7, 1, 'Clear Cache', '', '/tool/clearCache', 'returnUrl={returnUrl}', '', 'admin', 0, 1, NOW(), NULL),
+(8, 1, 'Generate Properties', '', '/tool/generateProperties', '', '', 'admin', 14, 1, NOW(), NULL),
+(9, 1, 'Lookups', '', '/lookup/index', '', '', 'admin', 10, 1, NOW(), NULL),
+(10, 1, 'Email Templates', '', '/emailTemplate/index', '', '', 'admin', 8, 1, NOW(), NULL),
+(11, 1, 'Audit Trails', '', '/auditTrail/index', '', '', 'admin', 4, 1, NOW(), NULL),
+(12, 1, 'Audits', '', '/audit/index', '', '', 'admin', 3, 1, NOW(), NULL),
+(13, 1, 'Email Spool', '', '/emailSpool/index', '', '', 'admin', 6, 1, NOW(), NULL),
+(14, 1, 'Settings', '', '/setting/index', '', '', 'admin', 2, 1, NOW(), NULL),
+(15, 1, 'Menus', '', '/menu/index', '', '', 'admin', 9, 1, NOW(), NULL),
+(16, 1, 'Clear Asset', '', '/tool/clearAsset', 'returnUrl={returnUrl}', '', 'admin', 1, 1, NOW(), NULL),
+(17, 3, 'Account', '', '/account/index', '', '', '@', 1, 1, NOW(), NULL),
+(18, 3, 'Update', '', '/account/update', '', '', '@', 2, 1, NOW(), NULL),
+(19, 3, 'Password', '', '/account/password', '', '', '@', 3, 1, NOW(), NULL),
+(20, 3, 'Logout', '', '/account/logout', '', '', '@', 4, 1, NOW(), NULL),
+(21, 3, 'Login', '', '/account/login', '', '', '?', 0, 1, NOW(), NULL),
+(22, 3, 'Register', '', '/account/register', '', '', '?', 0, 1, NOW(), NULL),
+(23, 3, 'Recover', '', '/account/recover', '', '', '?', 0, 1, NOW(), NULL),
+(24, 4, 'Documentation', '', '/site/page', 'view=documentation', '', NULL, 0, 1, NOW(), NULL),
+(25, 4, 'Help', '', '/site/page', 'view=help', '', NULL, 0, 1, NOW(), NULL),
+(274, 2, 'Documentation', '', '/site/page', 'view=documentation', '', NULL, 0, 1, NOW(), NULL),
+(275, 1, 'Attachments', '', '/attachment/index', '', '', 'admin', 7, 1, NOW(), NULL),
+(276, 1, 'Notes', '', '/note/index', '', '', 'admin', 11, 1, NOW(), NULL),
+(277, 1, 'Generate Code', '', '/gii', '', '', 'admin', 13, 1, NOW(), NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `model_cache`
+--
+
+CREATE TABLE IF NOT EXISTS `model_cache` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `model` varchar(255) NOT NULL,
+  `model_id` varchar(255) NOT NULL,
+  `key` varchar(255) NOT NULL,
+  `cache` longtext NOT NULL,
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `model_name` (`model`),
+  KEY `model_value` (`key`),
+  KEY `created` (`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `note`
+--
+
+CREATE TABLE IF NOT EXISTS `note` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notes` text NOT NULL,
+  `model` varchar(255) NOT NULL,
+  `model_id` int(11) NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `important` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model` (`model`,`model_id`),
+  KEY `created_dt` (`created`,`deleted`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119802 ;
 
 -- --------------------------------------------------------
 
@@ -216,10 +312,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 --
 
 INSERT INTO `role` (`id`, `name`) VALUES
-(1, 'admin'),
-(2, 'manager'),
-(3, 'staff'),
-(4, 'customer');
+(1, 'admin');
 
 -- --------------------------------------------------------
 
@@ -228,66 +321,42 @@ INSERT INTO `role` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `setting` (
-  `id` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`)
+  `key` varchar(128) NOT NULL,
+  `value` varchar(1024) NOT NULL,
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `setting`
---
-
-INSERT INTO `setting` (`id`) VALUES
-('app'),
-('core'),
-('user');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `setting_eav`
+-- Table structure for table `signature`
 --
 
-CREATE TABLE IF NOT EXISTS `setting_eav` (
-  `entity` varchar(64) NOT NULL,
-  `attribute` varchar(64) NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY (`entity`,`attribute`),
-  KEY `value` (`value`(32)) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `signature` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `model` varchar(255) NOT NULL,
+  `model_id` varchar(64) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `signature` text NOT NULL,
+  `created` datetime NOT NULL,
+  `deleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `setting_eav`
+-- Table structure for table `sort_order`
 --
 
-INSERT INTO `setting_eav` (`entity`, `attribute`, `value`) VALUES
-('app', 'allowAutoLogin', '1'),
-('app', 'dateFormat', 'Y-m-d'),
-('app', 'dateTimeFormat', 'Y-m-d H:i:s'),
-('app', 'defaultPageSize', '10'),
-('app', 'domain', 'localhost'),
-('app', 'email', 'support@localhost'),
-('app', 'language', 'en'),
-('app', 'name', 'App Name'),
-('app', 'phone', '1800 000 000'),
-('app', 'recaptcha', '1'),
-('app', 'recaptchaPrivate', '6LeBItQSAAAAALA4_G05e_-fG5yH_-xqQIN8AfTD'),
-('app', 'recaptchaPublic', '6LeBItQSAAAAAG_umhiD0vyxXbDFbVMPA0kxZUF6'),
-('app', 'rememberMe', '1'),
-('app', 'theme', 'admingrey'),
-('app', 'webmaster', 'webmaster@localhost'),
-('app', 'website', 'www.localhost'),
-('core', 'app_version', 'app-1.dev'),
-('core', 'debug', '1'),
-('core', 'debug_db', '0'),
-('core', 'debug_email', '1'),
-('core', 'debug_levels', 'error,warning'),
-('core', 'debug_toolbar', '0'),
-('core', 'id', 'app'),
-('core', 'memory_limit', '512M'),
-('core', 'timezone', 'Australia/Adelaide'),
-('core', 'time_limit', '600'),
-('core', 'yii_lite', '0'),
-('core', 'yii_version', 'yii-1.1.13.e9e4a0');
+CREATE TABLE IF NOT EXISTS `sort_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `model` varchar(255) DEFAULT NULL,
+  `model_id` int(11) DEFAULT NULL,
+  `sort_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `model` (`model`,`model_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1291262 ;
 
 -- --------------------------------------------------------
 
@@ -332,14 +401,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `email` (`email`),
   KEY `created` (`created`,`deleted`),
   KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `username`, `password`, `name`, `phone`, `fax`, `web_status`, `api_status`, `api_key`, `created`, `deleted`) VALUES
-(1, 'admin@localhost', 'admin', '$2a$08$b.5MVtbgKv4Dvf/M3AFKKuga4pxptFOsmu7gkN.QOH5yvws6Ks03i', '', '', '', 1, 0, '', '2012-07-10 01:40:42', NULL);
+(1, 'admin@localhost.localdomain', 'admin', '$2a$08$b.5MVtbgKv4Dvf/M3AFKKuga4pxptFOsmu7gkN.QOH5yvws6Ks03i', 'admin', '', '', 1, 0, '', NOW(), NULL);
 
 -- --------------------------------------------------------
 
@@ -376,6 +445,7 @@ CREATE TABLE IF NOT EXISTS `user_to_role` (
 
 INSERT INTO `user_to_role` (`id`, `user_id`, `role_id`) VALUES
 (1, 1, 1);
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

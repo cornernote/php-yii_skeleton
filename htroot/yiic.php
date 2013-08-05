@@ -9,7 +9,7 @@ if (substr(php_sapi_name(), 0, 3) != 'cli') {
 $_ENV['_start'] = microtime(true);
 
 // include core functions
-$core = dirname(__FILE__) . '/../core.php';
+$core = dirname(__FILE__) . '/../app/core.php';
 if (!file_exists($core)) {
     trigger_error('cannot find core file at "' . $core . '"', E_USER_ERROR);
 }
@@ -34,22 +34,22 @@ else {
 }
 
 // include global functions
-$globals = dirname(__FILE__) . '/globals.php';
+$globals = dirname(__FILE__) . '/../app/' . $_ENV['_core']['setting']['app_version'] . '/globals.php';
 if (!file_exists($globals)) {
     trigger_error('cannot find globals file at "' . $globals . '"', E_USER_ERROR);
 }
 require_once($globals);
 
 // define path to congig
-$config = dirname(__FILE__) . '/config/console.php';
+$config = dirname(__FILE__) . '/../app/' . $_ENV['_core']['setting']['app_version'] . '/config/console.php';
 if (!file_exists($config)) {
     trigger_error('cannot find config file at "' . $config . '"', E_USER_ERROR);
 }
 
 // include Yiic
-$yiic = dirname(__FILE__) . '/../../vendors/yii/' . $_ENV['_core']['setting']['yii_version'] . '/framework/yiic.php';
+$yiic = dirname(__FILE__) . '/../vendors/yii/' . $_ENV['_core']['setting']['yii_version'] . '/framework/yiic.php';
 if (!file_exists($yiic)) {
-    trigger_error('cannot find framework file at "' . $yii . '"', E_USER_ERROR);
+    trigger_error('cannot find framework file at "' . $yiic . '"', E_USER_ERROR);
 }
 
 // run the Yii CLI app (Yii-Haw!)
