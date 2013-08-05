@@ -23,7 +23,7 @@ class Kint
     public static $displayCalledFrom;
     public static $charEncodings;
     public static $maxStrLength;
-    public static $appRootDirs = array();
+    public static $appRootDirs;
     public static $maxLevels;
     public static $enabled;
     public static $theme;

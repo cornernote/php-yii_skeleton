@@ -11,5 +11,5 @@ $this->pageTitle = $this->pageHeading = $this->getName() . ' ' . t('List');
 $this->breadcrumbs = array($this->getName() . ' ' . t('List'));
 
 d(123);
-
+Kint::trace();
 d($this);
