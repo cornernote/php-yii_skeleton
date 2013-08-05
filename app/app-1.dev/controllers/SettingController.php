@@ -57,22 +57,34 @@ class SettingController extends WebController
         // handle posted data
         if (isset($_POST['Setting'])) {
 
+            // begin transaction
+            $error = false;
+            $transaction = Setting::model()->beginTransaction();
+
             // save settings
             foreach ($_POST['Setting'] as $key => $value) {
                 $value = isset($value['value']) ? $value['value'] : 0;
-                $setting = $settings[$key];
-                $setting->value = $value;
-                $setting->save();
+                $settings[$key]->value = $value;
+                if(!$settings[$key]->save()){
+                    $error = true;
+                    break;
+                }
             }
+            if (!$error){
+                // commit transaction
+                $transaction->commit();
 
-            // clear cache
-            cache()->flush();
-            ModelCache::model()->flush();
-            Helper::removeDirectory(app()->getAssetManager()->basePath, false);
+                // clear cache
+                cache()->flush();
+                ModelCache::model()->flush();
+                Helper::removeDirectory(app()->getAssetManager()->basePath, false);
 
-            // flash and redirect
-            user()->addFlash(t('Settings have been saved.'), 'success');
-            $this->redirect(array('/setting/index'));
+                // flash and redirect
+                user()->addFlash(t('Settings have been saved.'), 'success');
+                $this->redirect(array('/setting/index'));
+            }
+            $transaction->rollback();
+
         }
 
         $this->render('index', array(
