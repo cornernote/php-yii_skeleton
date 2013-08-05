@@ -111,7 +111,7 @@ class WebUser extends CWebUser
      */
     function getUser($id = null)
     {
-        if ($this->_model === null) {
+        if ($this->_model === null && Helper::tableExists('user')) {
             if ($id !== null)
                 $this->_model = User::model()->findByPk($id);
             else
@@ -123,7 +123,7 @@ class WebUser extends CWebUser
     /**
      * Load user setting
      * @param $name
-     * @return User
+     * @return string
      */
     function setting($name)
     {

@@ -29,6 +29,7 @@ echo $form->checkBoxRow($settings['debug'], 'value', array('name' => 'Setting[de
 echo $form->textFieldRow($settings['debug_levels'], 'value', array('name' => 'Setting[debug_levels][value]'));
 echo $form->checkBoxRow($settings['debug_db'], 'value', array('name' => 'Setting[debug_db][value]'));
 echo $form->textFieldRow($settings['error_email'], 'value', array('name' => 'Setting[error_email][value]'));
+echo $form->checkBoxRow($settings['audit'], 'value', array('name' => 'Setting[audit][value]'));
 echo '</fieldset>';
 
 echo '<fieldset><legend>' . t('PHP Settings') . '</legend>';

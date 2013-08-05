@@ -65,4 +65,13 @@ class Helper
         }
     }
 
+    /**
+     * @param $table
+     * @return bool
+     */
+    public static function tableExists($table)
+    {
+        return Yii::app()->getDb()->createCommand("SHOW TABLES LIKE '" . $table . "'")->queryScalar();
+    }
+
 }

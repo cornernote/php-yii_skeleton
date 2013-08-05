@@ -1,5 +1,5 @@
 <?php
-$audit = Audit::model()->findCurrent();
+$audit = Audit::findCurrent();
 if (!$audit) return;
 
 $color = isset($color) ? $color : (YII_DEBUG ? 'inherit' : 'transparent');

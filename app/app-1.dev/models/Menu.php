@@ -243,6 +243,9 @@ class Menu extends ActiveRecord
      */
     static public function getItemsFromMenu($label, $options = array())
     {
+        if (!Helper::tableExists('menu')) {
+            return array();
+        }
         $menu = Menu::model()->findByAttributes(array('label' => $label));
         if ($menu) {
             return $menu->getItems($options);
@@ -433,6 +436,9 @@ class Menu extends ActiveRecord
      */
     static public function userMenu()
     {
+        if (!Helper::tableExists('user'))
+            return '';
+
         ob_start();
         app()->controller->widget('bootstrap.widgets.TbButtonGroup', array(
             'type' => '', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
