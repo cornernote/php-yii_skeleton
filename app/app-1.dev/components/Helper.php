@@ -71,7 +71,7 @@ class Helper
      */
     public static function tableExists($table)
     {
-        return Yii::app()->getDb()->createCommand("SHOW TABLES LIKE '" . $table . "'")->queryScalar();
+        return (Yii::app()->getDb()->createCommand("SHOW TABLES LIKE '" . $table . "'")->queryScalar() == $table);
     }
 
 }
