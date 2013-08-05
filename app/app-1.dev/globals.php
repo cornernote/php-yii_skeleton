@@ -3,6 +3,9 @@
 /**
  * This is the shortcut to DIRECTORY_SEPARATOR
  */
+/**
+ *
+ */
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 /**
@@ -228,67 +231,6 @@ function format()
 }
 
 /**
- * Dumps the target with syntax highlighting on by default.
- */
-function dump($target)
-{
-    CVarDumper::dump($target, 10, true);
-}
-
-/**
- * Debug the target with syntax highlighting on by default.
- */
-function debug($var = null, $name = null)
-{
-    $bt = debug_backtrace();
-    $file = str_replace(bp(), '', $bt[0]['file']);
-    if ($name !== false) {
-        print '<div style="font-family: arial; background: #FFFBD6; margin: 10px 0;  padding: 5px; border:1px solid #666;">';
-        if ($name) $name = '<b>' . $name . '</b><br/>';
-        print '<span style="font-size:14px;">' . $name . '</span>';
-        print '<div style="border:1px solid #ccc; border-width: 1px 0;">';
-    }
-    print '<pre style="margin:0;padding:10px;">';
-    print_r($var);
-    print '</pre>';
-    if ($name !== false) {
-        print '</div>';
-        print '<span style="font-family: helvetica; font-size:10px;">' . $file . ' on line ' . $bt[0]['line'] . '</span>';
-        print '</div>';
-    }
-}
-
-/**
- * @param $object
- * @param string $name
- */
-function printr($object, $name = '')
-{
-    // echo "<hr/>";
-
-    $bt = debug_backtrace();
-    $file = str_replace(bp(), '', $bt[0]['file']);
-    print '<div style="background: #FFFBD6">';
-    $nameLine = '';
-    if ($name) $nameLine = '<b> <span style="font-size:18px;">' . $name . '</span></b> printr:<br/>';
-    print '<span style="font-size:12px;">' . $nameLine . ' ' . $file . ' on line ' . $bt[0]['line'] . '</span>';
-    print '<div style="border:1px solid #000;">';
-    // if ($name) 
-    // print ( 'printr of \'' . $name . '\' : ' ) ;
-    print ('<pre>');
-    if (is_array($object)) {
-        print_r($object);
-    }
-    else {
-        var_dump($object);
-    }
-    print ('</pre>');
-
-
-    echo "</div></div><hr/>";
-}
-
-/**
  * Gets a submitted field
  * used to be named getSubmittedField()
  */
@@ -329,13 +271,13 @@ function sfGrid($id)
         }
     }
     if (!empty($gridData)) {
-        foreach ($gridData as $k => $id) {
-            $ids[] = $id;
+        foreach ($gridData as $id) {
+            $ids[$id] = $id;
         }
     }
     else {
         if ($id) {
-            $ids[] = $id;
+            $ids[$id] = $id;
         }
     }
     return $ids;
@@ -388,4 +330,21 @@ function assetCopy()
         }
     }
     return $assetCopy;
+}
+
+/**
+ * @param $var
+ * @param string $name
+ */
+function debug($var, $name = '')
+{
+    $bt = debug_backtrace();
+    $file = str_replace(bp(), '', $bt[0]['file']);
+    print '<div style="background: #FFFBD6">';
+    $nameLine = $name ? '<b> <span style="font-size:18px;">' . $name . '</span></b> printr:<br/>' : '';
+    print '<span style="font-size:12px;">' . $nameLine . ' ' . $file . ' on line ' . $bt[0]['line'] . '</span>';
+    print '<div style="border:1px solid #000;">';
+    print '<pre>';
+    is_scalar($var) ? var_dump($var) : print_r($var);
+    print '</pre></div></div>';
 }

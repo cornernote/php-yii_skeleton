@@ -1,35 +1,77 @@
-<div class="kint-trace">
-	<ol>
-		<?php foreach ( $output as $i => $step ): ?>
-		<li>
-			<p>
-				<?php if ( $step['file'] ): ?>
-				<a href="#" class="kint-source-parent"><?php echo call_user_func( self::$pathDisplayCallback, $step['file'], $step['line'] )?></a>
-				<?php else: ?>
-				PHP internal call
-				<?php endif ?>
-				&raquo;
-				<?php echo $step['function']?>(<?php if ( $step['args'] ): ?><a href="#" class="kint-args-parent">arguments</a><?php endif ?>)
-			</p>
-			<?php if ( $step['args'] ): ?>
-			<div class="kint-args">
-				<table cellspacing="0">
-					<?php foreach ( $step['args'] as $name => $arg ): ?>
-					<tr>
-						<td><code><?php echo $name ?></code></td>
-						<td>
-							<pre><?php s( $arg ) ?></pre>
-						</td>
-					</tr>
-					<?php endforeach ?>
-				</table>
-			</div>
-			<?php endif ?>
-			<?php if ( $step['file'] ): ?>
-			<div class="kint-source"><?php echo $step['source'] ?></div>
-			<?php endif ?>
-		</li>
-		<?php endforeach ?>
-	</ol>
-</div>
+<?php
+$settings                = array(
+	'enabled'           => Kint::$enabled,
+	'displayCalledFrom' => Kint::$displayCalledFrom,
+);
+Kint::$enabled           = true;
+Kint::$displayCalledFrom = false;
 
+echo '<div class="kint kint-trace"><dl>';
+
+foreach ( $output as $i => $step ) {
+	echo '<dt class="kint-parent">'
+		. '<b>' . ( $i + 1 ) . '</b> '
+		. '<nav></nav>'
+		. '<var>';
+
+	if ( isset( $step['file'] ) ) {
+		echo Kint::shortenPath( $step['file'], $step['line'] );
+	} else {
+		echo 'PHP internal call';
+	}
+
+	echo '</var>';
+
+	echo $step['function'];
+
+	if ( isset( $step['args'] ) ) {
+		echo '(' . implode( ', ', array_keys( $step['args'] ) ) . ')';
+	}
+	echo '</dt><dd>';
+	$firstTab = ' class="kint-active-tab"';
+	echo '<ul class="kint-tabs">';
+
+	if ( !empty( $step['source'] ) ) {
+		echo "<li{$firstTab}>Source</li>";
+		$firstTab = '';
+	}
+
+	if ( !empty( $step['args'] ) ) {
+		echo "<li{$firstTab}>Arguments</li>";
+		$firstTab = '';
+	}
+
+	if ( !empty( $step['object'] ) ) {
+		kintParser::reset();
+		$calleDump = kintParser::factory( $step['object'] );
+
+		echo "<li{$firstTab}>Callee object [{$calleDump->subtype}]</li>";
+		$firstTab = '';
+	}
+
+
+	echo '</ul><ul>';
+
+
+	if ( !empty( $step['source'] ) ) {
+		echo "<li><pre class=\"kint-source\">{$step['source']}</pre></li>";
+	}
+
+	if ( !empty( $step['args'] ) ) {
+		echo "<li>";
+		foreach ( $step['args'] as $k => $arg ) {
+			kintParser::reset();
+			echo Kint_Decorators_Rich::decorate( kintParser::factory( $arg, $k ) );
+		}
+		echo "</li>";
+	}
+	if ( !empty( $step['object'] ) ) {
+		echo "<li>" . Kint_Decorators_Rich::decorate( $calleDump ) . "</li>";
+	}
+
+	echo '</ul></dd>';
+}
+echo '</dl></div>';
+Kint::$enabled           = $settings['enabled'];
+Kint::$displayCalledFrom = $settings['displayCalledFrom'];
+unset( $settings );

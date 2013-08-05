@@ -7,7 +7,6 @@
  * @property array $onException
  *
  * @property ClientScript $clientScript
- * @property EMailManager $eMailManager
  *
  * @method ClientScript getClientScript() getClientScript()
  */

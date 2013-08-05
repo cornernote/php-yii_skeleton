@@ -3,7 +3,7 @@ $config = require(dirname(__FILE__) . '/main.php');
 $web = array();
 
 // web only preloads
-//$web['preload'][] = 'kint'; // cannot be in main.php  due to issue in commands
+$web['preload'][] = 'kint'; // cannot be in main.php  due to issue in commands
 $web['preload'][] = 'bootstrap';
 
 // -- LOG ROUTES --

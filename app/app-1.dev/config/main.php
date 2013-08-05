@@ -13,7 +13,7 @@ $config = array(
     // preload classes
     'preload' => array(
         'log',
-        //'fatalErrorCatch',
+        'fatalErrorCatch',
         'globalInit',
     ),
 
@@ -95,9 +95,9 @@ $config = array(
         'eMailManager' => array(
             'class' => 'EMailManager',
         ),
-        //'kint' => array(
-        //    'class' => 'ext.kint.Kint',
-        //),
+        'kint' => array(
+            'class' => 'ext.kint.Kint',
+        ),
         'bootstrap' => array(
             'class' => 'ext.bootstrap.components.Bootstrap',
         ),
