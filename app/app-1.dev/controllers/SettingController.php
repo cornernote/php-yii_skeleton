@@ -65,12 +65,12 @@ class SettingController extends WebController
             foreach ($_POST['Setting'] as $key => $value) {
                 $value = isset($value['value']) ? $value['value'] : 0;
                 $settings[$key]->value = $value;
-                if(!$settings[$key]->save()){
+                if (!$settings[$key]->save()) {
                     $error = true;
                     break;
                 }
             }
-            if (!$error){
+            if (!$error) {
                 // commit transaction
                 $transaction->commit();
 
@@ -81,9 +81,12 @@ class SettingController extends WebController
 
                 // flash and redirect
                 user()->addFlash(t('Settings have been saved.'), 'success');
-                $this->redirect(array('/setting/index'));
+                $this->redirect(ReturnUrl::getUrl(array('/setting/index')));
             }
+
+            // rollback transaction and flash error
             $transaction->rollback();
+            user()->addFlash(t('Settings could not be saved.'), 'error');
 
         }
 
