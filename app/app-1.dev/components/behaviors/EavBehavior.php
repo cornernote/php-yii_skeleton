@@ -40,7 +40,7 @@ class EavBehavior extends EEavBehavior
     protected function getSaveEavAttributeCommand($attribute, $value)
     {
         if ($this->getOwner()->asa('AuditBehavior')) {
-            $auditId = Audit::model()->findCurrentId();
+            $auditId = Audit::findCurrentId();
             try {
                 $userid = user()->id;
             } catch (Exception $e) { //If we have no user object, this must be a command line program

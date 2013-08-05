@@ -37,11 +37,15 @@ class AuditBehavior extends CActiveRecordBehavior
      */
     public function afterSave($event)
     {
+        if (!Setting::item('audit')) {
+            parent::afterSave($event);;
+        }
+
         $date = date('Y-m-d H:i:s');
         $newAttributes = $this->owner->attributes;
         $oldAttributes = $this->owner->dbAttributes;
         $logModels = $this->getLogModels();
-        $auditId = Audit::model()->findCurrentId();
+        $auditId = Audit::findCurrentId();
 
         // insert
         if ($this->owner->isNewRecord) {
@@ -108,9 +112,13 @@ class AuditBehavior extends CActiveRecordBehavior
      */
     public function afterDelete($event)
     {
+        if (!Setting::item('audit')) {
+            parent::afterDelete($event);;
+        }
+
         $date = date('Y-m-d H:i:s');
         $logModels = $this->getLogModels();
-        $auditId = Audit::model()->findCurrentId();
+        $auditId = Audit::findCurrentId();
 
         // delete
         $pk = $this->getPkString($this->owner->getPrimaryKey());

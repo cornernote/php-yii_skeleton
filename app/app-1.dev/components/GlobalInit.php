@@ -31,6 +31,6 @@ class GlobalInit extends CApplicationComponent
         ini_set('xdebug.max_nesting_level', 200);
 
         // start the audit
-        Audit::model()->findCurrent();
+        Audit::findCurrent();
     }
 }

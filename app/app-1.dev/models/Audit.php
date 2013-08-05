@@ -81,7 +81,7 @@ class Audit extends ActiveRecord
     /**
      * @var
      */
-    private $_current;
+    static private $_audit;
 
     /**
      * Returns the static model of the specified AR class.
@@ -439,30 +439,38 @@ class Audit extends ActiveRecord
     /**
      * @return Audit
      */
-    public function findCurrent()
+    static public function findCurrent()
     {
+        if (!Setting::item('audit')) {
+            return false;
+        }
+
         // get existing Audit
-        if ($this->_current) {
-            return $this->_current;
+        if (self::$_audit) {
+            return self::$_audit;
         }
 
         // create new Audit
-        $this->_current = new Audit();
-        if ($this->_current->recordAudit()) {
-            Yii::app()->onEndRequest = array($this->_current, 'updateAudit');
+        self::$_audit = new Audit();
+        if (self::$_audit->recordAudit()) {
+            Yii::app()->onEndRequest = array(self::$_audit, 'updateAudit');
         }
-        return $this->_current;
+        return self::$_audit;
     }
 
     /**
      * @return int|bool
      */
-    public function findCurrentId()
+    static public function findCurrentId()
     {
-        if ($this->_current) {
-            return $this->_current->id;
+        if (!Setting::item('audit')) {
+            return false;
         }
-        $audit = $this->findCurrent();
+
+        if (self::$_audit) {
+            return self::$_audit->id;
+        }
+        $audit = self::findCurrent();
         if ($audit) {
             return $audit->id;
         }

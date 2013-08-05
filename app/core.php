@@ -28,13 +28,14 @@ function _core()
 			'error_email' => 'webmaster@localhost',
 			'time_limit' => 60,
 			'memory_limit' => '128M',
+			'audit' => false,
 		),
 	);
     $db = mysql_connect($core['db']['host'], $core['db']['user'], $core['db']['pass']) or die('no core connection');
     mysql_select_db($core['db']['name'], $db) or die('no core database');
 	$core['db']['setting'] = isset($core['db']['setting']) ? $core['db']['setting'] : 'setting'; // decide which table to use
-    $q = mysql_query("SELECT * FROM {$core['db']['setting']}", $db) or die('no core data');
-    while ($row = mysql_fetch_assoc($q))
+    $q = mysql_query("SELECT * FROM {$core['db']['setting']}", $db);
+    if ($q) while ($row = mysql_fetch_assoc($q))
         $core['setting'][$row['key']] = $row['value'];
     mysql_close($db);
     return $core;

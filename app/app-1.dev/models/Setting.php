@@ -94,11 +94,7 @@ class Setting extends ActiveRecord
         if (self::$_items) {
             return self::$_items;
         }
-        self::$_items = $_ENV['_core']['setting'];
-        foreach (CHtml::listData(self::model()->findAll(), 'key', 'value') as $k => $v) {
-            self::$_items[$k] = $v;
-        }
-        return self::$_items;
+        return self::$_items = $_ENV['_core']['setting'];
     }
 
 

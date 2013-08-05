@@ -9,7 +9,6 @@ class ErrorHandler extends CErrorHandler
      */
     public function handle($event)
     {
-        Audit::model()->findCurrent();
         if ($event instanceof CExceptionEvent)
             $this->logException($event);
         else
@@ -26,7 +25,7 @@ class ErrorHandler extends CErrorHandler
         $dir = app()->getRuntimePath() . '/errors';
         if (!file_exists($dir))
             mkdir($dir, 0777, true);
-        $auditId = Audit::model()->findCurrentId();
+        $auditId = Audit::findCurrentId();
         if (!$auditId)
             $auditId = uniqid();
         $path = $dir . '/audit-' . $auditId . '.html';
@@ -42,7 +41,7 @@ class ErrorHandler extends CErrorHandler
         $dir = app()->getRuntimePath() . '/errors';
         if (!file_exists($dir))
             mkdir($dir, 0777, true);
-        $auditId = Audit::model()->findCurrentId();
+        $auditId = Audit::findCurrentId();
         if (!$auditId)
             $auditId = uniqid();
         $path = $dir . '/audit-' . $auditId . '.html';
