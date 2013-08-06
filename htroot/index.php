@@ -3,15 +3,12 @@
 // start the timer
 $_ENV['_start'] = microtime(true);
 
-// include core functions
+// load core settings
 $core = dirname(__FILE__) . '/../app/core.php';
 if (!file_exists($core)) {
 	trigger_error('cannot find core file at "' . $core . '"', E_USER_ERROR);
 }
-require_once($core);
-
-// load core settings
-$_ENV['_core'] = _core();
+$_ENV['_core'] = require($core);
 
 // set debug levels
 if ($_ENV['_core']['setting']['debug']) {
@@ -41,7 +38,7 @@ if (!file_exists($config)) {
 	trigger_error('cannot find config file at "' . $config . '"', E_USER_ERROR);
 }
 
-// include Yii, or YiiLite
+// include Yii or YiiLite
 if ($_ENV['_core']['setting']['yii_lite']) {
     $yii = dirname(__FILE__) . '/../vendors/yii/' . $_ENV['_core']['setting']['yii_version'] . '/framework/yiilite.php';
 }

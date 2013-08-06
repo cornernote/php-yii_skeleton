@@ -176,7 +176,7 @@ class Kint_Decorators_Rich extends Kint
 	 *
 	 * @return string
 	 */
-	protected static function _wrapEnd( $callee, $prevCaller )
+	public static function _wrapEnd( $callee, $prevCaller )
 	{
 		if ( !Kint::$displayCalledFrom ) {
 			return '</div>';

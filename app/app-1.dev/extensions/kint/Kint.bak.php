@@ -9,7 +9,7 @@ require KINT_DIR . 'config.php';
 /**
  * Class Kint
  */
-class Kint
+class KintBak
 {
     /**
      * @var

@@ -24,7 +24,6 @@ $this->widget('bootstrap.widgets.TbMenu', array(
         array('label' => t('Kint'), 'url' => 'http://raveren.github.io/kint/'),
         array('label' => t('Swift Mailer'), 'url' => 'http://swiftmailer.org/docs/introduction.html'),
         array('label' => t('Highcharts'), 'url' => 'http://api.highcharts.com/highcharts'),
-
     ),
 ));
 

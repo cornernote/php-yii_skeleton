@@ -8,15 +8,12 @@ if (substr(php_sapi_name(), 0, 3) != 'cli') {
 // start the timer
 $_ENV['_start'] = microtime(true);
 
-// include core functions
+// load core settings
 $core = dirname(__FILE__) . '/../app/core.php';
 if (!file_exists($core)) {
     trigger_error('cannot find core file at "' . $core . '"', E_USER_ERROR);
 }
-require_once($core);
-
-// load core settings
-$_ENV['_core'] = _core();
+$_ENV['_core'] = require($core);
 
 // set debug levels
 if (!empty($_ENV['_core']['setting']['debug'])) {

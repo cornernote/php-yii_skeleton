@@ -23,6 +23,7 @@ class GlobalInit extends CApplicationComponent
         Yii::setPathOfAlias('behaviors', Yii::app()->getBasePath() . '/components/behaviors');
         Yii::setPathOfAlias('validators', Yii::app()->getBasePath() . '/components/validators');
         Yii::setPathOfAlias('widgets', Yii::app()->getBasePath() . '/components/widgets');
+        Yii::setPathOfAlias('core', $_ENV['_core']['path']);
 
         // set default php settings
         date_default_timezone_set(Setting::item('timezone'));
