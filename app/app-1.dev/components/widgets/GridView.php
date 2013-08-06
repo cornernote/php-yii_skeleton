@@ -10,7 +10,12 @@ class GridView extends TbGridView
     /**
      * @var string
      */
-    public $template = "{summary}{pager}{pageSelect}{items}{multiActions}";
+    public $template = "{summary}{pager}{gridButtons}{pageSelect}{gridActions}{multiActions}{items}";
+
+    /**
+     * @var string
+     */
+    public $templateLong = "{summary}{pager}{gridButtons}{pageSelect}{gridActions}{multiActions}{items}{summary}{pager}{gridButtons}{pageSelect}{gridActions}{multiActions}{clear}";
 
     /**
      * @var string
@@ -21,6 +26,16 @@ class GridView extends TbGridView
      * @var array
      */
     public $multiActions = array();
+
+    /**
+     * @var array
+     */
+    public $gridActions = array();
+
+    /**
+     * @var array
+     */
+    public $gridButtons = array();
 
     /**
      * @var int
@@ -46,24 +61,11 @@ class GridView extends TbGridView
         if (!isset($this->pager['displayFirstAndLast']))
             $this->pager['displayFirstAndLast'] = true;
 
-
         // userPageSize drop down changed
-        if (isset($_GET['userPageSize'])) {
-            foreach ($_GET['userPageSize'] as $type => $size) {
-                user()->setState('userPageSize.' . $type, (int)$size);
-            }
-            unset($_GET['userPageSize']);
-        }
+        $this->setUserPageSize();
 
-        // set data provider pageSize
-        $key = 'userPageSize.' . str_replace('-', '_', $this->id);
-        $size = user()->getState($key, param('defaultPageSize'));
-        if (!$size) {
-            $size = param('defaultPageSize');
-        }
-        $pagination = new CPagination();
-        $pagination->pageSize = $size;
-        $this->dataProvider->setPagination($pagination);
+        // set pagination
+        $this->dataProvider->setPagination($this->getPagination());
 
         // add checkbox when we have multiactions
         if ($this->multiActions) {
@@ -76,13 +78,23 @@ class GridView extends TbGridView
     }
 
     /**
+     * @return CPagination
+     */
+    public function getPagination()
+    {
+        $pagination = $this->dataProvider ? $this->dataProvider->getPagination() : new CPagination();
+        $pagination->pageSize = $this->getUserPageSize();
+        return $pagination;
+    }
+
+    /**
      *
      */
     public function registerClientScript()
     {
         parent::registerClientScript();
 
-        if ($this->multiActions) {
+        if ($this->multiActions || $this->gridActions || $this->gridButtons) {
             Yii::app()->clientScript->registerScriptFile(au() . '/js/jquery.form.js');
             // put the url from the button into the form action
             // handle submit form to capture the response into a modal
@@ -90,6 +102,8 @@ class GridView extends TbGridView
             ?>
             <script type="text/javascript">
                 var modalRemote = $('#modal-remote');
+
+                // handle multiActions
                 $('#<?php echo $this->id; ?>-form').on('change', '.multi-actions', function () {
                     var checked = false;
                     var action = $('#<?php echo $this->id; ?>-form').attr('action');
@@ -100,29 +114,57 @@ class GridView extends TbGridView
                             if ($(this).attr('checked'))
                                 checked = true;
                         });
-                        if (checked)
+                        if (checked) {
+                            setupGridViewAjaxForm();
                             $('#<?php echo $this->id; ?>-form').attr('action', url).submit();
-                        else
+                        }
+                        else {
                             alert('No rows selected');
+                        }
                     }
                 });
-                $('#<?php echo $this->id; ?>-form').ajaxForm({
-                    beforeSubmit:function (response) {
-                        if (!modalRemote.length) modalRemote = $('<div class="modal hide fade" id="modal-remote"></div>');
-                        modalRemote.modalResponsiveFix();
-                        modalRemote.touchScroll();
-                        modalRemote.html('<div class="modal-header"><h3><?php echo t('Loading...'); ?></h3></div><div class="modal-body"><div class="modal-remote-indicator"></div>').modal();
-                    },
-                    success:function (response) {
-                        modalRemote.html(response);
-                        $(window).resize();
-                        $('#modal-remote input:text:visible:first').focus();
-                    },
-                    error:function (response) {
-                        modalRemote.children('.modal-header').html('<button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button><h3><?php echo t('Error!'); ?></h3>');
-                        modalRemote.children('.modal-body').html(response);
+
+                // handle gridActions
+                $('#<?php echo $this->id; ?>-form').on('change', '.grid-actions', function () {
+                    var action = $('#<?php echo $this->id; ?>-form').attr('action');
+                    var url = $(this).val();
+                    $(this).val('');
+                    if (url) {
+                        setupGridViewAjaxForm();
+                        $('#<?php echo $this->id; ?>-form').attr('action', url).submit();
                     }
                 });
+
+                // handle gridButtons
+                $('#<?php echo $this->id; ?>-form').on('click', '.gridButton', function () {
+                    var action = $('#<?php echo $this->id; ?>-form').attr('action');
+                    var url = $(this).val();
+                    $(this).val('');
+                    if (url) {
+                        $('#<?php echo $this->id; ?>-form').attr('action', url).submit();
+                    }
+                });
+
+                // handle form submission
+                function setupGridViewAjaxForm() {
+                    $('#<?php echo $this->id; ?>-form').ajaxForm({
+                        beforeSubmit: function (response) {
+                            if (!modalRemote.length) modalRemote = $('<div class="modal hide fade" id="modal-remote"></div>');
+                            modalRemote.modalResponsiveFix();
+                            modalRemote.touchScroll();
+                            modalRemote.html('<div class="modal-header"><h3><?php echo t('Loading...'); ?></h3></div><div class="modal-body"><div class="modal-remote-indicator"></div>').modal();
+                        },
+                        success: function (response) {
+                            modalRemote.html(response);
+                            $(window).resize();
+                            $('#modal-remote input:text:visible:first').focus();
+                        },
+                        error: function (response) {
+                            modalRemote.children('.modal-header').html('<button type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></button><h3><?php echo t('Error!'); ?></h3>');
+                            modalRemote.children('.modal-body').html(response);
+                        }
+                    });
+                }
             </script>
             <?php
             Yii::app()->controller->endWidget();
@@ -134,11 +176,11 @@ class GridView extends TbGridView
      */
     public function run()
     {
-        if ($this->multiActions) {
+        if ($this->multiActions || $this->gridActions || $this->gridButtons) {
             echo CHtml::openTag('div', array(
-                'id' => $this->id . '-multi-checkbox',
-                'class' => 'multi-checkbox-table',
-            )) . "\n";
+                    'id' => $this->id . '-multi-checkbox',
+                    'class' => 'multi-checkbox-table',
+                )) . "\n";
             echo CHtml::beginForm(ru(), 'POST', array(
                 'id' => $this->id . '-form',
             ));
@@ -147,7 +189,7 @@ class GridView extends TbGridView
 
         parent::run();
 
-        if ($this->multiActions) {
+        if ($this->multiActions || $this->gridActions || $this->gridButtons) {
             echo CHtml::endForm();
             echo CHtml::closeTag('div');
         }
@@ -168,14 +210,13 @@ class GridView extends TbGridView
      */
     public function renderPageSelect()
     {
-        $size = user()->getState('userPageSize.' . str_replace('-', '_', $this->id), param('defaultPageSize'));
         $label = t('per page');
         $options = array(
             10 => '10 ' . $label,
             100 => '100 ' . $label,
             1000 => '1000 ' . $label,
         );
-        echo CHtml::dropDownList("userPageSize[{$this->id}]", $size, $options, array(
+        echo CHtml::dropDownList("userPageSize[{$this->id}]", $this->getUserPageSize(), $options, array(
             'onchange' => "$.fn.yiiGridView.update('{$this->id}',{data:{userPageSize:{" . str_replace('-', '_', $this->id) . ":$(this).val()}}})",
             'class' => 'page-size',
         ));
@@ -188,15 +229,105 @@ class GridView extends TbGridView
     {
         if ($this->dataProvider->getItemCount() > 0 && $this->multiActions) {
             echo '<div class="form-multi-actions">';
-//            foreach ($this->multiActions as $multiAction) {
-//                echo '<button class="btn multiAction" value="' . $multiAction['url'] . '">' . $multiAction['name'] . '</button> ';
-//            }
             echo CHtml::dropDownList("multiAction[{$this->id}]", '', CHtml::listData($this->multiActions, 'url', 'name'), array(
                 'empty' => t('with selected...'),
                 'class' => 'multi-actions',
             ));
             echo '</div>';
         }
+    }
+
+    /**
+     *
+     */
+    public function renderGridActions()
+    {
+        if ($this->gridActions) {
+            echo '<div class="form-grid-actions">';
+            echo CHtml::dropDownList("gridAction[{$this->id}]", '', CHtml::listData($this->gridActions, 'url', 'name'), array(
+                'empty' => t('with filtered set...'),
+                'class' => 'grid-actions',
+            ));
+            echo '</div>';
+        }
+    }
+
+    /**
+     *
+     */
+    public function renderGridButtons()
+    {
+        if ($this->gridButtons) {
+            echo '<div class="form-grid-buttons">';
+            foreach ($this->gridButtons as $gridButton) {
+                echo '<button class="btn gridButton" value="' . $gridButton['url'] . '">' . $gridButton['name'] . '</button> ';
+            }
+            echo '</div>';
+        }
+    }
+
+    /**
+     *
+     */
+    public function renderClear()
+    {
+        echo '<div class="clear"></div>';
+    }
+
+    /**
+     * @return bool
+     */
+    private function getUserPageSize()
+    {
+        $key = 'userPageSize.' . str_replace('-', '_', $this->id);
+        $size = user()->getState($key, param('defaultPageSize'));
+        if (!$size) {
+            $size = param('defaultPageSize');
+        }
+        return $size;
+    }
+
+    /**
+     *
+     */
+    private function setUserPageSize()
+    {
+        if (isset($_GET['userPageSize'])) {
+            foreach ($_GET['userPageSize'] as $type => $size) {
+                user()->setState('userPageSize.' . $type, (int)$size);
+            }
+            unset($_GET['userPageSize']);
+        }
+    }
+
+    /**
+     * Renders the pager.
+     */
+    public function renderPager()
+    {
+        if (!$this->enablePagination)
+            return;
+
+        $pager = array();
+        $class = 'CLinkPager';
+        if (is_string($this->pager))
+            $class = $this->pager;
+        else if (is_array($this->pager)) {
+            $pager = $this->pager;
+            if (isset($pager['class'])) {
+                $class = $pager['class'];
+                unset($pager['class']);
+            }
+        }
+        $pager['pages'] = $this->dataProvider->getPagination();
+
+        if ($pager['pages']->getPageCount() > 0) {
+            echo '<div class="' . $this->pagerCssClass . '">';
+            $this->widget($class, $pager);
+            echo '</div>';
+        }
+        else
+            $this->widget($class, $pager);
     }
 
 }

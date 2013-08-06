@@ -28,7 +28,8 @@
  * @method CActiveRecord withEavAttributes() withEavAttributes($attributes = array())
  *
  * Properties from table fields
- * @property string $id
+ * @property string $key
+ * @property string $value
  *
  * --- END GenerateProperties ---
  */
@@ -111,7 +112,7 @@ class Setting extends ActiveRecord
                 $time = filemtime($p . DS . $entry);
                 $_versions[$time] = array(
                     'entry' => $entry,
-                    'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                    'display' => $entry . ' -- ' . date(self::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
                 );
             }
         }
@@ -137,7 +138,7 @@ class Setting extends ActiveRecord
                 $time = filemtime($p . DS . $entry);
                 $_versions[$time] = array(
                     'entry' => $entry,
-                    'display' => $entry . ' -- ' . date(Setting::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
+                    'display' => $entry . ' -- ' . date(self::item('dateTimeFormat'), $time) . ' -- (' . Time::ago($time) . ')',
                 );
             }
         }
@@ -156,7 +157,7 @@ class Setting extends ActiveRecord
     public function attributeLabels()
     {
         return array(
-            'value' => ucwords(trim(strtolower(str_replace(array('-', '_'), ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $this->key))))),
+            'value' => StringHelper::humanize($this->key),
         );
     }
 

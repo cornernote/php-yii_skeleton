@@ -73,6 +73,17 @@ class StringHelper
     }
 
     /**
+     * Humanize
+     * converts "some_string" or "someString" to "Some String"
+     * @param $string
+     * @return string
+     */
+    public static function humanize($string)
+    {
+        return ucwords(trim(strtolower(str_replace(array('-', '_'), ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $string)))));
+    }
+
+    /**
      * @param $haystack
      * @param $needle
      * @return bool
