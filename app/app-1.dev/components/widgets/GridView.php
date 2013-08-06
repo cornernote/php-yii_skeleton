@@ -245,7 +245,7 @@ class GridView extends TbGridView
         if ($this->gridActions) {
             echo '<div class="form-grid-actions">';
             echo CHtml::dropDownList("gridAction[{$this->id}]", '', CHtml::listData($this->gridActions, 'url', 'name'), array(
-                'empty' => t('with filtered set...'),
+                'empty' => t('with all matching rows...'),
                 'class' => 'grid-actions',
             ));
             echo '</div>';

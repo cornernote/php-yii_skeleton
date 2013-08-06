@@ -82,28 +82,34 @@ class WebController extends Controller
 
     /**
      * Performs the AJAX validation.
-     * @param $models  mixed
+     * @param $model CActiveRecord|CActiveRecord[]
      * @param $form
-     * //changed param from this due to yellow ActiveRecord[] $models |ActiveRecord
      */
-    protected function performAjaxValidation($models, $form)
+    protected function performAjaxValidation($model, $form)
     {
-        /* @var $models ActiveRecords[] */
         if (isset($_POST['ajax']) && $_POST['ajax'] === $form) {
-            $result = array();
-            if (!is_array($models))
-                $models = array($models);
-            /* @var $models ActiveRecord[] */
-            foreach ($models as $model) {
-                if (isset($_POST[get_class($model)]))
-                    $model->attributes = $_POST[get_class($model)];
-                $model->validate(null, false);
-                foreach ($model->getErrors() as $attribute => $errors)
-                    $result[CHtml::activeId($model, $attribute)] = $errors;
-            }
-            echo function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+            echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    /**
+     * @param $model CActiveRecord|CActiveRecord[]
+     * @return bool
+     */
+    protected function performValidation($model)
+    {
+        if (!is_array($model)) {
+            $model = array($model);
+        }
+        $valid = true;
+        /** @var CActiveRecord[] $model */
+        foreach ($model as $_model) {
+            if (!$_model->validate()) {
+                $valid = false;
+            }
+        }
+        return $valid;
     }
 
     /**

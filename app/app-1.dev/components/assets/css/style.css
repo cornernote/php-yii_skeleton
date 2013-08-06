@@ -487,9 +487,7 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
     float: left;
 }
 
-.grid-view .page-size {
-    width: 120px;
-    margin-top: 10px;
+.grid-view .page-size, .grid-view .form-multi-actions, .grid-view .form-grid-actions  {
     float: right;
 }
 
