@@ -19,8 +19,11 @@ $this->widget('bootstrap.widgets.TbMenu', array(
     'stacked' => true, // whether this is a stacked menu
     'items' => array(
         array('label' => t('Yii'), 'url' => 'http://www.yiiframework.com/doc/'),
-        array('label' => t('Bootstrap'), 'url' => 'http://twitter.github.io/bootstrap/'),
+        array('label' => t('YiiExt'), 'url' => 'http://yiiext.github.io/'),
+        array('label' => t('Yii Booster'), 'url' => 'http://yiibooster.clevertech.biz/'),
         array('label' => t('Yii Bootstrap'), 'url' => 'http://www.cniska.net/yii-bootstrap'),
+        array('label' => t('Bootstrap'), 'url' => 'http://twitter.github.io/bootstrap/'),
+        array('label' => t('jQuery'), 'url' => 'http://api.jquery.com/'),
         array('label' => t('Kint'), 'url' => 'http://raveren.github.io/kint/'),
         array('label' => t('Swift Mailer'), 'url' => 'http://swiftmailer.org/docs/introduction.html'),
         array('label' => t('Highcharts'), 'url' => 'http://api.highcharts.com/highcharts'),
