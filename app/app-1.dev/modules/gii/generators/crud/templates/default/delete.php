@@ -21,7 +21,7 @@ echo "/** @var ActiveForm \$form */\n";
 echo "\$form = \$this->beginWidget('widgets.ActiveForm', array(\n";
 echo "    'id' => '" . lcfirst($this->modelClass) . "-' . \$task . '-form',\n";
 echo "    'type' => 'horizontal',\n";
-echo "    'action' => array('/" . lcfirst($this->modelClass) . "/delete', 'id' => \$id, 'task' => \$task, 'confirm', 1),\n";
+echo "    'action' => array('/" . lcfirst($this->modelClass) . "/delete', 'id' => \$id, 'task' => \$task, 'confirm' => 1),\n";
 echo "));\n";
 echo "echo sfGridHidden(\$id);\n";
 echo "echo \$form->beginModalWrap();\n";
