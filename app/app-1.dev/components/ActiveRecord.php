@@ -256,12 +256,7 @@ class ActiveRecord extends CActiveRecord
      */
     public function getDbAttribute($attribute)
     {
-        if (isset($this->dbAttributes[$attribute])) {
-            return $this->dbAttributes[$attribute];
-        }
-        else {
-            return null;
-        }
+        return isset($this->dbAttributes[$attribute]) ? $this->dbAttributes[$attribute] : null;
     }
 
     /**
