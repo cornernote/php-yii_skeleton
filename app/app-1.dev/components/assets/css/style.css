@@ -26,6 +26,7 @@ table form {
 }
 
 fieldset {
+    /*
     background: #fff;
     padding: 18px 10px 0 10px;
     margin: 0 0 10px 0;
@@ -34,9 +35,11 @@ fieldset {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    */
 }
 
 legend {
+    /*
     color: #464646;
     background: #fff;
     margin-bottom: 0;
@@ -46,6 +49,7 @@ legend {
     border-radius: 4px;
     padding: 0 2%;
     width: 96%;
+    */
     /*
     background: transparent;
     display: inline;
@@ -102,6 +106,10 @@ footer {
 
 .small {
     font-size: 85%;
+}
+
+.breadcrumb {
+    margin: 0 0 20px !important;
 }
 
 /*********************
@@ -344,6 +352,7 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    margin-top: 0 !important;
 }
 
 #breadcrumbs li {
@@ -457,7 +466,7 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
 /*********************
    Grids
 *********************/
-.grid-view {
+.grid-view, .list-view {
     padding-top: 0;
 }
 
@@ -477,7 +486,7 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
     float: left;
 }
 
-.grid-view-loading .summary, .list-view .summary {
+.grid-view-loading .summary {
     color: transparent;
 }
 
@@ -487,7 +496,7 @@ table.table-striped tbody tr:nth-child(odd) td, table.table-striped tbody tr:nth
     float: left;
 }
 
-.grid-view .page-size, .grid-view .form-multi-actions, .grid-view .form-grid-actions  {
+.grid-view .page-size, .grid-view .form-multi-actions, .grid-view .form-grid-actions {
     float: right;
 }
 
@@ -546,6 +555,12 @@ ul.ui-sortable, ul.ui-sortable li {
     margin-top: 6px;
     border-top-color: #000;
     border-bottom-color: #000;
+}
+
+.nav-tabs :hover .dropdown-toggle .caret {
+    margin-top: 6px;
+    border-top-color: #333;
+    border-bottom-color: #333;
 }
 
 /*********************
@@ -653,3 +668,25 @@ ul.ui-sortable, ul.ui-sortable li {
     padding-left: 0;
 }
 
+/*********************
+    JS Tree
+*********************/
+
+.jstree-default.jstree-focused {
+    background: transparent !important;
+}
+
+/*********************
+    Search
+*********************/
+
+.navbar-search {
+    margin-right: 10px;
+}
+
+.navbar-search .search-query {
+    width: 250px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}

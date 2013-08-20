@@ -542,6 +542,14 @@ class ActiveRecord extends CActiveRecord
      */
     public function getName()
     {
+        return $this->getIdString();
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdString()
+    {
         return $this->getControllerName() . '-' . $this->getPrimaryKeyString();
     }
 
@@ -562,12 +570,13 @@ class ActiveRecord extends CActiveRecord
      * @param string $title
      * @param string $urlAction
      * @param array $urlParams
+     * @param array $htmlOptions
      * @return string
      */
-    public function getLink($title = null, $urlAction = 'view', $urlParams = array())
+    public function getLink($title = null, $urlAction = 'view', $urlParams = array(), $htmlOptions = array())
     {
         $title = $title ? $title : $this->getName();
-        return l($title, $this->getUrl($urlAction, $urlParams));
+        return l($title, $this->getUrl($urlAction, $urlParams), $htmlOptions);
     }
 
     /**
@@ -576,7 +585,7 @@ class ActiveRecord extends CActiveRecord
     public function getDropdownLinks()
     {
         $links = array(
-            array('label' => $this->getName(), 'url' => $this->getUrl()),
+            array('label' => $this->getIdString(), 'url' => $this->getUrl()),
         );
         $items = $this->getDropdownLinkItems();
         if ($items) {

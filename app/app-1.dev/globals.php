@@ -60,6 +60,21 @@ function url($route, $params = array(), $ampersand = '&')
 }
 
 /**
+ * Absolute URL
+ * eg:
+ * absoluteUrl('/example/view', array('id'=>$this->id);
+ * @param $route
+ * @param array $params
+ * @param string $schema
+ * @param string $ampersand
+ * @return string
+ */
+function absoluteUrl($route, $params = array(), $schema = '', $ampersand = '&')
+{
+    return Yii::app()->createAbsoluteUrl($route, $params, $schema, $ampersand);
+}
+
+/**
  * HTTP Request
  * @return CHttpRequest
  */
@@ -192,6 +207,15 @@ function vp()
 }
 
 /**
+ * Htroot Path
+ * @return string
+ */
+function hp()
+{
+    return dirname(Yii::app()->request->scriptFile);
+}
+
+/**
  * Returns the named application parameter.
  * This is the shortcut to Yii::app()->params[$name].
  * @param $name
@@ -223,7 +247,7 @@ function cache($cache = 'mem')
 
 /**
  * This is the shortcut to Yii::app()->format
- * @return mixed
+ * @return CFormatter
  */
 function format()
 {

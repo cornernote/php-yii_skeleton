@@ -56,12 +56,21 @@ class ClientScript extends CClientScript
         $ignoreAjax = array(
             'yii.css',
             'bootstrap-yii.css',
+            'bootstrap-yii.min.css',
             'bootstrap-responsive.css',
             'bootstrap-responsive.min.css',
+            'bootstrap.no-responsive.css',
+            'bootstrap.no-responsive.min.css',
             'bootstrap.css',
             'bootstrap.min.css',
             'font-awesome.css',
             'font-awesome.min.css',
+            'jquery-ui-bootstrap.css',
+            'jquery-ui-bootstrap.min.css',
+            'bootstrap-notify.css',
+            'bootstrap-notify.min.css',
+            'jquery.qtip.css',
+            'style.css',
         );
         if (app()->request->isAjaxRequest) {
             foreach ($ignoreAjax as $ignore) {
@@ -73,12 +82,8 @@ class ClientScript extends CClientScript
         $options = array_merge(array(
             'order' => 0,
         ), $options);
-        $this->hasScripts = true;
-        $this->cssFiles[$url] = $media;
         $this->cssFilesOrder[$url] = $options['order'];
-        $params = func_get_args();
-        $this->recordCachingAction('clientScript', 'registerCssFile', $params);
-        return $this;
+        return parent::registerCssFile($url, $media);
     }
 
     /**
@@ -93,12 +98,8 @@ class ClientScript extends CClientScript
         $options = array_merge(array(
             'order' => 0,
         ), $options);
-        $this->hasScripts = true;
-        $this->css[$id] = array($css, $media);
         $this->cssOrder[$id] = $options['order'];
-        $params = func_get_args();
-        $this->recordCachingAction('clientScript', 'registerCssFile', $params);
-        return $this;
+        return parent::registerCss($id, $css, $media);
     }
 
     /**
@@ -133,57 +134,52 @@ class ClientScript extends CClientScript
      */
     public function reorderScripts()
     {
-        // reorder the cssFiles
-        if (!empty($this->cssFilesOrder)) {
-            asort($this->cssFilesOrder);
-            $newCssFiles = array();
-            foreach ($this->cssFilesOrder as $url => $order) {
-                $newCssFiles[$url] = $this->cssFiles[$url];
-            }
-            $this->cssFiles = $newCssFiles;
+        $this->cssFiles = $this->reorderScriptSet($this->cssFiles, $this->cssFilesOrder);
+        $this->css = $this->reorderScriptSet($this->css, $this->cssOrder);
+        if (isset($this->scriptFiles[self::POS_END])) {
+            $this->scriptFiles[self::POS_END] = $this->reorderScriptSet($this->scriptFiles[self::POS_END], $this->scriptFilesOrder[self::POS_END]);
         }
-        // reorder css
-        if (!empty($this->cssOrder)) {
-            asort($this->cssOrder);
-            $newCss = array();
-            foreach ($this->cssOrder as $id => $order) {
-                $newCss[$id] = $this->css[$id];
-            }
-            $this->css = $newCss;
-        }
-        // reorder the scriptFiles
-        if (!empty($this->scriptFilesOrder[self::POS_END])) {
-            asort($this->scriptFilesOrder[self::POS_END]);
-            $newScriptFiles = array();
-            foreach ($this->scriptFilesOrder[self::POS_END] as $url => $order) {
-                $newScriptFiles[$url] = $url;
-            }
-            $this->scriptFiles[self::POS_END] = $newScriptFiles;
-        }
-        // reorder the script
-        if (!empty($this->scriptsOrder[self::POS_READY])) {
-            asort($this->scriptsOrder[self::POS_READY]);
-            $newScript = array();
-            foreach ($this->scriptsOrder[self::POS_READY] as $id => $order) {
-                $newScript[$id] = $this->scripts[self::POS_READY][$id];
-            }
-            $this->scripts[self::POS_READY] = $newScript;
+        if (isset($this->scripts[self::POS_READY])) {
+            $this->scripts[self::POS_READY] = $this->reorderScriptSet($this->scripts[self::POS_READY], $this->scriptsOrder[self::POS_READY]);
         }
     }
 
+    /**
+     * @param $files
+     * @param $order
+     * @return mixed
+     */
+    public function reorderScriptSet($files, $order)
+    {
+        if (!empty($order)) {
+            asort($order);
+            $newFiles = array();
+            foreach ($order as $k => $_) {
+                if (!isset($files[$k]))
+                    continue;
+                $newFiles[$k] = $files[$k];
+                unset($files[$k]);
+            }
+            foreach ($newFiles as $k => $v) {
+                $files[$k] = $v;
+            }
+        }
+        return $files;
+    }
 
     /**
      * Registers a javascript file.
      * @param string $url URL of the javascript file
-     * @param integer $position the position of the JavaScript code. Valid values include the following:
+     * @param int|null $position the position of the JavaScript code. Valid values include the following:
      * <ul>
      * <li>CClientScript::POS_HEAD : the script is inserted in the head section right before the title element.</li>
      * <li>CClientScript::POS_BEGIN : the script is inserted at the beginning of the body section.</li>
      * <li>CClientScript::POS_END : the script is inserted at the end of the body section.</li>
      * </ul>
+     * @param array $options
      * @return ClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
      */
-    public function registerScriptFile($url, $position = self::POS_HEAD)
+    public function registerScriptFile($url, $position = self::POS_HEAD, $options = array())
     {
         // do not load these scripts on ajax
         $ignoreAjax = array(
@@ -200,21 +196,59 @@ class ClientScript extends CClientScript
                     return $this;
             }
         }
+        $options = array_merge(array(
+            'order' => 0,
+        ), $options);
+        if ($position === null)
+            $position = $this->defaultScriptFilePosition;
+        $this->scriptFilesOrder[$position][$url] = $options['order'];
         return parent::registerScriptFile($url, $position);
+    }
+
+    /**
+     * Registers a piece of javascript code.
+     * @param string $id ID that uniquely identifies this piece of JavaScript code
+     * @param string $script the javascript code
+     * @param integer $position the position of the JavaScript code. Valid values include the following:
+     * <ul>
+     * <li>CClientScript::POS_HEAD : the script is inserted in the head section right before the title element.</li>
+     * <li>CClientScript::POS_BEGIN : the script is inserted at the beginning of the body section.</li>
+     * <li>CClientScript::POS_END : the script is inserted at the end of the body section.</li>
+     * <li>CClientScript::POS_LOAD : the script is inserted in the window.onload() function.</li>
+     * <li>CClientScript::POS_READY : the script is inserted in the jQuery's ready function.</li>
+     * </ul>
+     * @param array $options
+     * @return CClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
+     */
+    public function registerScript($id, $script, $position = null, $options = array())
+    {
+        $options = array_merge(array(
+            'order' => 0,
+        ), $options);
+        if ($position === null)
+            $position = $this->defaultScriptPosition;
+        $this->scriptsOrder[$position][$id] = $options['order'];
+        return parent::registerScript($id, $script, $position);
     }
 
     /**
      * Registers a script package that is listed in {@link packages}.
      * @param string $name the name of the script package.
+     * @param array $options
      * @return ClientScript the CClientScript object itself (to support method chaining, available since version 1.1.5).
      * @see renderCoreScript
      */
-    public function registerCoreScript($name)
+    public function registerCoreScript($name, $options = array())
     {
         // do not load these scripts on ajax
         $ignoreAjax = array(
             'jquery',
             'yiiactiveform',
+            'bootstrap-yii',
+            'jquery-css',
+            'notify',
+            'bootstrap.js',
+            'bootbox',
         );
         if (app()->request->isAjaxRequest && in_array($name, $ignoreAjax)) {
             return $this;

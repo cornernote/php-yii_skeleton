@@ -24,8 +24,9 @@ $this->widget('bootstrap.widgets.TbMenu', array(
         array('label' => t('Yii Bootstrap'), 'url' => 'http://www.cniska.net/yii-bootstrap'),
         array('label' => t('Bootstrap'), 'url' => 'http://twitter.github.io/bootstrap/'),
         array('label' => t('jQuery'), 'url' => 'http://api.jquery.com/'),
-        array('label' => t('Kint'), 'url' => 'http://raveren.github.io/kint/'),
         array('label' => t('Swift Mailer'), 'url' => 'http://swiftmailer.org/docs/introduction.html'),
+        array('label' => t('Mustache PHP'), 'url' => 'https://github.com/bobthecow/mustache.php'),
+        array('label' => t('Kint'), 'url' => 'http://raveren.github.io/kint/'),
         array('label' => t('Highcharts'), 'url' => 'http://api.highcharts.com/highcharts'),
     ),
 ));

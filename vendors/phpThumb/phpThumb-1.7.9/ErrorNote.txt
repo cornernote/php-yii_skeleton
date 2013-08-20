@@ -1,0 +1,2 @@
+Error comes when it is checking for version number
+	if (eregi('^Version: [^0-9]*([ 0-9\\.\\:Q/]+) (http|file)\:', $versionstring[1], $matches)) {

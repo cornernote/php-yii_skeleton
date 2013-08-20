@@ -14,7 +14,7 @@ echo "\$this->pageTitle = \$this->pageHeading = \$" . lcfirst($this->modelClass)
 echo "\n";
 echo "\$this->breadcrumbs = array();\n";
 echo "\$this->breadcrumbs[\$this->getName() . ' ' . t('List')] = user()->getState('index." . lcfirst($this->modelClass) . "', array('/" . lcfirst($this->modelClass) . "/index'));\n";
-echo "\$this->breadcrumbs[\$" . lcfirst($this->modelClass) . "->getName()] = \$" . lcfirst($this->modelClass) . "->getLink();\n";
+echo "\$this->breadcrumbs[\$" . lcfirst($this->modelClass) . "->getName()] = \$" . lcfirst($this->modelClass) . "->getUrl();\n";
 echo "\$this->breadcrumbs[] = t('Log');\n";
 echo "\n";
 echo "\$this->renderPartial('_menu', array(\n";

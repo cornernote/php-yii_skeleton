@@ -113,4 +113,23 @@ class Helper
         return $zip->close();
     }
 
+    /**
+     * @param string $dir
+     * @param int $mode
+     * @param bool $recursive
+     * @return string
+     * @throws CException
+     */
+    public static function createDirectory($dir, $mode = 0777, $recursive = true)
+    {
+        if (file_exists($dir)) {
+            return $dir;
+        }
+        $created = @mkdir($dir, $mode, $recursive);
+        if (!$created) {
+            throw new CException('Error occurred when trying to create directory ' . $dir);
+        }
+        return $dir;
+    }
+
 }

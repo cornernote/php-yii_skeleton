@@ -22,7 +22,9 @@ echo "));\n";
 echo "\n";
 echo "\$attributes = array();\n";
 foreach ($this->tableSchema->columns as $column) {
-    echo "\$attributes[] = '" . $column->name . "';\n";
+    echo "\$attributes[] = array(\n";
+    echo "    'name' => '" . $column->name . "',\n";
+    echo ");\n";
 }
 echo "\n";
 echo "\$this->widget('widgets.DetailView', array(\n";

@@ -231,7 +231,12 @@ class Menu extends ActiveRecord
     public function isActive()
     {
         if (strpos($this->url, '/index') !== false && !$this->url_params) {
-            return (app()->controller->getId() == substr($this->url, 1, -6));
+            return (app()->controller->action->id == 'index');
+        }
+        foreach ($this->child as $child) {
+            if ($child->isActive()) {
+                return true;
+            }
         }
         return false;
     }
@@ -396,10 +401,17 @@ class Menu extends ActiveRecord
     static public function topMenu()
     {
         $menu = array();
+
+        // main
         $menu[] = array(
             'class' => 'bootstrap.widgets.TbMenu',
             'items' => self::getItemsFromMenu('Main'),
         );
+
+        // search
+        $menu[] = '<form id="navmenu-header-search" class="navbar-search pull-right" action="' . url('/site/jump') . '"><input type="text" name="term" class="search-query span1" id = "jump-search-box" placeholder="' . t('Search') . '"><input type="hidden" name="r" value="site/jump"></form>';
+
+        // system
         if (user()->checkAccess('admin')) {
             $menu[] = array(
                 'class' => 'bootstrap.widgets.TbMenu',
@@ -415,6 +427,8 @@ class Menu extends ActiveRecord
                 ),
             );
         }
+
+        // help
         $menu[] = array(
             'class' => 'bootstrap.widgets.TbMenu',
             'htmlOptions' => array(
@@ -428,6 +442,7 @@ class Menu extends ActiveRecord
                 ),
             ),
         );
+
         return $menu;
     }
 
