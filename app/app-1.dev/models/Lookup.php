@@ -211,7 +211,7 @@ class Lookup extends ActiveRecord
     public function clearCache()
     {
         if ($this->type) {
-            Yii::app()->cache->set('Lookup.loadItems.' . $this->type, false);
+            Yii::app()->cache->delete('Lookup.loadItems.' . $this->type);
         }
         parent::clearCache();
     }

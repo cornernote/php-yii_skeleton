@@ -1,24 +1,6 @@
 <?php
 /**
- * Override ActiveRecord
- *
- *
- * @method ActiveRecord static model() model()
- * @method ActiveRecord with() with()
- * @method ActiveRecord find() find($condition, array $params = array())
- * @method ActiveRecord[] findAll() findAll($condition = '', array $params = array())
- * @method ActiveRecord findByPk() findByPk($pk, $condition = '', array $params = array())
- * @method ActiveRecord[] findAllByPk() findAllByPk($pk, $condition = '', array $params = array())
- * @method ActiveRecord findByAttributes() findByAttributes(array $attributes, $condition = '', array $params = array())
- * @method ActiveRecord[] findAllByAttributes() findAllByAttributes(array $attributes, $condition = '', array $params = array())
- * @method ActiveRecord findBySql() findBySql(string $sql, array $params = array())
- * @method ActiveRecord[] findAllBySql() findAllBySql(string $sql, array $params = array())
- *
- *
- * @property string $errorString
- * @property boolean isNewRecord
- * @property string $scenario
- * @property string $controllerName
+ * Override CActiveRecord
  *
  */
 class ActiveRecord extends CActiveRecord
@@ -65,11 +47,8 @@ class ActiveRecord extends CActiveRecord
      */
     protected function beforeValidate()
     {
-        if (!parent::beforeValidate()) {
-            return false;
-        }
         $this->setDefaultAttributes();
-        return true;
+        return parent::beforeValidate();
     }
 
     /**
@@ -78,11 +57,8 @@ class ActiveRecord extends CActiveRecord
      */
     protected function beforeSave()
     {
-        if (!parent::beforeSave()) {
-            return false;
-        }
         $this->setDefaultAttributes();
-        return true;
+        return parent::beforeSave();
     }
 
     /**
@@ -93,6 +69,16 @@ class ActiveRecord extends CActiveRecord
         $this->dbAttributes = $this->attributes;
         $this->clearCache();
         parent::afterSave();
+    }
+
+    /**
+     * Actions to be performed before the model is deleted
+     */
+    protected function beforeDelete()
+    {
+        foreach ($this->cacheRelations as $cacheRelation)
+            $this->$cacheRelation; // touch to allow afterDelete() to clearCache()
+        return parent::beforeDelete();
     }
 
     /**
@@ -300,7 +286,7 @@ class ActiveRecord extends CActiveRecord
     public function getUrl($action = 'view', $params = array())
     {
         return array_merge(array(
-            '/' . $this->controllerName . '/' . $action,
+            '/' . $this->getControllerName() . '/' . $action,
             $this->getPrimaryKeySchemaString() => $this->getPrimaryKeyString(),
         ), (array)$params);
     }
