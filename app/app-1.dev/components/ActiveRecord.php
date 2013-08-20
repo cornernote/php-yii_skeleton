@@ -24,177 +24,39 @@
 class ActiveRecord extends CActiveRecord
 {
     /**
+     * The attributes that are currently in the database
+     *
+     * @see ActiveRecord::getDbAttribute()
      * @var array
      */
     public $dbAttributes = array();
 
     /**
-     * @var bool
-     */
-    public $ignoreClearCache = false;
-
-    /**
+     * An array of the models to clear cache when this models cache is cleared
+     *
      * @var array
      */
     public $cacheRelations = array();
 
     /**
-     * @var string
-     */
-    protected $_controllerName;
-
-    /**
-     * @var array
-     */
-    private $_joins = array();
-
-    /**
-     * Returns the data from the object prepared for a search
-     * @param string $type the type of search
-     * @param string $attribute the model attribute to search
-     * @return mixed the search string
-     */
-    public function getSearchField($type, $attribute)
-    {
-        $field = $this->$attribute;
-
-        // Strips the contents before the dash to get a clean id
-        if ($type == 'id') {
-            if (strpos($field, '-')) {
-                $field = explode('-', $field);
-                $field = $field[count($field) - 1];
-            }
-            return $field;
-        }
-
-        // Converts the date for a search
-        if ($type == 'date') {
-            $operator = null;
-            if ($field) {
-                $operators = array('<=', '>=', '<', '>', '=');
-                foreach ($operators as $operator) {
-                    if (strpos($field, $operator) === 0) {
-                        $field = trim(substr($field, strlen($operator)));
-                        break;
-                    }
-                }
-                $field = explode('-', $field);
-                if (count($field) == 3 && strlen($field[2]) == 4) {
-                    $field = $field[2] . '-' . $field[1] . '-' . $field[0];
-                }
-                else {
-                    $operator = null;
-                    $field = null;
-                }
-            }
-            return $operator . $field;
-        }
-
-        // Converts the between for a search
-        if ($type == 'between') {
-            $operator = null;
-            $values = explode(' ', $field);
-            foreach ($values as $k => $value) {
-                $value = explode('-', $value);
-                if (count($value) == 3 && strlen($value[2]) == 4) {
-                    $value = $value[2] . '-' . $value[1] . '-' . $value[0];
-                }
-                $values[$k] = $value;
-            }
-            return $values;
-        }
-
-        return false;
-    }
-
-    /**
-     * Converts getErrors array into string
-     *
-     * @return string
-     */
-    public function getErrorString()
-    {
-        return self::getStaticErrorString($this);
-    }
-
-    /**
-     * If you want to find errors of CActiveRecord like in AuditTrail use this function
-     *
-     * @static
-     * @param $model ActiveRecord
-     * @return string
-     */
-    public static function getStaticErrorString($model)
-    {
-        $output = array();
-        foreach ($model->getErrors() as $attribute => $errors) {
-            $output[] = $attribute . ': ' . implode(' ', $errors);
-        }
-        return implode(' | ', $output);
-    }
-
-    /**
-     * Override getActiveRelation()
-     *
-     * @param string $name of the relation
-     * @return CActiveRelation
-     */
-    public function getActiveRelation($name)
-    {
-        if ($this->getJoinRelation($name)) {
-            return $this->_joins[$name];
-        }
-        return parent::getActiveRelation($name);
-    }
-
-    /**
-     * Allows you to use dynamic relation called "join_yourRelationName"
-     *
-     * The $relation->on in the dynamic relation will be populated from
-     * the $relation->conditions in relation named yourRelationName
-     *
-     * This results in the conditions being used in the ON clause instead of the WHERE clause
-     *
-     * To use this, simply define a relation in your model called "yourRelationName",
-     * and then use model()->with("join_yourRelationName")
-     *
-     * @param string $name of the relation
-     * @return bool|CActiveRelation
-     */
-    private function getJoinRelation($name)
-    {
-        if (isset($this->_joins[$name]))
-            return $this->_joins[$name];
-
-        if (substr($name, 0, 5) == 'join_') {
-            $relationName = substr($name, 5);
-            $relation = $this->getActiveRelation($relationName);
-            if (!$relation)
-                return false;
-
-            $joinRelation = clone $relation;
-            $joinRelation->name = $name;
-            $joinRelation->on = $joinRelation->condition;
-            $joinRelation->on = preg_replace('/\b' . $relationName . '\./i', $name . '.', $joinRelation->on);
-            $joinRelation->condition = '';
-
-            $this->_joins[$name] = $joinRelation;
-            return $relation;
-        }
-        return false;
-    }
-
-    /**
      * Repopulates this active record with the latest data.
+     *
      * @return boolean whether the row still exists in the database. If true, the latest data will be populated to this active record.
      */
     public function refresh()
     {
-        if (!parent::refresh()) {
-            return false;
-        }
         $this->clearCache();
-        return true;
+        return parent::refresh();
+    }
+
+    /**
+     * Allows setting attributes
+     *
+     * @see ActiveRecord::beforeValidate()
+     * @see ActiveRecord::beforeSave()
+     */
+    public function setDefaultAttributes()
+    {
     }
 
     /**
@@ -219,7 +81,6 @@ class ActiveRecord extends CActiveRecord
         if (!parent::beforeSave()) {
             return false;
         }
-        $this->clearCache();
         $this->setDefaultAttributes();
         return true;
     }
@@ -229,25 +90,9 @@ class ActiveRecord extends CActiveRecord
      */
     protected function afterSave()
     {
-        parent::afterSave();
-        $this->clearCache();
-        $this->isNewRecord = false;
         $this->dbAttributes = $this->attributes;
-    }
-
-    /**
-     * Actions to be performed before the model is deleted
-     * @return bool
-     */
-    protected function beforeDelete()
-    {
         $this->clearCache();
-
-        // soft delete needs parent::beforeDelete() to run last
-        if (!parent::beforeDelete()) {
-            return false;
-        }
-        return true;
+        parent::afterSave();
     }
 
     /**
@@ -255,8 +100,8 @@ class ActiveRecord extends CActiveRecord
      */
     protected function afterDelete()
     {
-        parent::afterDelete();
         $this->clearCache();
+        parent::afterDelete();
     }
 
     /**
@@ -264,142 +109,8 @@ class ActiveRecord extends CActiveRecord
      */
     protected function afterFind()
     {
-        parent::afterFind();
-        // preserve an array containing the current database values
         $this->dbAttributes = $this->attributes;
-    }
-
-    /**
-     * clear model cache
-     */
-    public function clearCache()
-    {
-        if ($this->ignoreClearCache) {
-            return;
-        }
-        $this->getCacheKeyPrefix($removeOldKey = true);
-        ModelCache::deleteCache($this);
-        foreach ($this->cacheRelations as $dependentRelationName) {
-            //i.e. to clearCache of job for given item
-            if (is_array($this->$dependentRelationName)) {
-                foreach ($this->$dependentRelationName as $singleModel) {
-                    /* @var ActiveRecord $singleModel */
-                    $singleModel->clearCache();
-                }
-            }
-            else {
-                // if the related record exists, clear cache
-                if ($this->$dependentRelationName) {
-                    $this->$dependentRelationName->clearCache();
-                }
-            }
-        }
-        $this->getCacheKeyPrefix($removeOldKey = true);
-    }
-
-    /**
-     * tweak attributes before saving
-     */
-    public function setDefaultAttributes()
-    {
-    }
-
-    /**
-     * Check if any fields have changed
-     *
-     * @param string $field
-     * @param bool $details return the field name that was changed
-     * @return bool|string|array
-     */
-    public function changed($field = '*', $details = false)
-    {
-        if ($this->isNewRecord)
-            return false;
-        $changed = array();
-        if ($field != '*') {
-            if ($details) {
-                if ($this->dbAttributes[$field] == $this->{$field}) {
-                    $changed[$field] = array($this->dbAttributes[$field], $this->{$field});
-                }
-                return !empty($changed) ? $changed : false;
-            }
-            return $this->dbAttributes[$field] != $this->{$field};
-        }
-        $changed = array();
-        foreach ($this->attributes as $k => $v) {
-            $dbAttribute = isset($this->dbAttributes[$k]) ? $this->dbAttributes[$k] : null;
-            if ($dbAttribute != $v) {
-                if (!$details)
-                    return true;
-                else {
-                    $changed[$k] = array('old' => $this->dbAttributes[$k], 'new' => $v);
-                }
-            }
-        }
-        return !empty($changed) && $details ? $changed : false;
-    }
-
-
-    /**
-     * @return array|mixed|null
-     */
-    public function rules()
-    {
-        $rules = array();
-        if ($this->hasEventHandler('onRules')) {
-            $event = new CModelEvent($this);
-            $this->onRules($event);
-            $rules = $event->params;
-        }
-        return $rules;
-    }
-
-    /**
-     * @return array|mixed|null
-     */
-    public function attributeLabels()
-    {
-        $attributeLabels = array();
-        if ($this->hasEventHandler('onAttributeLabels')) {
-            $event = new CModelEvent($this);
-            $this->onAttributeLabels($event);
-            $attributeLabels = $event->params;
-        }
-        return $attributeLabels;
-    }
-
-    /**
-     * @param $event
-     */
-    public function onRules($event)
-    {
-        $this->raiseEvent('onRules', $event);
-    }
-
-    /**
-     * @param $event
-     */
-    public function onAttributeLabels($event)
-    {
-        $this->raiseEvent('onAttributeLabels', $event);
-    }
-
-    /**
-     * @param bool $removeOldKey
-     * @return bool|string
-     */
-    public function getCacheKeyPrefix($removeOldKey = false)
-    {
-        $key = 'getCacheKeyPrefix.' . get_class($this) . '.' . $this->getPrimaryKeyString();
-        $prefix = false;
-        if (!$removeOldKey) {
-            $prefix = Yii::app()->cache->get($key);
-        }
-        if (!$prefix) {
-            $prefix = uniqid();
-            Yii::app()->cache->set($key, $prefix);
-        }
-        return $prefix . '.';
+        parent::afterFind();
     }
 
     /**
@@ -433,52 +144,74 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     *
-     * @param array $ids
-     * @param array $attributes
-     * @param null $scenario
-     * @return array|int|string
+     * Clear model cache
      */
-    function updateAll($ids = array(), $attributes = array(), $scenario = null)
+    public function clearCache()
     {
-        $messages = array();
-        $message = array();
-        $class = get_class($this);
-        foreach ($ids as $id) {
-            /* @var ActiveRecord $model */
-            $model = ActiveRecord::model($class)->findByPk($id);
-            if (!$model) {
-                $message['error'][] = $class . ' ' . $id . ' ' . t('could not be found.');
-                continue;
-            }
-            if ($scenario) {
-                $model->scenario = $scenario;
-            }
-            $model->attributes = $attributes;
-            if ($model->save()) {
-                $message['success'][] = $model->getLink('inline');
-            }
-            else {
-                $message['error'][] = $model->getLink('inline') . ' ' . $model->errorString;
+        // clear related cache
+        foreach ($this->cacheRelations as $cacheRelation) {
+            $models = is_array($this->$cacheRelation) ? $this->$cacheRelation : array($this->$cacheRelation);
+            foreach ($models as $cacheRelationModel) {
+                if ($cacheRelationModel instanceof ActiveRecord) {
+                    $cacheRelationModel->clearCache();
+                }
             }
         }
-        if (isset($message['success'])) {
-            $messages['success'] = t('The following records have been updated:');
-            $messages['success'] .= '<ul class="bullet">';
-            foreach ($message['success'] as $_message) {
-                $messages['success'] .= "<li>{$_message}</li>";
-            }
-            $messages['success'] .= '</ul>';
+        // clear own cache
+        $this->getCacheKeyPrefix($removeOldKey = true);
+        ModelCache::deleteCache($this);
+    }
+
+    /**
+     * @param bool $removeOldKey
+     * @return bool|string
+     */
+    public function getCacheKeyPrefix($removeOldKey = false)
+    {
+        $key = 'getCacheKeyPrefix.' . get_class($this) . '.' . $this->getPrimaryKeyString();
+        $prefix = false;
+        if (!$removeOldKey) {
+            $prefix = Yii::app()->cache->get($key);
         }
-        if (isset($message['error'])) {
-            $messages['error'] = t('The following records could not be updated:');
-            $messages['error'] .= '<ul class="bullet">';
-            foreach ($message['error'] as $_message) {
-                $messages['error'] .= "<li>{$_message}</li>";
-            }
-            $messages['error'] .= '</ul>';
+        if (!$prefix) {
+            $prefix = uniqid();
+            Yii::app()->cache->set($key, $prefix);
         }
-        return $messages;
+        return $prefix . '.';
+    }
+
+    /**
+     * Check if any fields have changed
+     *
+     * @param string $field
+     * @param bool $details return the field name that was changed
+     * @return bool|string|array
+     */
+    public function changed($field = '*', $details = false)
+    {
+        if ($this->isNewRecord)
+            return false;
+        $changed = array();
+        if ($field != '*') {
+            if ($details) {
+                if ($this->getDbAttribute($field) == $this->{$field}) {
+                    $changed[$field] = array($this->getDbAttribute($field), $this->{$field});
+                }
+                return !empty($changed) ? $changed : false;
+            }
+            return $this->getDbAttribute($field) != $this->{$field};
+        }
+        $changed = array();
+        foreach ($this->attributes as $k => $v) {
+            if ($this->getDbAttribute($k) != $v) {
+                if (!$details)
+                    return true;
+                else {
+                    $changed[$k] = array('old' => $this->getDbAttribute($k), 'new' => $v);
+                }
+            }
+        }
+        return !empty($changed) && $details ? $changed : false;
     }
 
     /**
@@ -516,6 +249,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Gets an attribute, as it is in the database
+     *
      * @param $attribute
      * @return null
      */
@@ -530,14 +265,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     * @return $this
-     */
-    public function getAuditModel()
-    {
-        return $this;
-    }
-
-    /**
+     * The name of this model to be used in links and titles
+     *
      * @return string
      */
     public function getName()
@@ -546,6 +275,19 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * The name of the controller used in links
+     *
+     * @return string
+     */
+    public function getControllerName()
+    {
+        return lcfirst(get_class($this));
+    }
+
+    /**
+     * The name and id of the model
+     * eg: activeRecord-123
+     *
      * @return string
      */
     public function getIdString()
@@ -554,6 +296,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Returns a URL to this model
+     *
      * @param string $action
      * @param array $params
      * @return string
@@ -567,6 +311,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Returns a Link to this model
+     *
      * @param string $title
      * @param string $urlAction
      * @param array $urlParams
@@ -580,6 +326,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Returns an array of links to be used in TbDropdownColumn
+     *
      * @return array
      */
     public function getDropdownLinks()
@@ -595,7 +343,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     * Retrieves a list of links to be used in grid and menus.
+     * Returns a list of links to be used in grids and menus.
+     *
      * @param bool $extra
      * @return array
      */
@@ -605,6 +354,22 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Returns error array as a string
+     *
+     * @return string
+     */
+    public function getErrorString()
+    {
+        $output = array();
+        foreach ($this->getErrors() as $attribute => $errors) {
+            $output[] = $attribute . ': ' . implode(' ', $errors);
+        }
+        return implode(' | ', $output);
+    }
+
+    /**
+     * Returns Primary Key Schema as a string
+     *
      * @return string
      */
     public function getPrimaryKeySchemaString()
@@ -615,6 +380,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Returns Primary Key as a string
+     *
      * @return string
      */
     public function getPrimaryKeyString()
@@ -624,13 +391,5 @@ class ActiveRecord extends CActiveRecord
         return $this->getPrimaryKey();
     }
 
-
-    /**
-     * @return string
-     */
-    public function getControllerName()
-    {
-        return $this->_controllerName ? $this->_controllerName : lcfirst(get_class($this));
-    }
 
 }

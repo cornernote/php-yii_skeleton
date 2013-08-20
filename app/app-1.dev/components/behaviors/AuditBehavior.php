@@ -121,7 +121,7 @@ class AuditBehavior extends CActiveRecordBehavior
         $auditId = Audit::findCurrentId();
 
         // delete
-        $pk = $this->getPkString($this->owner->getPrimaryKey());
+        $pk = $this->auditModel->getPrimaryKeyString();
         foreach ($logModels as $logModel) {
             $prefix = isset($logModel['prefix']) ? $logModel['prefix'] . '.' . $pk : '';
             $log = new AuditTrail;
@@ -156,7 +156,12 @@ class AuditBehavior extends CActiveRecordBehavior
     protected function getLogModels()
     {
         if ($this->auditModel === null) {
-            $this->auditModel = $this->owner->getAuditModel();
+            if (method_exists($this->owner, 'getAuditModel')) {
+                $this->auditModel = call_user_func(array($this->owner, 'getAuditModel'));
+            }
+            else {
+                $this->auditModel = $this->owner;
+            }
         }
 
         $logModels = array();
@@ -165,7 +170,7 @@ class AuditBehavior extends CActiveRecordBehavior
         if ($this->auditModel) {
             $logModels[] = array(
                 'model' => get_class($this->auditModel),
-                'model_id' => $this->getPkString($this->auditModel->getPrimaryKey()),
+                'model_id' => $this->auditModel->getPrimaryKeyString(),
                 'prefix' => $this->fieldPrefix(),
             );
         }
@@ -183,12 +188,4 @@ class AuditBehavior extends CActiveRecordBehavior
         return $logModels;
     }
 
-    /**
-     * @param $pk
-     * @return string|array
-     */
-    protected function getPkString($pk)
-    {
-        return is_array($pk) ? implode(',', $pk) : $pk;
-    }
 }
