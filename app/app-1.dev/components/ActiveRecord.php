@@ -2,6 +2,8 @@
 /**
  * Override CActiveRecord
  *
+ * @package components
+ * @author Brett O'Donnell <brett@mrphp.com.au>
  */
 class ActiveRecord extends CActiveRecord
 {
@@ -43,6 +45,7 @@ class ActiveRecord extends CActiveRecord
 
     /**
      * Actions to be performed before the model is saved
+     *
      * @return bool
      */
     protected function beforeValidate()
@@ -53,6 +56,7 @@ class ActiveRecord extends CActiveRecord
 
     /**
      * Actions to be performed before the model is saved
+     *
      * @return bool
      */
     protected function beforeSave()
@@ -100,6 +104,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Get a cached element
+     *
      * @param $key
      * @return mixed
      */
@@ -115,6 +121,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Set a cached element
+     *
      * @param $key
      * @param $value
      * @param bool $insertModelCache
@@ -130,7 +138,7 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     * Clear model cache
+     * Clear cache for this model
      */
     public function clearCache()
     {
@@ -149,6 +157,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Get the cache prefix for this model
+     *
      * @param bool $removeOldKey
      * @return bool|string
      */
@@ -201,6 +211,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Lock database tables
+     *
      * @param array $tables
      */
     public function lockTables($tables = array())
@@ -218,7 +230,7 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
-     *
+     * Unlock database tables
      */
     public function unlockTables()
     {
@@ -227,6 +239,8 @@ class ActiveRecord extends CActiveRecord
     }
 
     /**
+     * Begin a database transaction
+     *
      * @return CDbTransaction
      */
     public function beginTransaction()
