@@ -6,7 +6,7 @@
 
 // index
 if ($this->action->id == 'index') {
-    $this->menu = Menu::getItemsFromMenu('System');
+    $this->menu = Menu::getItemsFromMenu('Log');
     return; // no more links
 }
 

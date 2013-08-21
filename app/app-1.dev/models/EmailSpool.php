@@ -29,6 +29,7 @@
  * @property string $model
  * @property integer $model_id
  * @property string $to_email
+ * @property string $type
  * @property string $to_name
  * @property string $from_email
  * @property string $from_name
@@ -41,7 +42,7 @@
  *
  * --- END GenerateProperties ---
  */
-class EmailSpool extends CActiveRecord
+class EmailSpool extends ActiveRecord
 {
 
     /**
@@ -129,7 +130,7 @@ class EmailSpool extends CActiveRecord
 
         // search
         if ($this->scenario == 'search') {
-            $rules[] = array('id, status, message_subject, to_name, to_email, from_name, from_email, model, model_id', 'safe', 'on' => 'search');
+            $rules[] = array('id, status, message_subject, to_name, to_email, from_name, from_email, model, model_id, type', 'safe');
         }
 
         return $rules;
@@ -137,7 +138,7 @@ class EmailSpool extends CActiveRecord
 
     /**
      * @param null $options
-     * @return string
+     * @return array
      */
     public function getUrl($options = null)
     {
@@ -166,15 +167,16 @@ class EmailSpool extends CActiveRecord
     public function search($options = array())
     {
         $criteria = new CDbCriteria;
-        $criteria->compare('t.id', $this->getSearchField('id', 'id'));
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.status', $this->status);
-        $criteria->compare('t.model', $this->model, true);
-        $criteria->compare('t.model_id', $this->model_id, true);
+        $criteria->compare('t.model', $this->model);
+        $criteria->compare('t.type', $this->type);
+        $criteria->compare('t.model_id', $this->model_id);
         $criteria->compare('t.to_email', $this->to_email, true);
         $criteria->compare('t.to_name', $this->to_name, true);
-        $criteria->compare('t.from_email', $this->from_email);
-        $criteria->compare('t.from_name', $this->from_name);
-        $criteria->compare('t.message_subject', $this->message_subject);
+        $criteria->compare('t.from_email', $this->from_email, true);
+        $criteria->compare('t.from_name', $this->from_name, true);
+        $criteria->compare('t.message_subject', $this->message_subject, true);
 
         $criteria->addCondition('t.deleted IS ' . ($this->deleted == 'deleted' ? 'NOT NULL' : 'NULL'));
 
@@ -185,8 +187,9 @@ class EmailSpool extends CActiveRecord
 
     /**
      * Find pending emails and attempt to deliver them
+     * @param bool $useMailinator
      */
-    public static function spool()
+    public static function spool($useMailinator = false)
     {
         // find all the spooled emails
         $spools = EmailSpool::model()->findAll(array(
@@ -199,13 +202,13 @@ class EmailSpool extends CActiveRecord
 
             // update status to emailing
             $spool->status = 'processing';
-            $spool->save();
+            $spool->save(false);
 
             // build the message
             $SM = app()->swiftMailer;
             $message = $SM->newMessage($spool->message_subject);
             $message->setFrom($spool->from_name ? array($spool->from_email => $spool->from_name) : array($spool->from_email));
-            $message->setTo($spool->to_name ? array($spool->to_email => $spool->to_name) : array($spool->to_email));
+            $message->setTo($spool->to_name ? array($spool->getToEmail($useMailinator) => $spool->to_name) : array($spool->getToEmail($useMailinator)));
             $message->setBody($spool->message_text);
             $message->addPart($spool->message_html, 'text/html');
             if (!empty($spool->attachments)) {
@@ -224,9 +227,37 @@ class EmailSpool extends CActiveRecord
             else {
                 $spool->status = 'error';
             }
-            $spool->save();
+            $spool->save(false);
 
         }
+    }
+
+    /**
+     * @param bool $useMailinator
+     * @return string
+     */
+    public function getToEmail($useMailinator = false)
+    {
+        if ($useMailinator) {
+            return str_replace('@', '.', $this->to_email) . '@mailinator.com';
+        }
+        return $this->to_email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelLink()
+    {
+        $ignore = array('Error', 'UserWelcome', 'UserRecover');
+        if (!in_array($this->model, $ignore) && class_exists($this->model) && is_subclass_of($this->model, 'ActiveRecord')) {
+            /** @var $model ActiveRecord */
+            $model = ActiveRecord::model($this->model)->findByPk($this->model_id);
+            if ($model) {
+                return $model->getLink();
+            }
+        }
+        return '';
     }
 
 }

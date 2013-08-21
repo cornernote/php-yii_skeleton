@@ -13,6 +13,8 @@ $this->renderPartial('_menu', array(
     'emailSpool' => $emailSpool,
 ));
 
+// details
+ob_start();
 $attributes = array();
 $attributes[] = array(
     'name' => 'id',
@@ -26,34 +28,24 @@ $attributes[] = 'model';
 $attributes[] = 'model_id';
 $attributes[] = 'from_email';
 $attributes[] = 'from_name';
-$modelName = explode('.', $emailSpool->model);
-$modelName = $modelName ? current($modelName) : false;
-if ($modelName != 'Error' && class_exists($modelName)) {
-    $model = new $modelName;
-    if (is_subclass_of($model, 'ActiveRecord')) {
-        /** @var $model ActiveRecord */
-        $model = ActiveRecord::model($modelName)->findByPk($emailSpool->model_id);
-        if ($model) {
-            $attributes[] = array(
-                'label' => 'Model Link',
-                'value' => $model->getLink(),
-                'type' => 'raw',
-            );
-        }
-    }
-}
 $attributes[] = array(
-    'name' => 'message_html',
-    'value' => $emailSpool->message_html,
-    'type' => 'raw',
-);
-$attributes[] = array(
-    'name' => 'message_text',
-    'value' => format()->formatNtext($emailSpool->message_text),
+    'name' => 'model_id',
+    'value' => $emailSpool->getModelLink(),
     'type' => 'raw',
 );
 $attributes[] = 'sent';
 $this->widget('widgets.DetailView', array(
     'data' => $emailSpool,
     'attributes' => $attributes,
+));
+$details = ob_get_clean();
+
+// tabs
+$this->widget('bootstrap.widgets.TbTabs', array(
+    'type' => 'pills', // 'tabs' or 'pills'
+    'tabs' => array(
+        array('label' => t('Details'), 'content' => $details, 'active' => true),
+        array('label' => t('HTML Message'), 'content' => $emailSpool->message_html),
+        array('label' => t('Text Message'), 'content' => nl2br($emailSpool->message_text)),
+    ),
 ));

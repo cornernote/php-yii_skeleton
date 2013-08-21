@@ -9,12 +9,19 @@ $columns[] = array(
     'name' => 'id',
     'class' => 'widgets.TbDropdownColumn',
 );
-$columns[] = 'model';
+$columns[] = array(
+    'name' => 'model',
+    //'filter' => array(),
+);
 $columns[] = 'model_id';
+$columns[] = array(
+    'name' => 'type',
+    //'filter' => array(),
+);
 $columns[] = array(
     'name' => 'message_subject',
     'type' => 'raw',
-    'value' => '"<b>".h($data->subject)."</b>"',
+    'value' => '"<b>".h($data->message_subject)."</b>"',
 );
 $columns[] = 'to_name';
 $columns[] = 'to_email';
@@ -26,7 +33,7 @@ $columns[] = array(
 $columns[] = array(
     'name' => 'sent',
     'type' => 'raw',
-    'value' => '$data->sent_date?$data->sent_date:""',
+    'value' => 'Time::agoIcon($data->sent)',
 );
 $columns[] = array(
     'name' => 'created',
