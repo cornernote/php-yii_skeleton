@@ -37,6 +37,7 @@ $_core = array(
 );
 $_core_db = mysql_connect($_core['db']['host'], $_core['db']['user'], $_core['db']['pass']);
 if ($_core_db && mysql_select_db($_core['db']['name'], $_core_db)) {
+    mysql_set_charset('utf8', $_core_db);
 	$_core['db']['setting'] = isset($_core['db']['setting']) ? $_core['db']['setting'] : 'setting'; // decide which table to use
 	$q = mysql_query("SELECT * FROM {$_core['db']['setting']}", $_core_db);
 	if ($q) while ($row = mysql_fetch_assoc($q))
