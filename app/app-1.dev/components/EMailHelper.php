@@ -8,41 +8,37 @@ class EMailHelper
     /**
      * @param $user User
      */
-    static public function sendRecoverPasswordEmail($user)
+    static public function sendUserRecover($user)
     {
         // setup email variables
         $to = array($user->email => $user->name);
-        $modelsForParams = array('user' => $user);
-        $relation = array('model' => 'RecoverPasswordEmail', 'model_id' => $user->id);
-        $viewParams = array();
+        $viewParams = array('User' => $user);
+        $relation = array('model' => 'User', 'model_id' => $user->id, 'type' => 'UserRecover');
 
         // get recovery temp login link
         $token = Token::model()->add('+1day', 1, $relation);
-        $viewParams['url'] = url(array('/account/passwordReset', 'id' => $user->id, 'token' => $token));
+        $viewParams['url'] = absoluteUrl('/account/passwordReset', array('id' => $user->id, 'token' => $token));
 
         // spool the email
-        self::spool($to, 'user.recover', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('EMailManager::sendRecoverPasswordEmail', $relation);
+        self::spool($to, 'user.recover', $viewParams, $relation);
     }
 
     /**
      * @param $user User
      */
-    static public function sendWelcomeEmail($user)
+    static public function sendUserWelcome($user)
     {
         // setup email variables
         $to = array($user->email => $user->name);
-        $modelsForParams = array('user' => $user);
-        $relation = array('model' => 'WelcomeEmail', 'model_id' => $user->id);
-        $viewParams = array();
+        $viewParams = array('User' => $user);
+        $relation = array('model' => 'User', 'model_id' => $user->id, 'type' => 'UserWelcome');
+
+        // get activation token
+        $token = Token::model()->add('+30days', 1, $relation);
+        $viewParams['url'] = absoluteUrl('/account/activate', array('id' => $user->id, 'token' => $token));
 
         // spool the email
-        self::spool($to, 'user.welcome', $viewParams, $modelsForParams, $relation);
-
-        // tell someone about it
-        Log::model()->add('EMailManager::sendWelcomeEmail', $relation);
+        self::spool($to, 'user.welcome', $viewParams, $relation);
     }
 
     /**
@@ -52,7 +48,7 @@ class EMailHelper
     {
         $relation = array('model' => 'Error', 'model_id' => 0);
 
-        $url = 'http://' . param('domain') . url('/error/index');
+        $url = absoluteUrl('/error/index');
         $messageString = t('errors have been archived') . ' ' . $url;
 
         $message = array(
@@ -75,15 +71,14 @@ class EMailHelper
      * @param $to string|array
      * @param $template
      * @param array $viewParams
-     * @param array $modelsForParams
      * @param array $relation
      * @throws CException
      * @return bool|integer
      */
-    static private function spool($to, $template, $viewParams = array(), $modelsForParams = array(), $relation = array())
+    static public function spool($to, $template, $viewParams = array(), $relation = array())
     {
         // generate the message
-        $message = self::renderEmailTemplate($template, $viewParams, $modelsForParams);
+        $message = self::renderEmailTemplate($template, $viewParams);
 
         // format the to_name/to_email
         $to_email = $to_name = '';
@@ -113,6 +108,9 @@ class EMailHelper
                 $emailSpool->model_id = $relation['model_id'];
             }
         }
+        if (isset($relation['type'])) {
+            $emailSpool->type = $relation['type'];
+        }
 
         // set flash message
         $flash = true;
@@ -138,11 +136,10 @@ class EMailHelper
     /**
      * @param $template string
      * @param $viewParams array
-     * @param array $modelsForParams
      * @throws CException
      * @return array
      */
-    static private function renderEmailTemplate($template, $viewParams = array(), $modelsForParams = array())
+    static public function renderEmailTemplate($template, $viewParams = array())
     {
         // load layout
         $emailLayout = EmailTemplate::model()->findByAttributes(array('name' => 'layout.default'));
@@ -154,46 +151,21 @@ class EMailHelper
         if (!$emailTemplate)
             throw new CException('missing EmailTemplate - ' . $template);
 
-        // load params
-        $params = CMap::mergeArray(self::getParams($modelsForParams), $viewParams);
+        // add settings to params
+        $viewParams['Setting'] = Setting::items();
+        $viewParams['Setting']['bu'] = absoluteUrl('/');
 
+        // parse template
         $mustache = new Mustache;
+        $fields = array('message_title', 'message_subject', 'message_html', 'message_text');
         $templates = array();
-        $fields = array('message_subject', 'message_html', 'message_text');
         foreach ($fields as $field) {
-            $params['contents'] = $mustache->render($emailTemplate->$field, $params);
-            $templates[$field] = $mustache->render($emailLayout->$field, $params);
-            unset($params['contents']);
+            $viewParams['contents'] = $mustache->render($emailTemplate->$field, $viewParams);
+            $viewParams[$field] = $templates[$field] = $mustache->render($emailLayout->$field, $viewParams);
+            unset($viewParams['contents']);
         }
 
         return $templates;
     }
 
-    /**
-     * @param $modelsForParams
-     * @return array|mixed
-     */
-    static private function getParams($modelsForParams)
-    {
-        // app params
-        $params = array();
-
-        // links
-        $params['app__domain'] = Setting::item('domain');
-        $params['app__au'] = au();
-
-        // company
-        $params['app__name'] = app()->name;
-        $params['app__phone'] = Setting::item('phone');
-        $params['app__email'] = Setting::item('email');
-        $params['app__website'] = Setting::item('website');
-
-        // model params
-        foreach ($modelsForParams as $model) {
-            if (method_exists($model, 'getEmailTemplateParams')) {
-                $params = CMap::mergeArray($params, call_user_func(array($model, 'getEmailTemplateParams')));
-            }
-        }
-        return $params;
-    }
 }
