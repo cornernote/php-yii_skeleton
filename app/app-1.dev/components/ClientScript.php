@@ -74,7 +74,7 @@ class ClientScript extends CClientScript
         );
         if (app()->request->isAjaxRequest) {
             foreach ($ignoreAjax as $ignore) {
-                if (StringHelper::endsWith($url, $ignore))
+                if ($this->endsWith($url, $ignore))
                     return $this;
             }
         }
@@ -192,7 +192,7 @@ class ClientScript extends CClientScript
         );
         if (app()->request->isAjaxRequest) {
             foreach ($ignoreAjax as $ignore) {
-                if (StringHelper::endsWith($url, $ignore))
+                if ($this->endsWith($url, $ignore))
                     return $this;
             }
         }
@@ -254,6 +254,21 @@ class ClientScript extends CClientScript
             return $this;
         }
         return parent::registerCoreScript($name);
+    }
+
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 
 }

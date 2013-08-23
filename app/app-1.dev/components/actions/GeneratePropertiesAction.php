@@ -96,7 +96,7 @@ class GeneratePropertiesAction extends CAction
             $firstPos = strpos($fileContents, $begin);
             $lastPos = strpos($fileContents, $end);
             if ($firstPos && $lastPos && ($lastPos > $firstPos)) {
-                $oldDoc = StringHelper::getBetweenString($fileContents, $begin, $end, false, false);
+                $oldDoc = $this->getBetweenString($fileContents, $begin, $end, false, false);
                 if ($contents != $oldDoc) {
                     file_put_contents($fileName, str_replace($oldDoc, $contents, $fileContents));
                     $message = 'overwrote file: ' . realpath($fileName);
@@ -176,7 +176,7 @@ class GeneratePropertiesAction extends CAction
                     $type = current($paramTypes);
                     $filterType = '';
                     if ($type && strpos($type, '$')) {
-                        $typeString = StringHelper::getBetweenString($type, false, '$');
+                        $typeString = $this->getBetweenString($type, false, '$');
                         $typeString = trim($typeString);
                         $filterType = StringHelper::filterDocType($typeString);
                         $filterType = $filterType ? trim($filterType) . ' ' : '';
@@ -239,6 +239,47 @@ class GeneratePropertiesAction extends CAction
 
         // all done...
         return $properties;
+    }
+
+    /**
+     * @param $contents
+     * @param $start
+     * @param $end
+     * @param bool $removeStart
+     * @param bool $removeEnd
+     * @return string
+     */
+    private function getBetweenString($contents, $start, $end, $removeStart = true, $removeEnd = true)
+    {
+        if ($start) {
+            $startPos = strpos($contents, $start);
+        }
+        else {
+            $startPos = 0;
+        }
+
+        if ($startPos === false) {
+            return false;
+        }
+        if ($end) {
+            $endPos = strpos($contents, $end, $startPos);
+            if ($endPos === false) {
+                $endPos = $endPos = strlen($contents);
+            }
+        }
+        else {
+            $endPos = strlen($contents);
+        }
+
+        if ($removeStart) {
+            $startPos += strlen($start);
+        }
+        $len = $endPos - $startPos;
+        if (!$removeEnd && $end && $endPos) {
+            $len = $len + strlen($end);
+        }
+        $subString = substr($contents, $startPos, $len);
+        return $subString;
     }
 
 }
