@@ -453,11 +453,10 @@ class Audit extends ActiveRecord
         // create new Audit
         self::$_audit = new Audit();
         //cache not working so it could not get schema for audits
-        if (!self::$_audit->attributes){
+        if (!self::$_audit->attributes) {
             return false;
         }
-        if
-            if (self::$_audit->recordAudit()) {
+        if (self::$_audit->recordAudit()) {
             Yii::app()->onEndRequest = array(self::$_audit, 'updateAudit');
         }
         return self::$_audit;
