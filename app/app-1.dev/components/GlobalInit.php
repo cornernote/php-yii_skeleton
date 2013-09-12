@@ -27,7 +27,9 @@ class GlobalInit extends CApplicationComponent
 
         // set default php settings
         date_default_timezone_set(Setting::item('timezone'));
-        set_time_limit((substr(php_sapi_name(), 0, 3) == 'cgi') ? 0 : Setting::item('time_limit'));
+        $timeLimit = isCli() ? 5 : param('time_limit');
+        set_time_limit($timeLimit);
+        ini_set('max_execution_time', $timeLimit);
         ini_set('memory_limit', Setting::item('memory_limit'));
         ini_set('xdebug.max_nesting_level', 200);
 

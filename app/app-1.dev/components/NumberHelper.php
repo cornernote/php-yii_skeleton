@@ -6,48 +6,47 @@ class NumberHelper
 {
 
     /**
+     * @param array $array
      * @return bool|float
      */
-    static public function median()
+    static public function getMedian($array = array())
     {
-        $args = func_get_args();
-
-        switch (func_num_args()) {
-            case 0:
-                trigger_error('median() requires at least one parameter', E_USER_WARNING);
-                return false;
-                break;
-
-            case 1:
-                $args = array_pop($args);
-            // fallthrough
-
-            default:
-                if (!is_array($args)) {
-                    trigger_error('median() requires a list of numbers to operate on or an array of numbers', E_USER_NOTICE);
-                    return false;
-                }
-
-                sort($args);
-
-                $n = count($args);
-                if ($n < 1) {
-                    return 0;
-                }
-                $h = intval($n / 2);
-
-                if ($n % 2 == 0) {
-                    $median = ($args[$h] + $args[$h - 1]) / 2;
-                }
-                else {
-                    $median = $args[$h];
-                }
-
-                break;
-        }
-
-        return $median;
+        if (!is_array($array) || empty($array)) return false;
+        sort($array);
+        $n = count($array);
+        if ($n < 1)
+            return 0;
+        $h = intval($n / 2);
+        return ($n % 2 == 0) ? ($array[$h] + $array[$h - 1]) / 2 : $array[$h];
     }
 
+    /**
+     * @param array $array
+     * @return bool|float
+     */
+    static public function getAverage($array = array())
+    {
+        if (!is_array($array) || empty($array)) return false;
+        return array_sum($array) / count($array);
+    }
 
+    /**
+     * @param array $array
+     * @return bool|float
+     */
+    static public function getHigh($array = array())
+    {
+        if (!is_array($array) || empty($array)) return false;
+        return max($array);
+    }
+
+    /**
+     * @param array $array
+     * @return bool|float
+     */
+    static public function getLow($array = array())
+    {
+        if (!is_array($array) || empty($array)) return false;
+        return min($array);
+    }
 }

@@ -1,14 +1,22 @@
 <?php
 
+/**
+ * Class QTip
+ */
 class QTip extends CWidget
 {
-    // function to init the widget
+    /**
+     *
+     */
     public function init()
     {
         $this->publishAssets();
     }
 
     // function to publish and register assets on page
+    /**
+     *
+     */
     public function publishAssets()
     {
         $basePath = vp() . DS . 'qtip2';
@@ -18,13 +26,23 @@ class QTip extends CWidget
         // auto-qtip on <a title="something">link</a>
         $cs->registerScript('qtip2', '
             $(document).on("mouseover", "a[title],i[title],.icon[title]", function(event) {
-                $(this).qtip({
+                var e = $(this);
+                index = e.parent().index();
+                e.qtip({
                     overwrite: false,
                     style: {
                         classes: "qtip-bootstrap"
                     },
                     show: {
                         ready: true
+                    },
+                    position: {
+                        adjust: {
+                            screen: true
+                        },
+                        my: "bottom center",
+                        at: "top center",
+                        viewport: $(window)
                     }
                 });
             });
