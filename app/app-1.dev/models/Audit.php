@@ -49,6 +49,11 @@
 class Audit extends ActiveRecord
 {
     /**
+     * @var bool
+     */
+    public $modelCache = false;
+
+    /**
      * @var
      */
     public $model;

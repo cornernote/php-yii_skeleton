@@ -16,6 +16,13 @@ class ActiveRecord extends CActiveRecord
     public $dbAttributes = array();
 
     /**
+     * If we should use a table to cache this
+     *
+     * @var bool
+     */
+    public $modelCache = true;
+
+    /**
      * An array of the models to clear cache when this models cache is cleared
      *
      * @var array
@@ -70,9 +77,11 @@ class ActiveRecord extends CActiveRecord
      */
     protected function afterSave()
     {
+        // afterSave needs to be called before resetting dbAttributes in order for behaviours
+        // such as AuditTrail to have the correct dbAttributes values
+        parent::afterSave();
         $this->dbAttributes = $this->attributes;
         $this->clearCache();
-        parent::afterSave();
     }
 
     /**
@@ -142,6 +151,8 @@ class ActiveRecord extends CActiveRecord
      */
     public function clearCache()
     {
+        if (!$this->modelCache)
+            return;
         // clear related cache
         foreach ($this->cacheRelations as $cacheRelation) {
             $models = is_array($this->$cacheRelation) ? $this->$cacheRelation : array($this->$cacheRelation);

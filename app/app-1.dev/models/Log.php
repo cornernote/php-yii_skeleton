@@ -34,6 +34,11 @@ class Log extends CActiveRecord
 {
 
     /**
+     * @var bool
+     */
+    public $modelCache = false;
+
+    /**
      * Returns the static model of the specified AR class.
      * @param string $className
      * @return Log the static model class

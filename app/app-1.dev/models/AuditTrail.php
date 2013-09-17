@@ -36,6 +36,11 @@
 class AuditTrail extends ActiveRecord
 {
     /**
+     * @var bool
+     */
+    public $modelCache = false;
+
+    /**
      * Returns the static model of the specified AR class.
      * @param string $className
      * @return AuditTrail the static model class
