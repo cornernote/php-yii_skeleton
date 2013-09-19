@@ -5,6 +5,7 @@ $config = array(
     'id' => $_ENV['_core']['setting']['id'],
     'name' => $_ENV['_core']['setting']['name'],
     'language' => $_ENV['_core']['setting']['language'],
+	'charset' => $_ENV['_core']['setting']['charset'],
 
     // paths
     'basePath' => dirname(dirname(__FILE__)),

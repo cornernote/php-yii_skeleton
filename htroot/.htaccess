@@ -1,4 +1,5 @@
 Options +FollowSymLinks
+AddDefaultCharset UTF-8
 
 <Limit GET POST PUT DELETE>
     order deny,allow

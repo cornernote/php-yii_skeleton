@@ -3,6 +3,7 @@
  * Core Settings
  */
  
+// default settings
 $_core = array(
 	'path' => dirname(__FILE__),
 	'db' => array(
@@ -21,6 +22,7 @@ $_core = array(
 		'email' => 'webmaster@localhost',
 		'website' => 'localhost',
 		'language' => 'en',
+		'charset' => 'utf-8',
 		'timezone' => 'GMT',
 		'theme' => 'lite',
 		'app_version' => 'app-1.dev',
@@ -35,6 +37,13 @@ $_core = array(
 		'audit' => false,
 	),
 );
+
+// local overrides
+if (file_exists(dirname(__FILE__) . '/core.local.php')) {
+    require(dirname(__FILE__) . '/core.local.php');
+}
+
+// settings from database
 $_core_db = mysql_connect($_core['db']['host'], $_core['db']['user'], $_core['db']['pass']);
 if ($_core_db && mysql_select_db($_core['db']['name'], $_core_db)) {
     mysql_set_charset('utf8', $_core_db);
@@ -45,4 +54,6 @@ if ($_core_db && mysql_select_db($_core['db']['name'], $_core_db)) {
 	mysql_close($_core_db);
 	unset($_core_db);
 }
+
+// here ya go
 return $_core;
