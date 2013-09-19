@@ -52,15 +52,37 @@ class ErrorController extends WebController
             $path .= 'archive/';
         $path .= $error;
 
+        $auditInfo = str_replace(array('archive/', 'audit-', '.html'), '', $error);
+        $errorCode = '';
+        if (strpos($auditInfo, '-')) {
+            list($auditId, $errorCode) = explode('-', $auditInfo);
+            if ($errorCode) {
+                $errorCode = $errorCode . ' - ';
+            }
+        }
+        else {
+            $auditId = $auditInfo;
+        }
+        $audit = Audit::model()->findByPk($auditId);
+        $auditLink = '';
+        if ($audit) {
+            $auditLink = $audit->getLink() . ' ';
+        }
         $contents = file_get_contents($path);
         $contents = str_replace('class="container"', 'class="container-fluid"', $contents);
-        $contents = str_replace('</h1>', ' - ' . $error . ' logged on ' . date('Y-m-d H:i:s', filemtime($path)) . '</h1>', $contents);
-        cs()->registerCss('error', file_get_contents(dirname($this->getViewFile('index')) . '/view.css'));
+        if (strpos($contents, '<body>')) {
+            $contents = str_replace('</h1>', ' - ' . $errorCode . $auditId . '</h1>' . '<h3> ' . $auditLink . ' logged on ' . date('Y-m-d H:i:s', filemtime($path)) . '</h3>', $contents);
+            $contents = StringHelper::getBetweenString($contents, '<body>', '</body>');
+            cs()->registerCss('error', file_get_contents(dirname($this->getViewFile('index')) . '/view.css'));
+        }
+        else {
+            $contents = '<h1>' . $errorCode . $auditId . '</h1>' . '<h3> ' . $auditLink . ' logged on ' . date('Y-m-d H:i:s', filemtime($path)) . '</h3><pre>' . $contents . '</pre>';
+        }
         $this->breadcrumbs = array(
             t('Error List') => array('/error/index'),
             t('Error') . ' ' . $error,
         );
-        $this->renderText(StringHelper::getBetweenString($contents, '<body>', '</body>'));
+        $this->renderText($contents);
         app()->end();
     }
 

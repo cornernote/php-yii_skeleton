@@ -188,4 +188,30 @@ $this->renderPartial('_menu', array(
         </div>
     </fieldset>
 
+    <?php if ($audit->error) { ?>
+        <fieldset>
+            <legend><?php echo t('Error');
+                if ($audit->error_code) echo '-' . $audit->error_code ?></legend>
+            <a href='javascript:void(0)' onclick="$('#show_error_detail').show('slow');$('#show_error').hide();"
+               id='show_error'>Show</a>
+
+            <div id='show_error_detail' style="display: none;">
+                <a href='javascript:void(0)'
+                   onclick="$('#show_error_detail').hide('hide');$('#show_error').show();">Hide</a>
+                <?php
+                $contents = $audit->unpack('error');
+                $contents = str_replace('class="container"', 'class="container-fluid"', $contents);
+                if (strpos($contents, '<body>')) {
+                    $contents = StringHelper::getBetweenString($contents, '<body>', '</body>');
+                    cs()->registerCss('error', file_get_contents(dirname($this->getViewFile('/error/index')) . '/view.css'));
+                }
+                else {
+                    $contents = '<pre>' . $contents . '</pre>';
+                }
+                echo $contents;
+                ?>
+            </div>
+        </fieldset>
+    <?php } ?>
+
 </div>
